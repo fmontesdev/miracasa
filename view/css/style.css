@@ -2344,7 +2344,7 @@ footer .credits {
 # Read modal
 --------------------------------------------------------------*/
 #real_estate_modal {
-	padding: 25px 25px 0 25px;
+	padding: 35px 25px 0 25px;
 }
 
 #read_container {
@@ -2393,7 +2393,7 @@ footer .credits {
 
 #read_features {
 	width: 100%;
-	background-color: #2eca6a;
+	background-color: #2eca6ac2;
   padding: 15px 30px 0 30px;
   margin-bottom: 22px;
 }
@@ -2443,7 +2443,7 @@ footer .credits {
 }
 
 .ui-dialog-title {
-  font-size: 30px;
+  font-size: 28px;
   font-weight: 700;
   color: #312e25;
 }

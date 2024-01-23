@@ -59,7 +59,7 @@
                         <div class="col-md-4">
                             <div class="card-box-a card-shadow">
                                 <div class="img-box-a">
-                                    <img src="view/img/property-2.jpg" alt="" class="img-a img-fluid">
+                                    <img src="view/img/property-<?php echo rand(1,10); ?>.jpg" alt="" class="img-a img-fluid">
                                 </div>
                                 <div class="card-overlay">
                                     <div class="card-overlay-a-content">

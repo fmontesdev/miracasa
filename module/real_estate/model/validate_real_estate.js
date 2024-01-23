@@ -225,7 +225,7 @@ function showModal(title_real_estate, id) {
     $("#real_estate_modal").dialog({
         title: title_real_estate,
         width : 1000,
-        height: 550,
+        height: 560,
         resizable: "false",
         modal: "true", // si esta en true bloquea el contenido de la web mientras la ventana esta activa (muy elegante)
         show: {
