@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1:3306
--- Tiempo de generación: 17-12-2023 a las 12:06:15
+-- Tiempo de generación: 24-01-2024 a las 12:25:13
 -- Versión del servidor: 8.2.0
 -- Versión de PHP: 8.2.13
 
@@ -30,30 +30,32 @@ SET time_zone = "+00:00";
 DROP TABLE IF EXISTS `real_estates`;
 CREATE TABLE IF NOT EXISTS `real_estates` (
   `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
-  `id_cadastre` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `type` varchar(25) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `trade` varchar(25) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `id_cadastre` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_es_trad_0900_ai_ci NOT NULL,
+  `trade` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_es_trad_0900_ai_ci NOT NULL,
+  `type` varchar(25) CHARACTER SET utf8mb4 COLLATE utf8mb4_es_trad_0900_ai_ci NOT NULL,
   `m2` int NOT NULL,
-  `province` varchar(25) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `postal_code` varchar(5) NOT NULL,
+  `feature` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_es_trad_0900_ai_ci NOT NULL,
+  `province` varchar(25) CHARACTER SET utf8mb4 COLLATE utf8mb4_es_trad_0900_ai_ci NOT NULL,
+  `town` varchar(25) CHARACTER SET utf8mb4 COLLATE utf8mb4_es_trad_0900_ai_ci NOT NULL,
   `price` int NOT NULL,
-  `publication_date` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `comments` varchar(1000) NOT NULL,
+  `publication_date` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_es_trad_0900_ai_ci NOT NULL,
+  `description` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_es_trad_0900_ai_ci NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_cadastre` (`id_cadastre`)
-) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=492 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_es_trad_0900_ai_ci;
 
 --
 -- Volcado de datos para la tabla `real_estates`
 --
 
-INSERT INTO `real_estates` (`id`, `id_cadastre`, `type`, `trade`, `m2`, `province`, `postal_code`, `price`, `publication_date`, `comments`) VALUES
-(1, '7503503YJ0070S0022TA', 'Vivienda', 'Compra', 90, 'Valencia', '46870', 125000, '15-04-2017', 'Piso situado en el barrio de El Llombo'),
-(2, '7003051YJ4480S0045BG', 'Local', 'Compra', 150, 'Madrid', '28042', 400000, '10-11-2023', 'Local comercial situado en Gran Via'),
-(3, '8204201YJ5210S0087JH', 'Garaje', 'Alquiler', 15, 'Barcelona', '8030', 80, '22-07-2010', 'Plaza de garaje en zona céntrica'),
-(4, '1234201YJ5210S0087JH', 'Oficina', 'Compra', 150, 'Sevilla', '23402', 350000, '27-12-2023', 'Oficinas en el mismo centro de Sevilla'),
-(34, '6234201YJ5210S0087XX', 'Local', 'Alquiler', 75, 'Albacete', '00456', 350, '02-12-2023', 'Local en el centro de Burgos'),
-(38, '6666201YJ5210S0087ZZ', 'Edificio', 'Compra', 2000, 'Cantabria', '35436', 1000000, '02-12-2023', '');
+INSERT INTO `real_estates` (`id`, `id_cadastre`, `trade`, `type`, `m2`, `feature`, `province`, `town`, `price`, `publication_date`, `description`) VALUES
+(485, '7003051YJ4480S0045AA', 'Compra', 'Vivienda', 150, 'Terraza:Climatización:', 'Cantabria', 'Santander', 250000, '10-11-2023', 'Local comercial situado en zona privilegiada para el comercio'),
+(486, '8204201YJ5210S0087BB', 'Alquiler', 'Garaje', 15, 'Ascensor:', 'Barcelona', 'Badalona', 60, '22-07-2021', 'Plaza de garaje en zona céntrica con inmejorable acceso'),
+(487, '1234201YJ5210S0087CC', 'Compra', 'Oficina', 150, 'Muebles:Climatización:', 'Sevilla', 'Dos Hermanas', 200000, '27-05-2020', 'Oficinas en el mismo centro de Dos Hermanas'),
+(488, '6845201YJ5210S0087DD', 'Alquiler', 'Vivienda', 140, 'Ascensor:Parking:Terraza:Muebles:Electrodomésticos:Climatización:', 'Albacete', 'Almansa', 550, '02-12-2022', 'Piso ubicado en el mismo centro de la ciudad'),
+(489, '2666201YJ5210S0087EE', 'Compra', 'Vivienda', 500, 'Terraza:Muebles:Electrodomésticos:Climatización:', 'Madrid', 'Madrid', 1200000, '02-12-2019', 'Casa completamente equipada ubicada en zona residencial de lujo'),
+(490, '9736201YJ5210S0087FF', 'Alquiler', 'Trastero', 15, 'Ascensor:', 'Ciudad Real', 'Puerto Llano', 50, '24-02-2023', 'Trastero ubicado en zona de fácil acceso'),
+(491, '4852201YJ5210S0087GG', 'Compra', 'Terreno', 1000, 'Parking:', 'Burgos', 'Burgos', 42000, '01-08-2018', 'Amplio terreno ubicado en zona residencial fantástica');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

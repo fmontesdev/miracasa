@@ -93,15 +93,15 @@ function validate(op){
     var v_id_cadastre=document.getElementById('id_cadastre').value;
     //console.log(v_id_cadastre);
     //return false;
-    var v_trade=document.getElementsByName('trade');
-    var v_type=document.getElementsByName('type');
+    var v_trade=document.getElementsByName('trade'); //radiobutton
+    var v_type=document.getElementsByName('type'); //radiobutton
     //console.log(v_type);
     //return false;
     var v_m2=document.getElementById('m2').value;
-    var v_feature=document.getElementsByName('feature[]');
+    var v_feature=document.getElementsByName('feature[]'); //checkbox
     //console.log(v_feature);
     //return false;
-    var v_province=document.getElementById('province').value;
+    var v_province=document.getElementById('province').value; //select
     var v_town=document.getElementById('town').value;
     var v_price=document.getElementById('price').value;
     var v_publication_date=document.getElementById('publication_date').value;

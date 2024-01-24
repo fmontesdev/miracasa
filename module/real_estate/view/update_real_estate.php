@@ -227,7 +227,7 @@
                     
                     <div class="buttons_container">
                         <div class="action_buttons">
-                            <input type="hidden" name="id" value=<?php echo $_GET['id'];?>>
+                            <input type="hidden" name="id" value=<?php echo $_GET['id'];?>> <!-- con el input hiden pasamos el id -->
                             <input name="Submit" type="button" class="btn btn-a action_btn" onclick="validate('update')" value="Modificar"/>
                         </div>
                         <div class="back_button">
