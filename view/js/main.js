@@ -176,6 +176,164 @@
   });
 
   /**
+   * Types carousel
+   */
+  new Swiper('#types-carousel', {
+    speed: 600,
+    loop: false,
+    autoplay: {
+      delay: 5000,
+      disableOnInteraction: false
+    },
+    slidesPerView: 'auto',
+    slidesPerGroup: 3,
+    //initialSlide: 2,
+    pagination: {
+      el: '.types-carousel-pagination',
+      type: 'bullets',
+      clickable: true
+    },
+    breakpoints: {
+      320: {
+        slidesPerView: 1,
+      },
+
+      500: {
+        slidesPerView: 2,
+      },
+
+      1000: {
+        slidesPerView: 3,
+      },
+
+      1500: {
+        slidesPerView: 4,
+      }
+    }
+  });
+
+  /**
+   * Categories carousel
+   */
+  new Swiper('#categories-carousel', {
+    speed: 500,
+    loop: false,
+    autoplay: {
+      delay: 2500,
+      disableOnInteraction: false
+    },
+    slidesPerView: 'auto',
+    pagination: {
+      el: '.categories-carousel-pagination',
+      type: 'bullets',
+      clickable: true
+    },
+    breakpoints: {
+      320: {
+        slidesPerView: 2,
+        spaceBetween: 18
+      },
+
+      1200: {
+        slidesPerView: 4,
+        spaceBetween: 18
+      }
+    }
+  });
+
+/**
+ * Operations carousel
+ */
+  new Swiper('#operations-carousel', {
+    speed: 500,
+    loop: false,
+    autoplay: {
+      delay: 2500,
+      disableOnInteraction: false
+    },
+    slidesPerView: 'auto',
+    pagination: {
+      el: '.operations-carousel-pagination',
+      type: 'bullets',
+      clickable: true
+    },
+    breakpoints: {
+      320: {
+        slidesPerView: 2,
+        spaceBetween: 18
+      },
+
+      1200: {
+        slidesPerView: 4,
+        spaceBetween: 18
+      }
+    }
+  });
+
+/**
+ * Cities carousel
+ */
+  new Swiper('#cities-carousel', {
+    speed: 500,
+    loop: false,
+    autoplay: {
+      delay: 1000,
+      disableOnInteraction: false
+    },
+    slidesPerView: 'auto',
+    pagination: {
+      el: '.cities-carousel-pagination',
+      type: 'bullets',
+      clickable: true
+    },
+    breakpoints: {
+      320: {
+        slidesPerView: 3,
+        spaceBetween: 14
+      },
+
+      1200: {
+        slidesPerView: 6,
+        spaceBetween: 14
+      }
+    }
+  });
+
+/**
+ * Recomendations carousel
+ */
+  new Swiper('#recomendations-carousel', {
+    speed: 500,
+    loop: false,
+    autoplay: {
+      delay: 2500,
+      disableOnInteraction: false
+    },
+    slidesPerView: 'auto',
+    pagination: {
+      el: '.recomendations-carousel-pagination',
+      type: 'bullets',
+      clickable: true
+    },
+    breakpoints: {
+      320: {
+        slidesPerView: 1,
+        spaceBetween: 18
+      },
+
+      768: {
+        slidesPerView: 2,
+        spaceBetween: 18
+      },
+
+      1200: {
+        slidesPerView: 3,
+        spaceBetween: 18
+      }
+    }
+  });
+
+  /**
    * Testimonial carousel
    */
   new Swiper('#testimonial-carousel', {

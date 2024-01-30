@@ -6,7 +6,7 @@
     		$pass = "";                             
     		$db = "miracasa";                      
     		$port = 3306;                           
-    		$tabla="estates";
+    		//$tabla="real_estate";
     		
     		$conexion = mysqli_connect($host, $user, $pass, $db, $port)or die(mysql_error());
 			return $conexion;

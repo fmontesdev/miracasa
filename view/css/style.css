@@ -283,6 +283,16 @@ a:hover {
   }
 }
 
+.section-t7 {
+  padding-top: 7rem;
+}
+
+@media (max-width: 767px) {
+  .section-t7 {
+    padding-top: 3.5rem;
+  }
+}
+
 .section-t4 {
   padding-top: 4rem;
 }
@@ -322,16 +332,20 @@ a:hover {
   padding-bottom: 4rem;
 }
 
+.title-wrap-2 {
+  padding-bottom: 2rem;
+}
+
 .title-a {
   text-decoration: none;
-  font-size: 2.6rem;
+  font-size: 2rem;
   font-weight: 600;
 }
 
 .title-link {
   font-size: 1.2rem;
   font-weight: 300;
-  padding-top: 1.2rem;
+  padding-top: 0.5rem;
 }
 
 .title-link a {
@@ -1263,19 +1277,19 @@ a:hover {
 ======================================*/
 @media (min-width: 768px) {
   .card-box-a:hover .card-overlay-a-content {
-    bottom: 60px;
+    bottom: 36px;
   }
 }
 
 @media (min-width: 768px) and (min-width: 768px) {
   .card-box-a:hover .card-overlay-a-content {
-    bottom: 60px;
+    bottom: 36px;
   }
 }
 
 @media (min-width: 768px) and (min-width: 992px) {
   .card-box-a:hover .card-overlay-a-content {
-    bottom: 64px;
+    bottom: 40px;
   }
 }
 
@@ -1286,11 +1300,11 @@ a:hover {
 }
 
 @media (max-width: 767px) {
-  .card-box-a .card-overlay-a-content {
-    bottom: 65px;
+  .card-box-a:hover .card-overlay-a-content {
+    bottom: 40px;
   }
 
-  .card-box-a .card-body-a {
+  .card-box-a:hover .card-body-a {
     padding-bottom: 1rem;
   }
 }
@@ -1305,7 +1319,7 @@ a:hover {
 
 @media (min-width: 768px) {
   .card-overlay-a-content {
-    bottom: -20px;
+    bottom: 0px;
   }
 }
 
@@ -1345,7 +1359,7 @@ a:hover {
 .card-body-a {
   z-index: 2;
   transition: all 0.5s ease-in;
-  padding: 0rem 1rem 2rem 1rem;
+  padding: 0rem 1rem 1rem 1rem;
 }
 
 .card-body-a .price-box {
@@ -1832,6 +1846,80 @@ a:hover {
 
 .agent-info-box .socials-footer li {
   margin-right: 1.5rem;
+}
+
+/*======================================
+//--//-->   HOME - CARD-E
+======================================*/
+.section-types {
+
+}
+
+.section-types .presentation {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  background-color: #2eca6a;
+  z-index: 2;
+}
+
+.section-types #types-carousel {
+ 
+}
+
+.section-types .types-carousel-pagination {
+
+}
+
+.card-header-e {
+  width: 100%;
+  padding: 0.9rem 0.7rem;
+  color: #ffffff;
+  position: absolute;
+  bottom: 0;
+  text-align: center;
+  z-index: 2;
+}
+
+.card-header-e .title-1 {
+  margin-bottom: 0;
+  padding: 0.6rem 0;
+  font-size: 2rem;
+  font-weight: 500;
+  line-height: 1.15;
+  align-items: center;
+}
+
+.card-header-e .title-3 {
+  margin-bottom: 0;
+  padding: 0.4rem 0;
+  font-size: 1.5rem;
+  font-weight: 500;
+  line-height: 1;
+  align-items: center;
+}
+
+@media (min-width: 768px) {
+  .card-header-e .title-1 {
+    font-size: 1.5rem;
+  }
+  .card-header-e .title-3 {
+    font-size: 1.5rem;
+  }
+}
+
+@media (min-width: 992px) {
+  .card-header-e .title-1 {
+    font-size: 2rem;
+  }
+  .card-header-e .title-3 {
+    font-size: 1.5rem;
+  }
+}
+
+.card-header-e .title-1 a, .card-header-e .title-3 a {
+  color: #ffffff;
+  text-decoration: none;
 }
 
 /*--------------------------------------------------------------
@@ -2423,6 +2511,17 @@ footer .credits {
 	padding: 0 0 0 15px;
 	font-size: 16px;
   color: #fff;
+}
+
+#read_category {
+	width: 100%;
+	display: flex;
+	flex-wrap: wrap;
+}
+
+#categories_0, #categories_1, #categories_2,
+#categories_3, #categories_4, #categories_5{
+	width: 20%;
 }
 
 #read_date {
