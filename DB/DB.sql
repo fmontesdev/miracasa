@@ -478,8 +478,8 @@ INSERT INTO `type` (`id_type`, `name_type`, `subtype`, `img_type`) VALUES
 --
 -- Filtros para la tabla `belong_to_cat`
 --
-ALTER TABLE `belong_to_cat`
-  ADD CONSTRAINT `belong_to_cat_ibfk_1` FOREIGN KEY (`id_realestate`) REFERENCES `real_estate` (`id_realestate`),
+
+
   ADD CONSTRAINT `belong_to_cat_ibfk_2` FOREIGN KEY (`id_cat`) REFERENCES `category` (`id_cat`);
 
 ALTER TABLE `belong_to_cat`

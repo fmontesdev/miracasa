@@ -1,6 +1,9 @@
 function ajaxPromise(sUrl, sType, sTData, sData = undefined) {
-    //$data = 'hola PROMISE';
-    //die("<script>console.log('.json_encode( $data ) .');</script>");
+    // console.log('Hola ajaxPromise');
+    // console.log(sUrl);
+    // console.log(sType);
+    // console.log(sTData);
+    // console.log(sData);
     return new Promise((resolve, reject) => {
         $.ajax({
             url: sUrl,
@@ -8,6 +11,7 @@ function ajaxPromise(sUrl, sType, sTData, sData = undefined) {
             dataType: sTData,
             data: sData
         }).done((data) => {
+            // console.log(data);
             resolve(data);
         }).fail((jqXHR, textStatus, errorThrow) => {
             reject(errorThrow);

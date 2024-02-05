@@ -21,7 +21,6 @@ function carouselTypes() {
         }
     }).catch(function() {
         window.location.href='index.php?page=503';
-        //window.location.href = "index.php?module=ctrl_exceptions&op=503&type=503&lugar=Type_Categories HOME";
     });
 }
 
@@ -48,7 +47,6 @@ function carouselCategories() {
         }
     }).catch(function() {
         window.location.href='index.php?page=503';
-        //window.location.href = "index.php?module=ctrl_exceptions&op=503&type=503&lugar=Type_Categories HOME";
     });
 }
 
@@ -75,7 +73,6 @@ function carouselOperations() {
         }
     }).catch(function() {
         window.location.href='index.php?page=503';
-        //window.location.href = "index.php?module=ctrl_exceptions&op=503&type=503&lugar=Type_Categories HOME";
     });
 }
 
@@ -102,7 +99,6 @@ function carouselCities() {
         }
     }).catch(function() {
         window.location.href='index.php?page=503';
-        //window.location.href = "index.php?module=ctrl_exceptions&op=503&type=503&lugar=Type_Categories HOME";
     });
 }
 
@@ -152,7 +148,6 @@ function carouselRecomendations() {
         }
     }).catch(function() {
         window.location.href='index.php?page=503';
-        //window.location.href = "index.php?module=ctrl_exceptions&op=503&type=503&lugar=Type_Categories HOME";
     });
 }
 

@@ -1176,6 +1176,51 @@ a:hover {
   padding-left: 0;
 }
 
+.intro-single2 {
+  padding: 3rem 0 3rem;
+}
+
+@media (max-width: 767px) {
+  .intro-single2 {
+    padding-top: 0rem;
+  }
+}
+
+.intro-single2 .title-single-box {
+  padding: 1rem 0 1rem 2rem;
+}
+
+.intro-single2 .title-single-box {
+  border-left: 3px solid #2eca6a;
+}
+
+.intro-single2 .title-single-box .title-single {
+  font-weight: 600;
+  font-size: 2.2rem;
+}
+
+@media (min-width: 768px) {
+  .intro-single2 .title-single-box .title-single {
+    font-size: 2.1rem;
+  }
+}
+
+@media (min-width: 992px) {
+  .intro-single2 .title-single-box .title-single {
+    font-size: 2.5rem;
+  }
+}
+
+.intro-single2 .breadcrumb-box {
+  padding: 1rem 0 0 0.5rem;
+}
+
+.intro-single2 .breadcrumb {
+  background-color: transparent;
+  padding-right: 0;
+  padding-left: 0;
+}
+
 /*--------------------------------------------------------------
 # Card General
 --------------------------------------------------------------*/
@@ -2259,7 +2304,7 @@ footer .credits {
 }
 
 /*--------------------------------------------------------------
-# List Inmuebles
+# List Inmuebles versión preeliminar
 --------------------------------------------------------------*/
 .m2 {
   color: #ddd;
@@ -2291,6 +2336,184 @@ footer .credits {
 .features {
   color: #ddd;
 	padding: 1px 9px;
+}
+
+/*--------------------------------------------------------------
+# List Inmuebles
+--------------------------------------------------------------*/
+.more_info {
+	cursor: pointer;
+}
+
+.containerList {
+	width: 100%;
+	display: flex;
+	flex-wrap: wrap;
+  padding: 0;
+  margin-bottom: 25px;
+	background: #f3f3f3;
+}
+
+.containerList_img {
+	width: 30%;
+}
+
+.list-img {
+  width: 100%;
+	height: auto;
+  max-height: 235px;
+}
+
+.containerList_info {
+	width: 70%;
+	padding: 20px;
+}
+
+.listInfo_header {
+	width: 100%;
+  margin-bottom: 16px;
+}
+
+.listInfo_title {
+  font-size: 21px;
+	font-weight: 500;
+  color: #2eca6a;
+}
+
+.listInfo_province {
+  margin-left: 15px;
+}
+
+.listInfo_trading {
+	width: 100%;
+  margin-bottom: 18px;
+}
+
+.listInfo_price {
+  font-size: 17px;
+	font-weight: 500;
+  color: #000;
+  padding: 0.1rem 0.6rem;
+  border: 2px solid #2eca6a;
+  border-radius: 50px;
+  text-transform: uppercase;
+}
+
+.listInfo_specs {
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.listInfo_desc {
+  margin-bottom: 0;
+  font-size: 15px;
+}
+
+/*--------------------------------------------------------------
+# Details Inmuebles
+--------------------------------------------------------------*/
+.containerDetails {
+	width: 100%;
+	display: flex;
+	flex-wrap: wrap;
+  padding: 0;
+	
+}
+
+.containerDetails_img {
+	width: 100%;
+}
+
+.details-img {
+  width: 100%;
+	height: auto;
+}
+
+.containerDetails_info {
+	width: 100%;
+	padding: 40px 30px 0 30px;
+}
+
+.detailsInfo_trading {
+	width: 100%;
+  margin-bottom: 40px;
+}
+
+.detailsInfo_price {
+  font-size: 24px;
+	font-weight: 500;
+  color: #000;
+  padding: 0.1rem 0.8rem;
+  border: 2px solid #2eca6a;
+  border-radius: 50px;
+  text-transform: uppercase;
+
+}
+
+.detailsInfo_specs {
+  width: 100%;
+	display: flex;
+	flex-wrap: wrap;
+  margin-bottom: 30px;
+}
+
+.detailsInfoSpecs_contents{
+	width: auto;
+  margin-right: 40px;
+}
+
+.detailsInfoSpecs-img, .detailsInfoExtras-img{
+	width: 40px;
+}
+
+.detailsInfoSpecs-txt, .detailsInfoExtras-txt {
+  padding-left: 12px;
+}
+
+.detailsInfo_title {
+	width: 100%;
+  margin-bottom: 20px;
+}
+
+.detailsInfoTitle_property {
+  margin-bottom: 5px;
+  font-size: 24px;
+	font-weight: 600;
+  color: #2eca6a;
+}
+
+.detailsInfoTitle_province {
+ margin-bottom: 0;
+}
+
+.detailsInfo_desc {
+  margin-bottom: 37px;
+}
+
+.detailsInfo_extras {
+	width: 100%;
+	padding: 0 30px;
+}
+
+.detailsInfoExtras_title {
+  font-size: 24px;
+	font-weight: 500;
+  color: #000;
+  margin: 0;
+  padding-top: 30px;
+  border-top: 1px solid #cacaca;
+}
+
+.detailsInfoExtras_container {
+  width: 100%;
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.detailsInfoExtras_contents{
+	width: 25%;
+  padding-top: 25px;
+  padding-bottom: 12px;
 }
 
 /*--------------------------------------------------------------

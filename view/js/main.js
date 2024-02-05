@@ -334,6 +334,57 @@
   });
 
   /**
+   * Details carousel
+   */
+  new Swiper('#details-carousel', {
+    speed: 600,
+    loop: false,
+    //loopAdditionalSlides: 4,
+    //loopedSlides: 2,
+    autoplay: {
+      delay: 4000,
+      disableOnInteraction: false
+    },
+    slidesPerView: 'auto',
+    //slidesPerGroup: 3,
+    //initialSlide: 2,
+    navigation: {
+      prevEl: '.swiper-button-prev',
+      nextEl: '.swiper-button-next',
+    },
+    pagination: {
+      el: '.details-carousel-pagination',
+      type: 'bullets',
+      clickable: true
+    },
+    breakpoints: {
+      320: {
+        slidesPerView: 1,
+      },
+
+      576: {
+        slidesPerView: 2,
+      },
+
+      768: {
+        slidesPerView: 2,
+      },
+
+      992: {
+        slidesPerView: 3,
+      },
+
+      1200: {
+        slidesPerView: 3,
+      },
+
+      1500: {
+        slidesPerView: 3,
+      }
+    }
+  });
+
+  /**
    * Testimonial carousel
    */
   new Swiper('#testimonial-carousel', {

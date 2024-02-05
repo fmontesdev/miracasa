@@ -5,11 +5,10 @@
     $op = isset($_GET['op']) ? $_GET['op'] : "";
 
     switch ($op) {
-        /*
         case 'list';
             include ('module/home/view/home.html');
             break;
-        */
+        
         case 'carouselType';
             //$data = 'hola CONTROLLER carouselType';
             //die("<script>console.log('.json_encode( $data ) .');</script>");
@@ -96,4 +95,3 @@
             include("view/inc/error404.php");
             break;
     }
-?>

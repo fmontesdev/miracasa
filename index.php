@@ -1,12 +1,11 @@
 <?php
-	include("view/inc/top_page_home.html");
-	/*
-    if ((isset($_GET['page'])) && ($_GET['page']==="controller_real_estate") ){
-		include("view/inc/top_page_real_estate.php");
+	
+    if ((isset($_GET['page'])) && ($_GET['page']==="controller_shop") ){
+		include("view/inc/top_page_shop.html");
 	}else{
-		include("view/inc/top_page.php");
+		include("view/inc/top_page_home.html");
 	}
-	*/
+	
 	session_start();
 ?>
 <div id="wrapper">		

@@ -2,7 +2,14 @@
 	if(isset($_GET['page'])){
 		switch($_GET['page']){
 			case "home";
-				include("module/home/view/home.html");
+				$_GET['op']='list';
+				include("module/home/controller/controller_home.php");
+				break;
+			case "controller_shop";
+				include("module/shop/controller/".$_GET['page'].".php");
+				break;
+			case "details";
+				include("module/shop/view/".$_GET['page'].".html");
 				break;
 			/*
 			case "controller_real_estate";
@@ -29,6 +36,7 @@
 				break;
 		}
 	} else{
-		include("module/home/view/home.html");
+		$_GET['op']='list';
+		include("module/home/controller/controller_home.php");
 	}
 ?>
