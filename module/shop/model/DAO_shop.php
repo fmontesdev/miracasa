@@ -4,7 +4,8 @@ include($path . "/model/connect.php");
 
 class DAOShop{
 	function select_all_realEstates(){
-		$sql = "SELECT r.id_realestate, t.name_type, o.name_op, s.price, c.name_city, c.province, r.area, r.rooms, r.bathrooms, r.description, i.img_realestate
+		$sql = "SELECT r.id_realestate, t.name_type, o.name_op, s.price, c.name_city, c.province, r.area,
+				r.rooms, r.bathrooms, r.description, GROUP_CONCAT(i.img_realestate SEPARATOR ':') AS img_realestate
 					FROM `real_estate` r 
 					INNER JOIN `type` t 
 					INNER JOIN `belong_to_type` bt
@@ -25,12 +26,24 @@ class DAOShop{
 		$res = mysqli_query($conexion, $sql);
 		connect::close($conexion);
 
-		$retrArray = array();
 		if (mysqli_num_rows($res) > 0) { //devuelve número de filas
 			while ($row = mysqli_fetch_assoc($res)) { //devuelve una fila de resultado como un array asociativo
-				$retrArray[] = $row; //pasamos cada fila de resultado a un array
+				$retrArray[] = array(
+					"id_realestate" => $row["id_realestate"],
+					"name_type" => $row["name_type"],
+					"name_op" => $row["name_op"],
+					"price" => $row["price"],
+					"name_city" => $row["name_city"],
+					"province" => $row["province"],
+					"area" => $row["area"],
+					"rooms" => $row["rooms"],
+					"bathrooms" => $row["bathrooms"],
+					"description" => $row["description"],
+					"img_realestate" => explode(":", $row['img_realestate'])
+				);
 			}
 		}
+
 		return $retrArray;
 	}
 
