@@ -70,7 +70,7 @@
 		}
 
 		function select_recomendations() {
-			$sql= "SELECT r.cadastre, t.name_type, o.name_op, s.price, c.name_city, r.area, r.rooms, r.bathrooms, i.img_realestate
+			$sql= "SELECT r.id_realestate, t.name_type, o.name_op, s.price, c.name_city, r.area, r.rooms, r.bathrooms, i.img_realestate
 						FROM `real_estate` r
 						INNER JOIN `type` t
 						INNER JOIN `belong_to_type` bt

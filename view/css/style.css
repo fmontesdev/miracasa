@@ -2401,8 +2401,25 @@ footer .credits {
 }
 
 .listInfo_specs {
+  width: 100%;
+	display: flex;
+	flex-wrap: wrap;
   margin-bottom: 8px;
+}
+
+.listInfoSpecs_contents {
+	width: auto;
+  margin-right: 25px;
+}
+
+.listInfoSpecs-img {
+	width: 28px;
+}
+
+.listInfoSpecs-txt {
+  font-size: 15px;
   font-weight: 500;
+  padding-left: 8px;
 }
 
 .listInfo_desc {
@@ -2951,4 +2968,11 @@ footer .credits {
 
 .back_btn {
   margin-left: 20px;
+}
+
+/*======================================
+Selection carousels
+======================================*/
+.typeSlide, .categorySlide, .operationSlide, .citySlide, .recomendationSlide {
+  cursor: pointer;
 }

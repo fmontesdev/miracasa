@@ -25,12 +25,16 @@ switch ($op) {
         break;
 
     case 'details_realestate':
+        // echo json_encode($_GET['id']);
+        // break
         try {
             $daoshop = new DAOShop();
             $Dates_realEstate = $daoshop->select_one_realEstate($_GET['id']);
         } catch (Exception $e) {
             echo json_encode("error");
         }
+        // echo json_encode($Dates_realEstate);
+        // break
         try {
             $daoshop_img = new DAOShop();
             $Dates_images = $daoshop_img->select_imgs_realEstate($_GET['id']);
@@ -54,8 +58,25 @@ switch ($op) {
             echo json_encode("error");
         }
         break;
+    
+    case 'filters_home':
+        // echo json_encode($_POST['filters']);
+        // break;
+        try {
+            $daoshop_filters = new DAOShop();
+            $Dates_realEstates = $daoshop_filters->filters_home($_POST['filters']);
+        } catch (Exception $e) {
+            echo json_encode("error");
+        }
 
-    default;
+        if (!empty($Dates_realEstates)) {
+            echo json_encode($Dates_realEstates);
+        } else {
+            echo json_encode("error");
+        }
+        break;
+
+    default:
         include("view/inc/error404.php");
         break;
 }

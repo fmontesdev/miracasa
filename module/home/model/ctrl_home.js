@@ -3,7 +3,7 @@ function carouselTypes() {
     ajaxPromise('module/home/controller/controller_home.php?op=carouselType','GET', 'JSON')
     .then(function(data) {
         for (row in data) {
-            $('<div></div>').attr('class', 'carousel-item-c swiper-slide').attr('id', data[row].name_type).appendTo('#types-carousel .containerTypes')
+            $('<div></div>').attr('class', 'typeSlide carousel-item-c swiper-slide').attr('id', data[row].id_type).appendTo('#types-carousel .containerTypes')
                 .html(`
                     <div class='card-box-b card-shadow news-box'>
                         <div class='img-box-b'>
@@ -12,7 +12,7 @@ function carouselTypes() {
                         <div class='card-overlay'>
                             <div class='card-header-e'>
                                 <span class='title-1'>
-                                    <a href='#'>${data[row].name_type}</a>
+                                    <span>${data[row].name_type}</span>
                                 </span>
                             </div>
                         </div>
@@ -24,11 +24,11 @@ function carouselTypes() {
             speed: 600,
             loop: true,
             autoplay: {
-                delay: 2500,
+                delay: 5000,
                 disableOnInteraction: false
             },
             slidesPerView: 'auto',
-            //slidesPerGroup: 3,
+            //slidesPerGroup: 2,
             //initialSlide: 2,
             pagination: {
                 el: '.types-carousel-pagination',
@@ -52,7 +52,7 @@ function carouselCategories() {
     ajaxPromise('module/home/controller/controller_home.php?op=carouselCategory','GET', 'JSON')
     .then(function(data) {
         for (row in data) {
-            $('<div></div>').attr('class', 'carousel-item-c swiper-slide').attr('id', data[row].name_cat).appendTo('#categories-carousel .containerCategories')
+            $('<div></div>').attr('class', 'categorySlide carousel-item-c swiper-slide').attr('id', data[row].id_cat).appendTo('#categories-carousel .containerCategories')
                 .html(`
                     <div class='card-box-b card-shadow news-box'>
                         <div class='img-box-b'>
@@ -61,7 +61,7 @@ function carouselCategories() {
                         <div class='card-overlay'>
                             <div class='card-header-e'>
                                 <span class='title-1'>
-                                    <a href='#'>${data[row].name_cat}</a>
+                                    <span>${data[row].name_cat}</span>
                                 </span>
                             </div>
                         </div>
@@ -70,10 +70,10 @@ function carouselCategories() {
         }
 
         new Swiper('#categories-carousel', {
-            speed: 500,
+            speed: 600,
             loop: true,
             autoplay: {
-                delay: 2500,
+                delay: 5000,
                 disableOnInteraction: false
             },
             slidesPerView: 'auto',
@@ -104,7 +104,7 @@ function carouselOperations() {
     ajaxPromise('module/home/controller/controller_home.php?op=carouselOperation','GET', 'JSON')
     .then(function(data) {
         for (row in data) {
-            $('<div></div>').attr('class', 'carousel-item-c swiper-slide').attr('id', data[row].name_op).appendTo('#operations-carousel .containerOperations')
+            $('<div></div>').attr('class', 'operationSlide carousel-item-c swiper-slide').attr('id', data[row].id_op).appendTo('#operations-carousel .containerOperations')
                 .html(`
                     <div class='card-box-b card-shadow news-box'>
                         <div class='img-box-b'>
@@ -113,7 +113,7 @@ function carouselOperations() {
                         <div class='card-overlay'>
                             <div class='card-header-e'>
                                 <span class='title-1'>
-                                    <a href='#'>${data[row].name_op}</a>
+                                    <span>${data[row].name_op}</span>
                                 </span>
                             </div>
                         </div>
@@ -122,10 +122,10 @@ function carouselOperations() {
         }
 
         new Swiper('#operations-carousel', {
-            speed: 500,
-            loop: true,
+            speed: 600,
+            loop: false,
             autoplay: {
-                delay: 2500,
+                delay: 5000,
                 disableOnInteraction: false
             },
             slidesPerView: 'auto',
@@ -156,7 +156,7 @@ function carouselCities() {
     ajaxPromise('module/home/controller/controller_home.php?op=carouselCity','GET', 'JSON')
     .then(function(data) {
         for (row in data) {
-            $('<div></div>').attr('class', 'carousel-item-c swiper-slide').attr('id', data[row].name_city).appendTo('#cities-carousel .containerCities')
+            $('<div></div>').attr('class', 'citySlide carousel-item-c swiper-slide').attr('id', data[row].id_city).appendTo('#cities-carousel .containerCities')
                 .html(`
                     <div class='card-box-b card-shadow news-box'>
                         <div class='img-box-b'>
@@ -165,7 +165,7 @@ function carouselCities() {
                         <div class='card-overlay'>
                             <div class='card-header-e'>
                                 <span class='title-3'>
-                                    <a href='#'>${data[row].name_city}</a>
+                                    <span>${data[row].name_city}</span>
                                 </span>
                             </div>
                         </div>
@@ -177,7 +177,7 @@ function carouselCities() {
             speed: 500,
             loop: true,
             autoplay: {
-                delay: 1000,
+                delay: 2500,
                 disableOnInteraction: false
             },
             slidesPerView: 'auto',
@@ -208,7 +208,7 @@ function carouselRecomendations() {
     ajaxPromise('module/home/controller/controller_home.php?op=carouselRecomendations','GET', 'JSON')
     .then(function(data) {
         for (row in data) {
-            $('<div></div>').attr('class', 'carousel-item-b swiper-slide').attr('id', data[row].cadastre).appendTo('#recomendations-carousel .containerRecomendations')
+            $('<div></div>').attr('class', 'recomendationSlide carousel-item-b swiper-slide').attr('id', data[row].id_realestate).appendTo('#recomendations-carousel .containerRecomendations')
                 .html(`
                     <div class='card-box-a card-shadow'>
                         <div class='img-box-a'>
@@ -218,7 +218,7 @@ function carouselRecomendations() {
                             <div class='card-overlay-a-content'>
                                 <div class='card-header-a'>
                                     <h2 class='card-title-a'>
-                                        <a href='#'><span class='color-b'>${data[row].name_type}</span> en ${data[row].name_city}</a>
+                                        <span class='color-b'>${data[row].name_type}</span> en ${data[row].name_city}
                                     </h2>
                                 </div>
                                 <div class='card-body-a'>
@@ -285,6 +285,58 @@ function carouselRecomendations() {
     });
 }
 
+function clicks(){
+    $(document).on("click",'div.typeSlide', function (){
+        var filters_home = []; // creamos array donde capturaremos todos los clicks del home
+        filters_home.push({"type":[this.getAttribute('id')]}); // introducimos en la primera posición del array el id del div que indicamos (id_type)
+        localStorage.removeItem('filters_home') // borramos el contenido previo de localStorage
+        localStorage.setItem('filters_home', JSON.stringify(filters_home)); // seteamos localStorge serializando el array filters_home con JSON (pasamos de un array a un string)
+            setTimeout(function(){ 
+            window.location.href = 'index.php?page=controller_shop&op=list'; // cargaremos crtl_shop.js a través del controller_shop.php al darnos acceso a shop.html 
+            }, 500);  
+    });
+
+    $(document).on("click",'div.categorySlide', function (){
+        var filters_home = [];
+        filters_home.push({"category":[this.getAttribute('id')]});
+        localStorage.removeItem('filters_home');
+        localStorage.setItem('filters_home', JSON.stringify(filters_home)); 
+            setTimeout(function(){ 
+            window.location.href = 'index.php?page=controller_shop&op=list';
+            }, 500);  
+    });
+
+    $(document).on("click",'div.operationSlide', function (){
+        var filters_home = [];
+        filters_home.push({"operation":[this.getAttribute('id')]});
+        localStorage.removeItem('filters_home');
+        localStorage.setItem('filters_home', JSON.stringify(filters_home)); 
+          setTimeout(function(){ 
+            window.location.href = 'index.php?page=controller_shop&op=list';
+          }, 500);  
+      });
+
+    $(document).on("click",'div.citySlide', function (){
+        var filters_home = [];
+        filters_home.push({"city":[this.getAttribute('id')]});
+        localStorage.removeItem('filters_home');
+        localStorage.setItem('filters_home', JSON.stringify(filters_home)); 
+            setTimeout(function(){ 
+            window.location.href = 'index.php?page=controller_shop&op=list';
+            }, 500);
+    });
+
+    $(document).on("click",'div.recomendationSlide', function (){
+        var filtersHome_details = [];
+        filtersHome_details.push({"recomendation":[this.getAttribute('id')]});
+        localStorage.removeItem('filtersHome_details');
+        localStorage.setItem('filtersHome_details', JSON.stringify(filtersHome_details)); 
+            setTimeout(function(){ 
+            window.location.href = 'index.php?page=controller_shop&op=list';
+            }, 500);
+    });
+} 
+
 $(document).ready(function() {
     //$data = 'hola JS function';
     //die("<script>console.log('.json_encode( $data ).');</script>");
@@ -293,4 +345,5 @@ $(document).ready(function() {
     carouselOperations();
     carouselCities();
     carouselRecomendations();
+    clicks();
 });

@@ -8,8 +8,8 @@
 			case "controller_shop";
 				include("module/shop/controller/".$_GET['page'].".php");
 				break;
-			case "details";
-				include("module/shop/view/".$_GET['page'].".html");
+			case "controller_exceptions";
+				include("module/exceptions/controller/".$_GET['page'].".php");
 				break;
 			/*
 			case "controller_real_estate";
@@ -39,4 +39,3 @@
 		$_GET['op']='list';
 		include("module/home/controller/controller_home.php");
 	}
-?>

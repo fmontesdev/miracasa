@@ -1,11 +1,28 @@
 function loadAllRealestates() {
-    ajaxForSearch('module/shop/controller/controller_shop.php?op=all_realestates');
+    var validate_filtersHome = localStorage.getItem('filters_home') || undefined; // conseguimos de localStorage filters_home, sinó existe undefined
+    var validate_filtersHome_details = localStorage.getItem('filtersHome_details') || undefined; // conseguimos de localStorage filtersHome_details, sinó existe undefined
+    
+    if (validate_filtersHome != undefined) {
+        var filters = JSON.parse(validate_filtersHome); // deserializamos para convertir el string otra vez en un array
+        console.log(filters);
+        ajaxForSearch('module/shop/controller/controller_shop.php?op=filters_home', 'POST', 'JSON', { 'filters': filters });
+    } else {
+        ajaxForSearch('module/shop/controller/controller_shop.php?op=all_realestates', 'GET', 'JSON');
+    }
+    
+    if (validate_filtersHome_details != undefined) {
+        localStorage.removeItem('filtersHome_details'); // eliminamos de localStorage id_recomendation para no interferir en próximas busquedas
+        var id_details = JSON.parse(validate_filtersHome_details); // deserializamos para convertir el string otra vez en un array
+        console.log(id_details);
+        loadDetails(id_details[0]['recomendation'][0]);
+    }
 }
 
-function ajaxForSearch(url) {
-    // console.log('Hola loadAllRealestates');
-    // die("<script>console.log('Hola loadCategories');</script>");
-    ajaxPromise(url,'GET', 'JSON')
+function ajaxForSearch(url, type, dataType, sData=undefined) {
+    // console.log(url, type, dataType, sData);
+    // return;
+    // die("<script>console.log('Hola ajaxForSearch');</script>");
+    ajaxPromise(url, type, dataType, sData)
     .then(function(data) {
         console.log(data);
         $('.section-intro').empty();
@@ -15,18 +32,75 @@ function ajaxForSearch(url) {
 
         // Mejora para que cuando no hayan resultados en los filtros aplicados
         if (data == "error") {
-            $('<div></div>').appendTo('.container_listRealestates')
-                .html(`
-                    <h3>¡No se encontaron resultados con los filtros aplicados!</h3>`
-                )
-        } else {
             $('<div></div>').attr('class', 'intro-single2').appendTo('.section-intro')
                 .html(`
                     <div class='container'>
                         <div class='row'>
                             <div class='col-md-12 col-lg-8'>
                                 <div class='title-single-box'>
-                                    <h1 class='title-single'>Nuestros Inmuebles</h1>
+                                    <h1 class='title-single'>Sin resultados</h1>
+                                    <span class='color-text-a'>¡No se encontaron resultados con los filtros aplicados!</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`
+                )
+        } else {
+            // Título personalizado del list
+            var title_filter = "";
+            var validate_filters = localStorage.getItem('filters_home') || undefined;
+
+            if (validate_filters != undefined){
+                localStorage.removeItem('filters_home'); // eliminamos de localStorage filters_home para no interferir en próximas busquedas
+                var filters = JSON.parse(validate_filters); // deserializamos para convertir el string otra vez en un array
+                if (filters[0]['type']) {
+                    switch (data[0].name_type) {
+                        case 'Habitación':    
+                            title_filter = "Habitaciones";
+                            break;
+                        case 'Garaje':    
+                            title_filter = "Garajes";
+                            break;
+                        case 'Trastero':    
+                            title_filter = "Trasteros";
+                            break;
+                        case 'Oficina':    
+                            title_filter = "Oficinas";
+                            break;
+                        case 'Local o nave':    
+                            title_filter = "Locales o naves";
+                            break;
+                        case 'Terreno':    
+                            title_filter = "Terrenos";
+                            break;
+                        case 'Edificio':    
+                            title_filter = "Edificios";
+                            break;
+                        default:    
+                            title_filter = "Viviendas";
+                            break;
+                    }
+                }
+                if (filters[0]['category']) {
+                    title_filter = data[0].name_cat;
+                }
+                if (filters[0]['operation']) {
+                    title_filter = data[0].name_op;
+                }
+                if (filters[0]['city']) {
+                    title_filter = data[0].name_city;
+                }
+            } else {
+                title_filter = "Nuestros Inmuebles";
+            }
+
+            $('<div></div>').attr('class', 'intro-single2').appendTo('.section-intro')
+                .html(`
+                    <div class='container'>
+                        <div class='row'>
+                            <div class='col-md-12 col-lg-8'>
+                                <div class='title-single-box'>
+                                    <h1 class='title-single'>${title_filter}</h1>
                                     <span class='color-text-a'>Tu Selección</span>
                                 </div>
                             </div>
@@ -43,6 +117,8 @@ function ajaxForSearch(url) {
                         </div>
                     </div>`
                 )
+
+            // Bucle para cada una de las viviendas    
             for (row in data) {
                 $('<div></div>').attr('class', 'containerList').attr('id', data[row].id_realestate).appendTo('.container_listRealestates')
                     .html(`
@@ -61,14 +137,41 @@ function ajaxForSearch(url) {
                             <div class='listInfo_trading'>
                                 <span class='listInfo_price'>${new Intl.NumberFormat("es-ES").format(data[row].price)} €&nbsp;&nbsp;|&nbsp;&nbsp;${data[row].name_op}</span>
                             </div>
-                            <p class='listInfo_specs'>
-                                ${data[row].area} m<sup>2</sup>
-                                ${(data[row].rooms != 0 ? (`&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;${data[row].rooms} habitaciones`) : "")}
-                                ${(data[row].bathrooms != 0 ? (`&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;${data[row].bathrooms} baños`) : "")}
-                            </p>
+                            <div class='listInfo_specs'>
+                                <div class="listInfoSpecs_contents">
+                                    <img src='view/img/specs/area.png' class='listInfoSpecs-img'>
+                                    <span class='listInfoSpecs-txt'>
+                                        ${data[row].area} m<sup>2</sup>
+                                    </span>
+                                </div>
+                                ${(data[row].rooms != 0 ? (`
+                                    <div class="listInfoSpecs_contents">
+                                        <img src='view/img/specs/rooms.png' class='listInfoSpecs-img'>
+                                        <span class='listInfoSpecs-txt'>
+                                        ${data[row].rooms} habitaciones
+                                        </span>
+                                    </div>
+                                `) : "")}
+                                ${(data[row].bathrooms != 0 ? (`
+                                    <div class="listInfoSpecs_contents">
+                                        <img src='view/img/specs/bathrooms.png' class='listInfoSpecs-img'>
+                                        <span class='listInfoSpecs-txt'>
+                                            ${data[row].bathrooms} baños
+                                        </span>
+                                    </div>
+                                `) : "")}
+                                ${(data[row].floor != 0 ? (`
+                                    <div class="listInfoSpecs_contents">
+                                        <img src='view/img/specs/floor.png' class='listInfoSpecs-img'>
+                                        <span class='listInfoSpecs-txt'>
+                                            ${data[row].floor}
+                                        </span>
+                                    </div>
+                                `) : "")}
+                            </div>
                             <p class='listInfo_desc'>${data[row].description}</p>
                         </div>`
-                        );
+                    );
 
                 // Recorremos las imágenes de cada vivienda y las agregamos al carrusel
                 // Para apuntar al div donde creamos los slides, indicamos div del carrousel + div slide
@@ -97,7 +200,20 @@ function ajaxForSearch(url) {
             }
         }
     }).catch(function() {
-        window.location.href='index.php?page=503';
+        localStorage.removeItem('filters_home'); // eliminamos de localStorage filters_home para no interferir en próximas busquedas
+        $('<div></div>').attr('class', 'intro-single2').appendTo('.section-intro')
+            .html(`
+                <div class='container'>
+                    <div class='row'>
+                        <div class='col-md-12 col-lg-8'>
+                            <div class='title-single-box'>
+                                <h1 class='title-single'>Sin resultados</h1>
+                                <span class='color-text-a'>¡No se encontaron resultados con los filtros aplicados!</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>`
+            )
     });
 }
 
@@ -119,6 +235,13 @@ function loadDetails(id_realestate) {
         $('.container_detailsRealestate').empty();
 
         // Carousel container
+        $('<div></div>').attr('class', 'swiper').attr('id', 'details-carousel').appendTo('.section-detailsCarousel')
+            .html(`
+                <div class='container_detailsCarousel swiper-wrapper'></div>
+                <div class='swiper-button-prev'></div>
+                <div class='swiper-button-next'></div>
+                <div class='details-carousel-pagination carousel-pagination'></div>`
+            )
         for (row in data[1][0]) {
             $('<div></div>').attr('class', 'carousel-item-c swiper-slide').attr('id', data[1][0][row].id_img_re).appendTo('#details-carousel .container_detailsCarousel')
                 .html(`
@@ -191,6 +314,13 @@ function loadDetails(id_realestate) {
                     <span class='detailsInfoSpecs-txt'>${data[0].bathrooms} baños</span>`
                 )
         }
+        if (data[0].floor != 0){
+            $('<div></div>').attr('class', 'detailsInfoSpecs_contents').appendTo('.detailsInfo_specs')
+                .html(`
+                    <img src='view/img/specs/floor.png' class='detailsInfoSpecs-img'>
+                    <span class='detailsInfoSpecs-txt'>${data[0].floor}</span>`
+                )
+        }
         
         // Extras container
         $('<div></div>').attr('class', 'detailsInfo_extras').appendTo('.container_detailsRealestate')
@@ -205,6 +335,7 @@ function loadDetails(id_realestate) {
                     <span class='detailsInfoExtras-txt'>${data[2][0][row].name_extras}</span>`
                 )
         }
+
     }).catch(function() {
         window.location.href='index.php?page=503';
     });
