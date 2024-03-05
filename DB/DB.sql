@@ -118,6 +118,7 @@ CREATE TABLE IF NOT EXISTS `city` (
   `id_city` int NOT NULL AUTO_INCREMENT,
   `name_city` varchar(25) COLLATE utf8mb4_es_trad_0900_ai_ci NOT NULL,
   `province` varchar(25) COLLATE utf8mb4_es_trad_0900_ai_ci NOT NULL,
+  `id_touristarea` int DEFAULT NULL,
   `img_city` varchar(100) COLLATE utf8mb4_es_trad_0900_ai_ci NOT NULL,
   PRIMARY KEY (`id_city`)
 ) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_es_trad_0900_ai_ci;
@@ -180,8 +181,84 @@ INSERT INTO `city` (`id_city`, `name_city`, `province`, `img_city`) VALUES
 (51, 'Ceuta', 'Ceuta', 'view/img/cities/ceuta.jpg'),
 (52, 'Melilla', 'Melilla', 'view/img/cities/melilla.jpg');
 
+INSERT INTO `city` (`id_city`, `name_city`, `province`, `id_touristarea`, `img_city`) VALUES
+(53, 'Canet de Mar', 'Barcelona', 1, 'view/img/cities/canet_de_mar.jpg'),
+(54, 'Castelldefels', 'Barcelona', 1, 'view/img/cities/castelldefels.jpg'),
+(55, 'Sitges', 'Barcelona', 1, 'view/img/cities/sitges.jpg'),
+(56, 'Altea', 'Alicante', 2, 'view/img/cities/altea.jpg'),
+(57, 'Benidorm', 'Alicante', 2, 'view/img/cities/benidorm.jpg'),
+(58, 'Torrevieja', 'Alicante', 2, 'view/img/cities/torrevieja.jpg'),
+(59, 'Lloret de Mar', 'Girona', 3, 'view/img/cities/lloret_de_mar.jpg'),
+(60, 'Águilas', 'Murcia', 4, 'view/img/cities/aguilas.jpg'),
+(61, 'Cartagena', 'Murcia', 4, 'view/img/cities/cartagena.jpg'),
+(62, 'Muros', 'A Coruña', 5, 'view/img/cities/muros.jpg'),
+(63, 'Muxía', 'A Coruña', 5, 'view/img/cities/muxia.jpg'),
+(64, 'Roquetas de Mar', 'Almería', 6, 'view/img/cities/roquetas_de_mar.jpg'),
+(65, 'San Vicente de la Barquera', 'Cantabria', 7, 'view/img/cities/san_vicente_de_la_barquera.jpg'),
+(66, 'Oropesa del Mar', 'Castellón', 8, 'view/img/cities/oropesa_del_mar.jpg'),
+(67, 'Peñíscola', 'Castellón', 8, 'view/img/cities/penyiscola.jpg'),
+(68, 'Vinarós', 'Castellón', 8, 'view/img/cities/vinaros.jpg'),
+(69, 'El Puerto de Santa María', 'Cádiz', 9, 'view/img/cities/el_puerto_de_santa_maria.jpg'),
+(70, 'Isla Cristina', 'Huelva', 9, 'view/img/cities/isla_cristina.jpg'),
+(71, 'Gandía', 'Valencia', 10, 'view/img/cities/gandia.jpg'),
+(72, 'Estepona', 'Málaga', 11, 'view/img/cities/estepona.jpg'),
+(73, 'Marbella', 'Málaga', 11, 'view/img/cities/marbella.jpg'),
+(74, 'Torremolinos', 'Málaga', 11, 'view/img/cities/torremolinos.jpg'),
+(75, 'Cambrils', 'Tarragona', 12, 'view/img/cities/cambrils.jpg'),
+(76, 'Salou', 'Tarragona', 12, 'view/img/cities/salou.jpg'),
+(77, 'Almuñecar', 'Granada', 13, 'view/img/cities/almuñecar.jpg'),
+(78, 'Motril', 'Granada', 13, 'view/img/cities/motril.jpg'),
+(79, 'Hondarríbia', 'Gipuzkoa', 14, 'view/img/cities/hondarribia.jpg'),
+(80, 'Gijón', 'Asturias', 15, 'view/img/cities/gijon.jpg'),
+(81, 'Ribadesella', 'Asturias', 15, 'view/img/cities/ribadesella.jpg'),
+(82, 'Ribadeo', 'Lugo', 16, 'view/img/cities/ribadeo.jpg'),
+(83, 'Viveiro', 'Lugo', 16, 'view/img/cities/viveiro.jpg'),
+(84, 'Ferrol', 'A Coruña', 17, 'view/img/cities/ferrol.jpg'),
+(85, 'Sanxenxo', 'Pontevedra', 18, 'view/img/cities/sanxenxo.jpg'),
+(86, 'Vigo', 'Pontevedra', 18, 'view/img/cities/vigo.jpg');
+
+
+
+
 -- --------------------------------------------------------
 
+--
+-- Estructura de tabla para la tabla `tourist_area`
+--
+
+DROP TABLE IF EXISTS `tourist_area`;
+CREATE TABLE IF NOT EXISTS `tourist_area` (
+  `id_touristarea` int NOT NULL AUTO_INCREMENT,
+  `name_touristarea` varchar(25) COLLATE utf8mb4_es_trad_0900_ai_ci NOT NULL,
+  `img_touristarea` varchar(100) COLLATE utf8mb4_es_trad_0900_ai_ci NOT NULL,
+  PRIMARY KEY (`id_touristarea`)
+) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_es_trad_0900_ai_ci;
+
+--
+-- Volcado de datos para la tabla `city`
+--
+
+INSERT INTO `tourist_area` (`id_touristarea`, `name_touristarea`, `img_touristarea`) VALUES
+(1, 'Costa Barcelona', 'view/img/tourist_areas/costa_barcelona.jpg'),
+(2, 'Costa Blanca', 'view/img/tourist_areas/costa_blanca.jpg'),
+(3, 'Costa Brava', 'view/img/tourist_areas/costa_brava.jpg'),
+(4, 'Costa Cálida', 'view/img/tourist_areas/costa_calida.jpg'),
+(5, 'Costa da Morte', 'view/img/tourist_areas/costa_da_morte.jpg'),
+(6, 'Costa de Almería', 'view/img/tourist_areas/costa_almeria.jpg'),
+(7, 'Costa de Cantabria', 'view/img/tourist_areas/costa_cantabria.jpg'),
+(8, 'Costa de Castellón', 'view/img/tourist_areas/costa_castellon.jpg'),
+(9, 'Costa de la Luz', 'view/img/tourist_areas/costa_de_la_luz.jpg'),
+(10, 'Costa de Valencia', 'view/img/tourist_areas/costa_valencia.jpg'),
+(11, 'Costa del Sol', 'view/img/tourist_areas/costa_del_sol.jpg'),
+(12, 'Costa Dorada', 'view/img/tourist_areas/costa_dorada.jpg'),
+(13, 'Costa Tropical', 'view/img/tourist_areas/costa_tropical.jpg'),
+(14, 'Costa Vasca', 'view/img/tourist_areas/costa_vasca.jpg'),
+(15, 'Costa Verde', 'view/img/tourist_areas/costa_verde.jpg'),
+(16, 'Mariña Lucense', 'view/img/tourist_areas/marinya_lucense.jpg'),
+(17, 'Rías Altas', 'view/img/tourist_areas/rias_altas.jpg'),
+(18, 'Rías Baixas', 'view/img/tourist_areas/rias_baixas.jpg');
+
+-- --------------------------------------------------------
 --
 -- Estructura de tabla para la tabla `exceptions`
 --
@@ -471,6 +548,8 @@ INSERT INTO `type` (`id_type`, `name_type`, `subtype`, `img_type`) VALUES
 (17, 'Casa adosada', 'Casa', 'view/img/types/casa_adosada.jpg'),
 (18, 'Finca rústica', 'Casa', 'view/img/types/finca_rustica.jpg');
 
+-- --------------------------------------------------------
+
 --
 -- Restricciones para tablas volcadas
 --
@@ -536,6 +615,13 @@ ALTER TABLE `real_estate`
 
 ALTER TABLE `real_estate`
   DROP FOREIGN KEY `real_estate_ibfk_2`;
+
+--
+-- Filtros para la tabla `city`
+--
+
+ALTER TABLE `city`
+	ADD CONSTRAINT `city_ibfk_1` FOREIGN KEY (`id_touristarea`) REFERENCES `tourist_area` (`id_touristarea`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

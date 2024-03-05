@@ -1,3 +1,58 @@
+function carouselTouristcat() {
+    //die("<script>console.log('Hola loadCategories');</script>");
+    ajaxPromise('module/home/controller/controller_home.php?op=carouselTouristcat','GET', 'JSON')
+    .then(function(data) {
+        console.log(data);
+        for (row in data) {
+            $('<div></div>').attr('class', 'touristcatSlide carousel-item-c swiper-slide').attr('id', data[row].id_touristcat).appendTo('#touristcat-carousel .containerTouristcat')
+                .html(`
+                    <div class='card-box-b card-shadow news-box'>
+                        <div class='img-box-b'>
+                            <img src='${data[row].img_touristcat}' alt='' class='img-b img-fluid'>
+                        </div>
+                        <div class='card-overlay'>
+                            <div class='card-header-e touristcat_map_overlay_cont'>
+                                <div class='full_width'>
+                                    <img src='${data[row].map_touristcat}' alt='' class='touristcat_map'>
+                                </div>
+                                <div class='full_width'>
+                                    <span class='title-1'>
+                                    ${data[row].name_touristcat}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`
+                )     
+        }
+
+        new Swiper('#touristcat-carousel', {
+            speed: 600,
+            loop: true,
+            autoplay: {
+                delay: 5000,
+                disableOnInteraction: false
+            },
+            slidesPerView: 'auto',
+            //slidesPerGroup: 2,
+            //initialSlide: 2,
+            pagination: {
+                el: '.touristcat-carousel-pagination',
+                type: 'bullets',
+                clickable: true
+            },
+            breakpoints: {
+                320: {slidesPerView: 1,},
+                500: {slidesPerView: 2,},
+                1000: {slidesPerView: 3,},
+                1500: {slidesPerView: 4,}
+            }
+        });
+    }).catch(function() {
+        window.location.href='index.php?page=503';
+    });
+}
+
 function carouselTypes() {
     //die("<script>console.log('Hola loadCategories');</script>");
     ajaxPromise('module/home/controller/controller_home.php?op=carouselType','GET', 'JSON')
@@ -12,7 +67,7 @@ function carouselTypes() {
                         <div class='card-overlay'>
                             <div class='card-header-e'>
                                 <span class='title-1'>
-                                    <span>${data[row].name_type}</span>
+                                    ${data[row].name_type}
                                 </span>
                             </div>
                         </div>
@@ -36,10 +91,15 @@ function carouselTypes() {
                 clickable: true
             },
             breakpoints: {
-                320: {slidesPerView: 1,},
-                500: {slidesPerView: 2,},
-                1000: {slidesPerView: 3,},
-                1500: {slidesPerView: 4,}
+                320: {
+                    slidesPerView: 2,
+                    spaceBetween: 18
+                },
+            
+                1200: {
+                    slidesPerView: 4,
+                    spaceBetween: 18
+                }
             }
         });
     }).catch(function() {
@@ -61,7 +121,7 @@ function carouselCategories() {
                         <div class='card-overlay'>
                             <div class='card-header-e'>
                                 <span class='title-1'>
-                                    <span>${data[row].name_cat}</span>
+                                    ${data[row].name_cat}
                                 </span>
                             </div>
                         </div>
@@ -113,7 +173,7 @@ function carouselOperations() {
                         <div class='card-overlay'>
                             <div class='card-header-e'>
                                 <span class='title-1'>
-                                    <span>${data[row].name_op}</span>
+                                    ${data[row].name_op}
                                 </span>
                             </div>
                         </div>
@@ -165,7 +225,7 @@ function carouselCities() {
                         <div class='card-overlay'>
                             <div class='card-header-e'>
                                 <span class='title-3'>
-                                    <span>${data[row].name_city}</span>
+                                    ${data[row].name_city}
                                 </span>
                             </div>
                         </div>
@@ -286,6 +346,16 @@ function carouselRecomendations() {
 }
 
 function clicks(){
+    $(document).on("click",'div.touristcatSlide', function (){
+        var filters_home = []; // creamos array donde capturaremos todos los clicks del home
+        filters_home.push({"touristcat":[this.getAttribute('id')]}); // introducimos en la primera posición del array el id del div que indicamos (id_type)
+        localStorage.removeItem('filters_home') // borramos el contenido previo de localStorage
+        localStorage.setItem('filters_home', JSON.stringify(filters_home)); // seteamos localStorge serializando el array filters_home con JSON (pasamos de un array a un string)
+            setTimeout(function(){ 
+            window.location.href = 'index.php?page=controller_shop&op=list'; // cargaremos crtl_shop.js a través del controller_shop.php al darnos acceso a shop.html 
+            }, 500);  
+    });
+
     $(document).on("click",'div.typeSlide', function (){
         var filters_home = []; // creamos array donde capturaremos todos los clicks del home
         filters_home.push({"type":[this.getAttribute('id')]}); // introducimos en la primera posición del array el id del div que indicamos (id_type)
@@ -340,6 +410,7 @@ function clicks(){
 $(document).ready(function() {
     //$data = 'hola JS function';
     //die("<script>console.log('.json_encode( $data ).');</script>");
+    carouselTouristcat()
     carouselTypes();
     carouselCategories();
     carouselOperations();

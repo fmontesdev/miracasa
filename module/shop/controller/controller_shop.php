@@ -76,6 +76,93 @@ switch ($op) {
         }
         break;
 
+    case 'load_filters';
+        // echo json_encode($_POST['filters']);
+        // break;
+        try {
+            $daoshop_filters = new DAOShop();
+            $Dates_city = $daoshop_filters->select_filter_city();
+        } catch (Exception $e) {
+            echo json_encode("error");
+        }
+        // echo json_encode($Dates_realEstate);
+        // break
+        try {
+            $daoshop_filters = new DAOShop();
+            $Dates_cat = $daoshop_filters->select_filter_cat();
+        } catch (Exception $e) {
+            echo json_encode("error");
+        }
+        try {
+            $daoshop_filters = new DAOShop();
+            $Dates_type = $daoshop_filters->select_filter_type();
+        } catch (Exception $e) {
+            echo json_encode("error");
+        }
+        try {
+            $daoshop_filters = new DAOShop();
+            $Dates_type_flat = $daoshop_filters->select_filter_flat();
+        } catch (Exception $e) {
+            echo json_encode("error");
+        }
+        try {
+            $daoshop_filters = new DAOShop();
+            $Dates_type_house = $daoshop_filters->select_filter_house();
+        } catch (Exception $e) {
+            echo json_encode("error");
+        }
+        try {
+            $daoshop_filters = new DAOShop();
+            $Dates_op = $daoshop_filters->select_filter_op();
+        } catch (Exception $e) {
+            echo json_encode("error");
+        }
+        try {
+            $daoshop_filters = new DAOShop();
+            $Dates_extras = $daoshop_filters->select_filter_extras();
+        } catch (Exception $e) {
+            echo json_encode("error");
+        }
+        try {
+            $daoshop_filters = new DAOShop();
+            $Dates_touristcat = $daoshop_filters->select_filter_touristcat();
+        } catch (Exception $e) {
+            echo json_encode("error");
+        }
+
+        if (!empty($Dates_city || $Dates_cat || $Dates_type || $Dates_type_flat || $Dates_type_house || $Dates_op || $Dates_extras || $Dates_touristcat)) {
+            $rdo = array();
+            $rdo[0][] = $Dates_city;
+            $rdo[1][] = $Dates_cat;
+            $rdo[2][0] = $Dates_type;
+            $rdo[2][1] = $Dates_type_flat;
+            $rdo[2][2] = $Dates_type_house;
+            $rdo[3][] = $Dates_op;
+            $rdo[4][] = $Dates_extras;
+            $rdo[5][] = $Dates_touristcat;
+            echo json_encode($rdo);
+        } else {
+            echo json_encode("error");
+        }
+        break;
+
+    case 'filters_shop':
+        // echo json_encode($_POST['filters']);
+        // break;
+        try {
+            $daoshop_filters = new DAOShop();
+            $Dates_realEstates = $daoshop_filters->filters_shop($_POST['filters']);
+        } catch (Exception $e) {
+            echo json_encode("error");
+        }
+
+        if (!empty($Dates_realEstates)) {
+            echo json_encode($Dates_realEstates);
+        } else {
+            echo json_encode("error");
+        }
+        break;
+
     default:
         include("view/inc/error404.php");
         break;

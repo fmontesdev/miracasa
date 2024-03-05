@@ -9,6 +9,24 @@
             include ('module/home/view/home.html');
             break;
         
+        case 'carouselTouristcat';
+            //$data = 'hola CONTROLLER carouselType';
+            //die("<script>console.log('.json_encode( $data ) .');</script>");
+            try{
+                $daohome = new DAOHome();
+                $SelectTouristcat = $daohome->select_touristcat();
+            } catch(Exception $e){
+                echo json_encode("error");
+            }
+            
+            if(!empty($SelectTouristcat)){
+                echo json_encode($SelectTouristcat); 
+            }
+            else{
+                echo json_encode("error");
+            }
+            break;
+        
         case 'carouselType';
             //$data = 'hola CONTROLLER carouselType';
             //die("<script>console.log('.json_encode( $data ) .');</script>");

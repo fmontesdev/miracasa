@@ -1036,7 +1036,7 @@ a:hover {
 }
 
 .intro .intro-body .price-a {
-  color: #ffffff;
+  color: #ffffff77;
   padding: 1rem 1.5rem;
   border: 2px solid #2eca6a;
   border-radius: 50px;
@@ -1181,41 +1181,48 @@ a:hover {
 }
 
 @media (max-width: 767px) {
-  .intro-single2 {
+  .intro-single2, .intro-single3 {
     padding-top: 0rem;
   }
 }
 
-.intro-single2 .title-single-box {
+.intro-single2 .title-single-box,
+.intro-single3 .title-single-box {
   padding: 1rem 0 1rem 2rem;
 }
 
-.intro-single2 .title-single-box {
+.intro-single2 .title-single-box,
+.intro-single3 .title-single-box {
   border-left: 3px solid #2eca6a;
 }
 
-.intro-single2 .title-single-box .title-single {
+.intro-single2 .title-single-box .title-single,
+.intro-single3 .title-single-box .title-single {
   font-weight: 600;
   font-size: 2.2rem;
 }
 
 @media (min-width: 768px) {
-  .intro-single2 .title-single-box .title-single {
+  .intro-single2 .title-single-box .title-single,
+  .intro-single3 .title-single-box .title-single {
     font-size: 2.1rem;
   }
 }
 
 @media (min-width: 992px) {
-  .intro-single2 .title-single-box .title-single {
+  .intro-single2 .title-single-box .title-single,
+  .intro-single3 .title-single-box .title-single {
     font-size: 2.5rem;
   }
 }
 
-.intro-single2 .breadcrumb-box {
+.intro-single2 .breadcrumb-box,
+.intro-single3 .breadcrumb-box {
   padding: 1rem 0 0 0.5rem;
 }
 
-.intro-single2 .breadcrumb {
+.intro-single2 .breadcrumb,
+.intro-single3 .breadcrumb {
   background-color: transparent;
   padding-right: 0;
   padding-left: 0;
@@ -2341,6 +2348,10 @@ footer .credits {
 /*--------------------------------------------------------------
 # List Inmuebles
 --------------------------------------------------------------*/
+.section-listRealestates {
+  padding-top: 5rem;
+}
+
 .more_info {
 	cursor: pointer;
 }
@@ -2971,8 +2982,405 @@ footer .credits {
 }
 
 /*======================================
-Selection carousels
+Carousels home
 ======================================*/
-.typeSlide, .categorySlide, .operationSlide, .citySlide, .recomendationSlide {
+.touristcatSlide, .typeSlide, .categorySlide, .operationSlide, .citySlide, .recomendationSlide {
   cursor: pointer;
+}
+
+.title_mainCarousel {
+  background-color: #2eca6a;
+}
+
+.title_mainCarousel h2 {
+  margin: 0;
+  padding: 5px 0;
+  color: #fff;
+  font-weight: 500;
+  text-align: center;
+}
+
+.touristcat_map_overlay_cont {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.full_width {
+  width: 100%;
+  height: auto;
+}
+
+.touristcat_map {
+  width: 100px;
+  height: auto;
+}
+
+/*======================================
+Modal
+======================================*/
+.section-filters .container {
+  padding-left: 0;
+}
+.modal_fixed {
+  position: fixed;
+  top: 95px;
+  width: 100%;
+  height: auto;
+  padding-top: 42px;
+  padding-bottom: 12px;
+  background-color: #fff;
+  display: flex;
+  flex-wrap: wrap;
+  z-index: 2;
+}
+
+/* Modal container*/
+.modal {
+  visibility: hidden;
+  opacity: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  height: 100%;
+  -webkit-transition: all .2s;
+  transition: all .2s;
+}
+
+/* Modal container gets target and it is shown and background modal too*/
+.modal:target, .modal:target .modal-bg {
+  display: block;
+  z-index: 100;
+  opacity: 1;
+  visibility: visible; 
+}
+
+/* Background modal*/
+.modal-bg:active, .modal-bg:hover, .modal-bg:visited, .modal-bg:link {
+  text-decoration: none;
+  visibility: hidden;
+  opacity: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.5);
+  -webkit-transition: all .2s;
+  transition: all .2s;
+  cursor: default;
+}
+
+ /* Background modal overlaps to container*/
+ .modal:target .modal-bg {
+  z-index: 200; 
+}
+
+/* Modal content or body - Generic*/
+.modal-content {
+  position: relative;
+  width: 15%;
+  height: auto;
+  padding-bottom: 8px;
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+  z-index: 300;
+}
+
+/* Modales por filtro */
+#modal_all_filters .modal-content {
+  position: fixed;
+  top: 58%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 550px;
+  height: 580px;
+  overflow: auto; /* Si el contenido sobrepasa la altura especificada, aparece scroll */
+}
+
+#modal_city .modal-content {
+  top: 180px;
+  left: 40px;
+  height: 388px;
+  min-width: 250px;
+  overflow: auto;  /* Si el contenido sobrepasa la altura especificada, aparece scroll */
+}
+
+#modal_touristcat .modal-content {
+  top: 180px;
+  left: 210px;
+  height: 388px;
+  min-width: 250px;
+  overflow: auto;  /* Si el contenido sobrepasa la altura especificada, aparece scroll */
+}
+
+#modal_type .modal-content {
+  top: 180px;
+  left: 380px;
+  min-width: 400px;
+}
+
+#modal_op .modal-content {
+  top: 180px;
+  left: 550px;
+  min-width: 300px;
+}
+
+#modal_extras .modal-content {
+  top: 180px;
+  left: 720px;
+  min-width: 250px;
+}
+
+#modal_results .results {
+  font-size: 16px;
+  font-weight: 500;
+  color: #2ab760;
+}
+
+/* Contenedores botones */
+#modal_city, #modal_touristcat, #modal_type, #modal_op, #modal_extras, #modal_all_filters {
+  width: 170px;
+  height: 35px;
+  padding-right: 10px;
+  margin-bottom: 8px;
+}
+
+#modal_all_filters {
+  width: auto;
+  height: 35px;
+  padding-right: 10px;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+#modal_all_filters img {
+  width: 31px;
+}
+
+#modal_remove {
+  width: auto;
+  height: 35px;
+  padding-right: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+#modal_remove img {
+  width: 31px;
+}
+
+#modal_results {
+  width: auto;
+  height: 35px;
+  padding: 0 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #2eca6a;
+  border-radius: 18px;
+  background-color: #2eca6a17;
+}
+
+/* Botón */
+.modal-button {
+  width: 100%;
+  height: 100%;
+  border: 1px solid #2eca6a;
+  border-radius: 5px;
+  background-color: #fff;
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: -0.25px;
+  overflow: hidden; /* Oculta el contenido que se desborda */
+  text-overflow: ellipsis; /* Agrega puntos suspensivos (...) al texto desbordado */
+  white-space: nowrap; /* Evita que el texto se envuelva */
+}
+
+/* Títulos */
+.modal-title{
+  padding: 8px 15px 6px 15px;
+  margin-bottom: 7px;
+  border-bottom: 1px solid #cacaca;
+  display: flex;
+  align-items: center;
+}
+
+.modal-title span {
+  font-size: 16px;
+  font-weight: 500;
+  margin-right: auto;
+}
+
+.modal-title img {
+  width: 18px;
+  cursor: pointer;
+  display: flex;
+  margin-left: auto;
+}
+
+.filterAll-title_main {
+  padding: 13px 15px 11px 15px;
+  /* background-color: #f3f3f3; */
+}
+
+.filterAll-title {
+  width: 100%;
+  padding: 0 15px 4px 15px;
+}
+
+.filterAll-title_main span {
+  font-size: 18px;
+  font-weight: 600;
+  margin-right: auto;
+}
+
+.filterAll-title span {
+  font-size: 16px;
+  font-weight: 600;
+  margin-right: auto;
+}
+
+.filterAll-doubleTitle {
+  padding-bottom: 7px;
+}
+
+/* Contenedores inputs */
+.filter_container {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: left;
+  padding: 2px 15px;
+}
+
+.filter_container:hover {
+  background-color: #f3f3f3;
+}
+
+.filter_container label {
+  margin-left: 8px;
+}
+
+.filter_container input + label {
+  display: inline-block;
+  cursor: pointer;
+}
+
+.filter_container input:checked + label {
+  font-weight: 500;
+}
+
+.filterTypeCont_data {
+  width: 100%;
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+.filterTypeCont_col1 {
+  width: 50%;
+  padding-top: 3px;
+  padding-left: 15px;
+}
+
+.filterTypeCont_col2 {
+  width: 50%;
+  padding-top: 3px;
+}
+
+ul.filterTypeCont_general, ul.filterTypeCont_piso, ul.filterTypeCont_casa,
+ul.filterTypeAllCont_general, ul.filterTypeAllCont_piso, ul.filterTypeAllCont_casa {
+  padding-left: 0;
+  margin-bottom: 0;
+}
+
+.filterExtras_container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.filterAll_container_main .filterExtras_container .filter_container {
+  width: 50%;
+}
+
+/* Contenedor input Filter City - Filter Tourist Category */
+.filterCity_container .modal-title, .filterTouristcat_container .modal-title {
+  position: sticky;
+  top: 0;
+  background-color: #fff;
+  z-index: 1;
+}
+
+.filterCity_container input, .filterTouristcat_container input {
+  display: none;
+}
+
+.filterCity_container .filter_container:has(input:checked), .filterTouristcat_container .filter_container:has(input:checked) {
+  /* background-color: #05d85685; */
+  background-color: #d8d8d8;
+  font-weight: 500;
+  color: #fff;
+}
+
+/* Contenedores Filter All */
+.filterAll_container {
+  border-top: 1px solid #cacaca;
+  padding: 15px 0;
+}
+
+.filterTypeAll_container, .filterCityTouristcatAll_container, .filterCatOpAll_container, .filterPrice_container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.filterExtras_container {
+  padding-bottom: 8px;
+}
+
+.filterAll_container select {
+  height: 35px;
+  width: 243px;
+  margin: 6px 0 7px 16px;
+  border-radius: 5px;
+}
+
+/* Botones rooms/bathrooms */
+#filter_rooms_cont, #filter_bathrooms_cont {
+  display: flex;
+  justify-content: center;
+  padding: 6px 0;
+}
+
+.filter_button {
+  width: 94px;
+  height: 35px;
+  margin-right: 5px;
+  border: 1px solid #cacaca;
+  border-radius: 5px;
+  background-color: #fff;
+  font-size: 15px;
+  font-weight: 400;
+  /* transition: 200ms; */
+}
+
+.filter_button:hover {
+  background-color: #f8f8f8;
+}
+
+.filter_button:active {
+  border: 1px solid #2eca6a;
+  background-color: #2eca6a17;
+  color: #2ab760;
 }

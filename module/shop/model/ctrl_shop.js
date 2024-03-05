@@ -1,20 +1,25 @@
 function loadAllRealestates() {
     var validate_filtersHome = localStorage.getItem('filters_home') || undefined; // conseguimos de localStorage filters_home, sinó existe undefined
     var validate_filtersHome_details = localStorage.getItem('filtersHome_details') || undefined; // conseguimos de localStorage filtersHome_details, sinó existe undefined
+    var validate_filtersShop = localStorage.getItem('filters_shop') || undefined; // conseguimos de localStorage filters_shop, sinó existe undefined
     
     if (validate_filtersHome != undefined) {
-        var filters = JSON.parse(validate_filtersHome); // deserializamos para convertir el string otra vez en un array
-        console.log(filters);
-        ajaxForSearch('module/shop/controller/controller_shop.php?op=filters_home', 'POST', 'JSON', { 'filters': filters });
-    } else {
-        ajaxForSearch('module/shop/controller/controller_shop.php?op=all_realestates', 'GET', 'JSON');
-    }
-    
-    if (validate_filtersHome_details != undefined) {
+        var filtersHome = JSON.parse(validate_filtersHome); // deserializamos para convertir el string otra vez en un array
+        localStorage.removeItem('filters_home');
+        console.log(filtersHome);
+        ajaxForSearch('module/shop/controller/controller_shop.php?op=filters_home', 'POST', 'JSON', { 'filters': filtersHome });
+    } else if (validate_filtersHome_details != undefined) {
         localStorage.removeItem('filtersHome_details'); // eliminamos de localStorage id_recomendation para no interferir en próximas busquedas
         var id_details = JSON.parse(validate_filtersHome_details); // deserializamos para convertir el string otra vez en un array
         console.log(id_details);
         loadDetails(id_details[0]['recomendation'][0]);
+    } else if (validate_filtersShop != undefined) {
+        // localStorage.removeItem('filters_shop'); // eliminamos de localStorage filters_shop para no interferir en próximas busquedas
+        var filtersShop = JSON.parse(validate_filtersShop); // deserializamos para convertir el string otra vez en un array
+        console.log(filtersShop);
+        ajaxForSearch('module/shop/controller/controller_shop.php?op=filters_shop', 'POST', 'JSON', { 'filters': filtersShop });
+    } else {
+        ajaxForSearch('module/shop/controller/controller_shop.php?op=all_realestates', 'GET', 'JSON');
     }
 }
 
@@ -25,9 +30,13 @@ function ajaxForSearch(url, type, dataType, sData=undefined) {
     ajaxPromise(url, type, dataType, sData)
     .then(function(data) {
         console.log(data);
+
+        localStorage.setItem('results', data.length);
+            
+        // return;
         $('.section-intro').empty();
         $('.container_listRealestates').empty(); // antes de iniciar borramos el contenedor de list
-        $('.container_detailsCarousel').empty(); // antes de iniciar borramos el contenedor de details
+        $('.section-detailsCarousel').empty(); // antes de iniciar borramos el contenedor de details
         $('.container_detailsRealestate').empty();
 
         // Mejora para que cuando no hayan resultados en los filtros aplicados
@@ -47,76 +56,76 @@ function ajaxForSearch(url, type, dataType, sData=undefined) {
                 )
         } else {
             // Título personalizado del list
-            var title_filter = "";
-            var validate_filters = localStorage.getItem('filters_home') || undefined;
+            // var title_filter = "";
+            // var validate_filters = localStorage.getItem('filters_home') || undefined;
 
-            if (validate_filters != undefined){
-                localStorage.removeItem('filters_home'); // eliminamos de localStorage filters_home para no interferir en próximas busquedas
-                var filters = JSON.parse(validate_filters); // deserializamos para convertir el string otra vez en un array
-                if (filters[0]['type']) {
-                    switch (data[0].name_type) {
-                        case 'Habitación':    
-                            title_filter = "Habitaciones";
-                            break;
-                        case 'Garaje':    
-                            title_filter = "Garajes";
-                            break;
-                        case 'Trastero':    
-                            title_filter = "Trasteros";
-                            break;
-                        case 'Oficina':    
-                            title_filter = "Oficinas";
-                            break;
-                        case 'Local o nave':    
-                            title_filter = "Locales o naves";
-                            break;
-                        case 'Terreno':    
-                            title_filter = "Terrenos";
-                            break;
-                        case 'Edificio':    
-                            title_filter = "Edificios";
-                            break;
-                        default:    
-                            title_filter = "Viviendas";
-                            break;
-                    }
-                }
-                if (filters[0]['category']) {
-                    title_filter = data[0].name_cat;
-                }
-                if (filters[0]['operation']) {
-                    title_filter = data[0].name_op;
-                }
-                if (filters[0]['city']) {
-                    title_filter = data[0].name_city;
-                }
-            } else {
-                title_filter = "Nuestros Inmuebles";
-            }
+            // if (validate_filters != undefined){
+            //     localStorage.removeItem('filters_home'); // eliminamos de localStorage filters_home para no interferir en próximas busquedas
+            //     var filters = JSON.parse(validate_filters); // deserializamos para convertir el string otra vez en un array
+            //     if (filters[0]['type']) {
+            //         switch (data[0].name_type) {
+            //             case 'Habitación':    
+            //                 title_filter = "Habitaciones";
+            //                 break;
+            //             case 'Garaje':    
+            //                 title_filter = "Garajes";
+            //                 break;
+            //             case 'Trastero':    
+            //                 title_filter = "Trasteros";
+            //                 break;
+            //             case 'Oficina':    
+            //                 title_filter = "Oficinas";
+            //                 break;
+            //             case 'Local o nave':    
+            //                 title_filter = "Locales o naves";
+            //                 break;
+            //             case 'Terreno':    
+            //                 title_filter = "Terrenos";
+            //                 break;
+            //             case 'Edificio':    
+            //                 title_filter = "Edificios";
+            //                 break;
+            //             default:    
+            //                 title_filter = "Viviendas";
+            //                 break;
+            //         }
+            //     }
+            //     if (filters[0]['category']) {
+            //         title_filter = data[0].name_cat;
+            //     }
+            //     if (filters[0]['operation']) {
+            //         title_filter = data[0].name_op;
+            //     }
+            //     if (filters[0]['city']) {
+            //         title_filter = data[0].name_city;
+            //     }
+            // } else {
+            //     title_filter = "Nuestros Inmuebles";
+            // }
 
-            $('<div></div>').attr('class', 'intro-single2').appendTo('.section-intro')
-                .html(`
-                    <div class='container'>
-                        <div class='row'>
-                            <div class='col-md-12 col-lg-8'>
-                                <div class='title-single-box'>
-                                    <h1 class='title-single'>${title_filter}</h1>
-                                    <span class='color-text-a'>Tu Selección</span>
-                                </div>
-                            </div>
-                            <div class='col-md-12 col-lg-4'>
-                                <nav aria-label='breadcrumb' class='breadcrumb-box d-flex justify-content-lg-end'>
-                                    <ol class='breadcrumb'>
-                                        <li class='breadcrumb-item'>
-                                            <a href='index.php?page=home'>Inicio</a>
-                                        </li>
-                                        <li class='breadcrumb-item active' aria-current='page'>Inmuebles</li>
-                                    </ol>
-                                </nav>
-                            </div>
-                        </div>
-                    </div>`
-                )
+            // $('<div></div>').attr('class', 'intro-single2').appendTo('.section-intro')
+            //     .html(`
+            //         <div class='container'>
+            //             <div class='row'>
+            //                 <div class='col-md-12 col-lg-8'>
+            //                     <div class='title-single-box'>
+            //                         <h1 class='title-single'>${title_filter}</h1>
+            //                         <span class='color-text-a'>Tu Selección</span>
+            //                     </div>
+            //                 </div>
+            //                 <div class='col-md-12 col-lg-4'>
+            //                     <nav aria-label='breadcrumb' class='breadcrumb-box d-flex justify-content-lg-end'>
+            //                         <ol class='breadcrumb'>
+            //                             <li class='breadcrumb-item'>
+            //                                 <a href='index.php?page=home'>Inicio</a>
+            //                             </li>
+            //                             <li class='breadcrumb-item active' aria-current='page'>Inmuebles</li>
+            //                         </ol>
+            //                     </nav>
+            //                 </div>
+            //             </div>
+            //         </div>`
+            //     )
 
             // Bucle para cada una de las viviendas    
             for (row in data) {
@@ -200,8 +209,9 @@ function ajaxForSearch(url, type, dataType, sData=undefined) {
             }
         }
     }).catch(function() {
+        localStorage.setItem('results', 0);
         localStorage.removeItem('filters_home'); // eliminamos de localStorage filters_home para no interferir en próximas busquedas
-        $('<div></div>').attr('class', 'intro-single2').appendTo('.section-intro')
+        $('<div></div>').attr('class', 'intro-single3').appendTo('.section-catch')
             .html(`
                 <div class='container'>
                     <div class='row'>
@@ -217,7 +227,6 @@ function ajaxForSearch(url, type, dataType, sData=undefined) {
     });
 }
 
-
 function clicks() {
     $(document).on("click", ".more_info", function() {
         var id_realestate = this.getAttribute('id');
@@ -231,8 +240,9 @@ function loadDetails(id_realestate) {
         console.log(data);
         $('.section-intro').empty();
         $('.container_listRealestates').empty();
-        $('.container_detailsCarousel').empty();
+        $('.section-detailsCarousel').empty();
         $('.container_detailsRealestate').empty();
+        $('.section-filters').empty();
 
         // Carousel container
         $('<div></div>').attr('class', 'swiper').attr('id', 'details-carousel').appendTo('.section-detailsCarousel')
@@ -341,8 +351,677 @@ function loadDetails(id_realestate) {
     });
 }
 
+function loadFilters() {
+    ajaxPromise('module/shop/controller/controller_shop.php?op=load_filters','GET', 'JSON')
+    .then(function(data) {
+        console.log(data);
+        $('<div></div>').attr('class', 'container').appendTo('.section-filters')
+        .html(`
+            <div class='modal_fixed container'>
+                <div id='modal_all_filters'>
+                    <a href='#modalAllFilters' class='open'>
+                        <img src='view/img/icons/filtrar.png'>
+                    </a>
+                    <div id='modalAllFilters' class='modal container'>
+                        <a href='#' class='modal-bg container'></a>
+                        <div class='modal-content filterAll_container_main'>
+                            <div class='filterAll-title_main'>
+                                <span>Filtros</span>
+                            </div>
+
+                            <div class='filterCityTouristcatAll_container filterAll_container'>
+                                <div class='filterCityAll_container'>
+                                    <div class='filterAll-title'>
+                                        <span>Ciudad</span>
+                                    </div>
+                                    <select id='filter_city_select' name='filter_city' class='filter_city'>
+                                        <option hidden selected>Selecciona una ciudad</option>
+                                    </select>
+                                </div>
+
+                                <div class='filterTouristcatAll_container'>
+                                    <div class='filterAll-title'>
+                                        <span>Zona turística</span>
+                                    </div>
+                                    <select id='filter_touristcat_select' name='filter_touristcat' class='filter_touristcat'>
+                                        <option hidden selected>Selecciona zona turística</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class='filterTypeAll_container filterAll_container'>
+                                <div class='filterAll-title'>
+                                    <span>Tipo de inmuebles</span>
+                                </div>
+                                <div class='filterTypeCont_data'>
+                                    <div class='filterTypeCont_col1'>
+                                        <label><em>General</em></label>
+                                        <ul class='filterTypeAllCont_general'></ul>
+                                    </div>
+
+                                    <div class='filterTypeCont_col2'>
+                                        <label><em>Piso</em></label>
+                                        <ul class='filterTypeAllCont_piso'></ul>
+                                        <label><em>Casa</em></label>
+                                        <ul class='filterTypeAllCont_casa'></ul>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class='filterCatOpAll_container filterAll_container'>
+                                <div class='filterCatAll_container'>
+                                    <div class='filterAll-title'>
+                                        <span>Categoria</span>
+                                    </div>
+                                    <select id='filter_cat_select' name='filter_cat' class='filter_cat'>
+                                        <option hidden selected>Selecciona una categoria</option>
+                                    </select>
+                                </div>
+
+                                <div class='filterOpAll_container'>
+                                    <div class='filterAll-title'>
+                                        <span>Transacción</span>
+                                    </div>
+                                    <select id='filter_op_select' name='filter_op' class='filter_op'>
+                                        <option hidden selected>Selecciona transacción</option>
+                                    </select>
+                                </div>
+                            </div>
+
+
+
+                            <div class='filterPrice_container filterAll_container'>
+                                <div class='filterAll-title filterAll-doubleTitle'>
+                                    <span>Precio</span>
+                                </div>
+
+                                <div class='filterPriceSince_container'>
+                                    <div class='filterAll-title'>
+                                        <span>Mínimo</span>
+                                    </div>
+                                    <select id='filter_priceSince_select' name='filter_priceSince' class='filter_priceSince'>
+                                        <option hidden selected>Indiferente</option>
+                                        <option value='50000'>50.000 €</option>
+                                        <option value='75000'>75.000 €</option>
+                                        <option value='100000'>100.000 €</option>
+                                        <option value='125000'>125.000 €</option>
+                                        <option value='150000'>150.000 €</option>
+                                        <option value='200000'>200.000 €</option>
+                                        <option value='250000'>250.000 €</option>
+                                        <option value='300000'>300.000 €</option>
+                                        <option value='400000'>400.000 €</option>
+                                        <option value='500000'>500.000 €</option>
+                                        <option value='750000'>750.000 €</option>
+                                        <option value='1000000'>1.000.000 €</option>
+                                        <option value='1500000'>1.500.000 €</option>
+                                        <option value='2000000'>2.000.000 €</option>
+                                    </select>
+                                </div>
+
+                                <div class='filterPriceTo_container'>
+                                    <div class='filterAll-title'>
+                                        <span>Máximo</span>
+                                    </div>
+                                    <select id='filter_priceTo_select' name='filter_priceTo' class='filter_priceTo'>
+                                        <option hidden selected>Indiferente</option>
+                                        <option value='50000'>50.000 €</option>
+                                        <option value='75000'>75.000 €</option>
+                                        <option value='100000'>100.000 €</option>
+                                        <option value='125000'>125.000 €</option>
+                                        <option value='150000'>150.000 €</option>
+                                        <option value='200000'>200.000 €</option>
+                                        <option value='250000'>250.000 €</option>
+                                        <option value='300000'>300.000 €</option>
+                                        <option value='400000'>400.000 €</option>
+                                        <option value='500000'>500.000 €</option>
+                                        <option value='750000'>750.000 €</option>
+                                        <option value='1000000'>1.000.000 €</option>
+                                        <option value='1500000'>1.500.000 €</option>
+                                        <option value='2000000'>2.000.000 €</option>
+                                    </select>
+                                </div>
+                            </div>  
+
+                            <div class='filterRooms_container filterAll_container'>
+                                <div class='filterAll-title'>
+                                    <span>Habitaciones</span>
+                                </div>
+                                <div id='filter_rooms_cont'>
+                                    <input type='button' name='filterRooms_buttons' id='filterRooms_buttons' class='filter_button' value='1'>
+                                    <input type='button' name='filterRooms_buttons' id='filterRooms_buttons' class='filter_button' value='2'>
+                                    <input type='button' name='filterRooms_buttons' id='filterRooms_buttons' class='filter_button' value='3'>
+                                    <input type='button' name='filterRooms_buttons' id='filterRooms_buttons' class='filter_button' value='4'>
+                                    <input type='button' name='filterRooms_buttons' id='filterRooms_buttons' class='filter_button' value='+5'>
+                                </div>
+
+                            </div>
+
+                            <div class='filterBathrooms_container filterAll_container'>
+                                <div class='filterAll-title'>
+                                    <span>Baños</span>
+                                </div>
+                                <div id='filter_bathrooms_cont'>
+                                    <input type='button' name='filterBathrooms_buttons' id='filterBathrooms_buttons' class='filter_button' value='1'>
+                                    <input type='button' name='filterBathrooms_buttons' id='filterBathrooms_buttons' class='filter_button' value='2'>
+                                    <input type='button' name='filterBathrooms_buttons' id='filterBathrooms_buttons' class='filter_button' value='3'>
+                                    <input type='button' name='filterBathrooms_buttons' id='filterBathrooms_buttons' class='filter_button' value='4'>
+                                    <input type='button' name='filterBathrooms_buttons' id='filterBathrooms_buttons' class='filter_button' value='+5'>
+                                </div>
+                            </div>
+
+                            <div class='filterExtras_container filterAll_container'>
+                                <div class='filterAll-title'>
+                                    <span>Extras</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id='modal_city'>
+                    <a href='#modalCity' class='open'>
+                        <button id='city_button' class='modal-button'>Ciudad</button>
+                    </a>
+                    <div id='modalCity' class='modal container'>
+                        <a href='#' class='modal-bg container'></a>
+                        <div class='modal-content filterCity_container'>
+                            <div class='modal-title'>
+                                <span>Ciudad</span>
+                                <img src='view/img/icons/eliminar.png' onclick='remove_filterCity()'>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id='modal_touristcat'>
+                    <a href='#modalTouristcat' class='open'>
+                        <button id='touristcat_button' class='modal-button'>Zona Turística</button>
+                    </a>
+                    <div id='modalTouristcat' class='modal container'>
+                        <a href='#' class='modal-bg container'></a>
+                        <div class='modal-content filterTouristcat_container'>
+                            <div class='modal-title'>
+                                <span>Zona Turística</span>
+                                <img src='view/img/icons/eliminar.png' onclick='remove_filterTouristcat()'>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id='modal_type'>
+                    <a href='#modalType' class='open'>
+                        <button id='type_button' class='modal-button'>Tipo de inmueble</button>
+                    </a>
+                    <div id='modalType' class='modal container'>
+                        <a href='#' class='modal-bg container'></a>
+                        <div class='modal-content filterType_container'>
+                            <div class='modal-title'>
+                                <span>Tipo de inmueble</span>
+                                <img src='view/img/icons/eliminar.png' onclick='remove_filterType()'>
+                            </div>
+                            <div class='filterTypeCont_data'>
+                                <div class='filterTypeCont_col1'>
+                                    <label><em>General</em></label>
+                                    <ul class='filterTypeCont_general'></ul>
+                                </div>
+                                
+                                <div class='filterTypeCont_col2'>
+                                    <label><em>Piso</em></label>
+                                    <ul class='filterTypeCont_piso'></ul>
+                                    <label><em>Casa</em></label>
+                                    <ul class='filterTypeCont_casa'></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id='modal_op'>
+                    <a href='#modalOp' class='open'>
+                        <button id='op_button' class='modal-button'>Transacción</button>
+                    </a>
+                    <div id='modalOp' class='modal container'>
+                        <a href='#' class='modal-bg container'></a>
+                        <div class='modal-content filterOp_container'>
+                            <div class='modal-title'>
+                                <span>Transacción</span>
+                                <img src='view/img/icons/eliminar.png' onclick='remove_filterOp()'>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id='modal_extras'>
+                    <a href='#modalExtras' class='open'>
+                        <button id='extras_button' class='modal-button'>Extras</button>
+                    </a>
+                    <div id='modalExtras' class='modal container'>
+                        <a href='#' class='modal-bg container'></a>
+                        <div class='modal-content filterExtras_container'>
+                            <div class='modal-title'>
+                                <span>Extras</span>
+                                <img src='view/img/icons/eliminar.png' onclick='remove_filterExtras()'>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id='modal_remove'>
+                    <img src='view/img/icons/eliminar.png' onclick='remove_filters()'>
+                </div>
+
+                <div id='modal_results'>
+                    <span class='results'>${localStorage.getItem('results')} Inmuebles</span>
+                </div>
+            </div>`
+        )
+        // filters all
+        for (row in data[0][0]) {
+            $('<option></option>').attr('value', `${data[0][0][row].name_city}`).html(`${data[0][0][row].name_city}`).appendTo('#filter_city_select')
+            };
+        for (row in data[1][0]) {
+            $('<option></option>').attr('value', `${data[1][0][row].name_cat}`).html(`${data[1][0][row].name_cat}`).appendTo('#filter_cat_select')
+            };
+        for (row in data[2]) {
+            for (i=0; i<data[2][row].length; i++ ) {
+                if (data[2][row][i].subtype == 'Inmueble') {
+                    $('<li></li>').attr('class', 'filter_container').appendTo('.filterTypeAllCont_general')       
+                        .html(`
+                            <input type='radio' id='filter_type_${data[2][row][i].id_type}' name='filter_type_all' class='filter_type_all' value='${data[2][row][i].name_type}'>
+                            <label for='filter_type_${data[2][row][i].id_type}'>${data[2][row][i].name_type}</label>`
+                    );
+                };
+                if (data[2][row][i].subtype == 'Piso') {
+                    $('<li></li>').attr('class', 'filter_container').appendTo('.filterTypeAllCont_piso')       
+                        .html(`
+                            <input type='radio' id='filter_type_${data[2][row][i].id_type}' name='filter_type_all' class='filter_type_all' value='${data[2][row][i].name_type}'>
+                            <label for='filter_type_${data[2][row][i].id_type}'>${data[2][row][i].name_type}</label>`
+                    ); 
+                };
+                if (data[2][row][i].subtype == 'Casa') {
+                    $('<li></li>').attr('class', 'filter_container').appendTo('.filterTypeAllCont_casa')       
+                        .html(`
+                            <input type='radio' id='filter_type_${data[2][row][i].id_type}' name='filter_type_all' class='filter_type_all' value='${data[2][row][i].name_type}'>
+                            <label for='filter_type_${data[2][row][i].id_type}'>${data[2][row][i].name_type}</label>`
+                    ); 
+                };
+            };
+        };
+        for (row in data[3][0]) {
+            $('<option></option>').attr('value', `${data[3][0][row].name_op}`).html(`${data[3][0][row].name_op}`).appendTo('#filter_op_select')
+            };
+        for (row in data[5][0]) {
+            $('<option></option>').attr('value', `${data[5][0][row].name_touristcat}`).html(`${data[5][0][row].name_touristcat}`).appendTo('#filter_touristcat_select')
+            };
+
+        // filter city
+        for (row in data[0][0]) {
+            $('<div></div>').attr('class', 'filter_container').appendTo('.filterCity_container')       
+                .html(`
+                    <input type='radio' id='filter_city_${data[0][0][row].id_city}' name='filter_city' class='filter_city' value='${data[0][0][row].name_city}'>
+                    <label for='filter_city_${data[0][0][row].id_city}'>${data[0][0][row].name_city}</label>`
+            )};
+
+        // filter type
+        for (row in data[2]) {
+            for (i=0; i<data[2][row].length; i++ ) {
+                if (data[2][row][i].subtype == 'Inmueble') {
+                    $('<li></li>').attr('class', 'filter_container').appendTo('.filterTypeCont_general')       
+                        .html(`
+                            <input type='radio' id='filter_type_${data[2][row][i].id_type}' name='filter_type' class='filter_type' value='${data[2][row][i].name_type}'>
+                            <label for='filter_type_${data[2][row][i].id_type}'>${data[2][row][i].name_type}</label>`
+                    );
+                };
+                if (data[2][row][i].subtype == 'Piso') {
+                    $('<li></li>').attr('class', 'filter_container').appendTo('.filterTypeCont_piso')       
+                        .html(`
+                            <input type='radio' id='filter_type_${data[2][row][i].id_type}' name='filter_type' class='filter_type' value='${data[2][row][i].name_type}'>
+                            <label for='filter_type_${data[2][row][i].id_type}'>${data[2][row][i].name_type}</label>`
+                    ); 
+                };
+                if (data[2][row][i].subtype == 'Casa') {
+                    $('<li></li>').attr('class', 'filter_container').appendTo('.filterTypeCont_casa')       
+                        .html(`
+                            <input type='radio' id='filter_type_${data[2][row][i].id_type}' name='filter_type' class='filter_type' value='${data[2][row][i].name_type}'>
+                            <label for='filter_type_${data[2][row][i].id_type}'>${data[2][row][i].name_type}</label>`
+                    ); 
+                };
+            };
+        };
+        
+        // filter operation
+        for (row in data[3][0]) {
+            $('<div></div>').attr('class', 'filter_container').appendTo('.filterOp_container')       
+                .html(`
+                    <input type='radio' id='filter_op_${data[3][0][row].id_op}' name='filter_op' class='filter_op' value='${data[3][0][row].name_op}'>
+                    <label for='filter_op_${data[3][0][row].id_op}'>${data[3][0][row].name_op}</label>`
+            )};
+
+        // filter extras
+        for (row in data[4][0]) {
+            $('<div></div>').attr('class', 'filter_container').appendTo('.filterExtras_container')       
+                .html(`
+                    <input type='checkbox' id='filter_extras_${data[4][0][row].id_extras}' name='filter_extras' class='filter_extras' value='${data[4][0][row].name_extras}'>
+                    <label for='filter_extras_${data[4][0][row].id_extras}'>${data[4][0][row].name_extras}</label>`
+            )};
+        
+        // filter tourist category
+        for (row in data[5][0]) {
+            $('<div></div>').attr('class', 'filter_container').appendTo('.filterTouristcat_container')       
+                .html(`
+                    <input type='radio' id='filter_touristcat_${data[5][0][row].id_touristcat}' name='filter_touristcat' class='filter_touristcat' value='${data[5][0][row].name_touristcat}'>
+                    <label for='filter_touristcat_${data[5][0][row].id_touristcat}'>${data[5][0][row].name_touristcat}</label>`
+            )};
+        
+        highlight();
+        
+    }).catch(function() {
+        window.location.href='index.php?page=503';
+    });
+}
+
+function saveFilters() {
+    $(".section-filters").on("change",".filter_city",function(){
+        // filter_city.splice(0, 2, 'name_city', this.value);
+        localStorage.setItem('filter_city', this.value);
+        applyFilters();
+    });
+
+    $(".section-filters").on("change",".filter_cat",function(){
+        // filter_cat.splice(0, 2, 'name_cat', this.value);
+        localStorage.setItem('filter_cat', this.value);
+        applyFilters();
+    });
+        
+    $(".section-filters").on("change",".filter_type",function(){
+        // filter_type.splice(0, 2, 'name_type', this.value);
+        localStorage.setItem('filter_type', this.value);
+        applyFilters();
+    });
+
+    $(".section-filters").on("change",".filter_type_all",function(){
+        // filter_type.splice(0, 2, 'name_type', this.value);
+        localStorage.setItem('filter_type', this.value);
+        applyFilters();
+    });
+
+    $(".section-filters").on("change",".filter_op",function(){
+        // filter_op.splice(0, 2, 'name_op', this.value);
+        localStorage.setItem('filter_op', this.value);
+        applyFilters();
+    });
+
+    // checkbox
+    $(".section-filters").on("change",".filter_extras",function(){
+        var filter_extras = JSON.parse(localStorage.getItem('filter_extras')) || [];
+
+        if (filter_extras.includes(this.value)) {
+            var index = filter_extras.indexOf(this.value); // obtenemos la posición del valor en el array
+            filter_extras.splice(index, 1); // 1 es la cantidad de elemento a eliminar
+        } else {
+            filter_extras.push(this.value);
+        }
+
+        localStorage.setItem('filter_extras', JSON.stringify(filter_extras));
+        applyFilters();
+    });
+
+    $(".section-filters").on("click","#filterRooms_buttons",function(){
+        localStorage.setItem('filter_rooms', this.value);
+        applyFilters();
+    });
+
+    $(".section-filters").on("click","#filterBathrooms_buttons",function(){
+        localStorage.setItem('filter_bathrooms', this.value);
+        applyFilters();
+    });
+
+    // rango
+    $(".section-filters").on("change",".filter_priceSince",function(){
+        var filter_priceSince = [];
+        filter_priceSince.push('price_since', this.value);
+        localStorage.setItem('filter_priceSince', JSON.stringify(filter_priceSince));
+        applyFilters();
+    });
+
+    $(".section-filters").on("change",".filter_priceTo",function(){
+        var filter_priceTo = [];
+        filter_priceTo.push('price_to', this.value);
+        localStorage.setItem('filter_priceTo', JSON.stringify(filter_priceTo));
+        applyFilters();
+    });
+
+    $(".section-filters").on("change",".filter_touristcat",function(){
+        localStorage.setItem('filter_touristcat', this.value);
+        applyFilters();
+    });
+}
+
+function applyFilters() {
+    var filter_priceSince = [];
+    var filter_priceTo = [];
+    var filters_shop = [];
+
+    if (localStorage.getItem('filter_city')) {
+        filters_shop.push(['name_city', (localStorage.getItem('filter_city'))]);
+    }
+
+    if (localStorage.getItem('filter_cat')) {
+        filters_shop.push(['name_cat', (localStorage.getItem('filter_cat'))]);
+    }
+
+    if (localStorage.getItem('filter_type')) {
+        filters_shop.push(['name_type', (localStorage.getItem('filter_type'))]);
+    }
+
+    if (localStorage.getItem('filter_op')) {
+        filters_shop.push(['name_op', (localStorage.getItem('filter_op'))]);
+    }
+
+    // checkbox
+    if (localStorage.getItem('filter_extras')) {
+        var filter_extras = JSON.parse(localStorage.getItem('filter_extras'));
+        console.log(filter_extras);
+        if (filter_extras.length > 0) {
+            filters_shop.push(['name_extras', filter_extras]);
+        } else {
+            localStorage.removeItem('filter_extras');
+            localStorage.removeItem('filters_shop');
+        }
+    }
+
+    if (localStorage.getItem('filter_rooms')) {
+        filters_shop.push(['rooms', (localStorage.getItem('filter_rooms'))]);
+    }
+
+    if (localStorage.getItem('filter_bathrooms')) {
+        filters_shop.push(['bathrooms', (localStorage.getItem('filter_bathrooms'))]);
+    }
+
+    // rango
+    if (localStorage.getItem('filter_priceSince')) {
+        filter_priceSince = JSON.parse(localStorage.getItem('filter_priceSince'));
+        if (localStorage.getItem('filter_priceTo')) {
+            filter_priceTo = JSON.parse(localStorage.getItem('filter_priceTo'));
+            filters_shop.push(['price', filter_priceSince, filter_priceTo]);
+        } else {
+            filter_priceTo.push('price_to', "100000000");
+            filters_shop.push(['price', filter_priceSince, filter_priceTo]);
+        }
+    } 
+    else  {
+        if (localStorage.getItem('filter_priceTo')) {
+            filter_priceSince.push('price_since', "0");
+            filter_priceTo = JSON.parse(localStorage.getItem('filter_priceTo'));
+            filters_shop.push(['price', filter_priceSince, filter_priceTo]);
+        }
+    }
+
+    if (localStorage.getItem('filter_touristcat')) {
+        filters_shop.push(['name_touristcat', (localStorage.getItem('filter_touristcat'))]);
+    }
+
+    if (filters_shop.length != 0) {
+        localStorage.setItem('filters_shop', JSON.stringify(filters_shop));
+        location.reload();
+    } else {
+        location.reload();
+    }       
+}
+
+function highlight() {
+    if (localStorage.getItem('filters_shop')) {
+        var filters_shop = JSON.parse(localStorage.getItem('filters_shop'));
+    }
+    for (row1 in filters_shop) {
+        if (filters_shop[row1][0] === 'name_city') {
+            $('#city_button')
+                .html(filters_shop[row1][1])
+                .css({
+                    "background-color": "#2eca6a17",
+                    "color": "#2ab760",
+                    "transition": "all 5000ms",
+                });
+            $("input[value='"+ filters_shop[row1][1] +"']").attr('checked', true);
+            $("option[value='"+ filters_shop[row1][1] +"']").attr('selected', true);
+        }
+
+        if (filters_shop[row1][0] === 'name_cat') {
+            $("option[value='"+ filters_shop[row1][1] +"']").attr('selected', true);
+            // jQuery("input[value='"+ filters_shop[row1][1] +"']").attr('checked', true);
+            // $("input[type=checkbox]").prop("checked", false);
+        }
+
+        if (filters_shop[row1][0] === 'name_type') {
+            $('#type_button')
+                .html(filters_shop[row1][1])
+                .css({
+                    "background-color": "#2eca6a17",
+                    "color": "#2ab760",
+                    "transition": "all 5000ms",
+                });
+            $("input[value='"+ filters_shop[row1][1] +"']").attr('checked', true);
+        }
+
+        if (filters_shop[row1][0] === 'name_op') {
+            $('#op_button')
+                .html(filters_shop[row1][1])
+                .css({
+                    "background-color": "#2eca6a17",
+                    "color": "#2ab760",
+                    "transition": "all 5000ms",
+                });
+            $("input[value='"+ filters_shop[row1][1] +"']").attr('checked', true);
+            $("option[value='"+ filters_shop[row1][1] +"']").attr('selected', true);
+        }
+
+        if (filters_shop[row1][0] === 'name_extras') {
+            for (row2 in filters_shop[row1][1]) {
+                $('#extras_button')
+                    .css({
+                        "background-color": "#2eca6a17",
+                        "color": "#2ab760",
+                        "transition": "all 5000ms",
+                    });
+                if (filters_shop[row1][1].length == 1) {
+                    $('#extras_button').html(filters_shop[row1][1][row2]);
+                } else {
+                    $('#extras_button').html(`Extras (${filters_shop[row1][1].length})`);
+                }
+                $("input[value='"+ filters_shop[row1][1][row2] +"']").attr('checked', true);
+            }  
+        }
+
+        if (filters_shop[row1][0] === 'rooms') {
+            $("#filter_rooms_cont input[value='"+ filters_shop[row1][1] +"']") // el id es del div que contiene los inputs
+                .css({
+                    "border": "1px solid #2eca6a",
+                    "background-color": "#2eca6a17",
+                    "color": "#2ab760",
+                    "transition": "all 5000ms",
+                });
+        }
+
+        if (filters_shop[row1][0] === 'bathrooms') {
+            $("#filter_bathrooms_cont input[value='"+ filters_shop[row1][1] +"']") // el id es del div que contiene los inputs
+                .css({
+                    "border": "1px solid #2eca6a",
+                    "background-color": "#2eca6a17",
+                    "color": "#2ab760",
+                    "transition": "all 5000ms",
+                });
+        }
+
+        if (filters_shop[row1][0] === 'price') {
+            $("#filter_priceSince_select option[value='"+ filters_shop[row1][1][1] +"']").attr('selected', true);
+            $("#filter_priceTo_select option[value='"+ filters_shop[row1][2][1] +"']").attr('selected', true);
+        }
+
+        if (filters_shop[row1][0] === 'name_touristcat') {
+            $('#touristcat_button')
+                .html(filters_shop[row1][1])
+                .css({
+                    "background-color": "#2eca6a17",
+                    "color": "#2ab760",
+                    "transition": "all 5000ms",
+                });
+            $("input[value='"+ filters_shop[row1][1] +"']").attr('checked', true);
+            $("option[value='"+ filters_shop[row1][1] +"']").attr('selected', true);
+        }
+    }
+}
+
+function remove_filters() {
+    localStorage.removeItem('filters_shop');
+    localStorage.removeItem('filter_city');
+    localStorage.removeItem('filter_cat');
+    localStorage.removeItem('filter_type');
+    localStorage.removeItem('filter_op');
+    localStorage.removeItem('filter_extras');
+    localStorage.removeItem('filter_rooms');
+    localStorage.removeItem('filter_bathrooms');
+    localStorage.removeItem('filter_priceSince');
+    localStorage.removeItem('filter_priceTo');
+    localStorage.removeItem('filter_touristcat');
+    location.reload();
+}
+
+function remove_filterCity() {
+    localStorage.removeItem('filter_city');
+    remove_filtersShop();
+}
+
+function remove_filterTouristcat() {
+    localStorage.removeItem('filter_touristcat');
+    remove_filtersShop();
+}
+
+function remove_filterType() {
+    localStorage.removeItem('filter_type');
+    remove_filtersShop();
+}
+
+function remove_filterOp() {
+    localStorage.removeItem('filter_op');
+    remove_filtersShop();
+}
+
+function remove_filterExtras() {
+    localStorage.removeItem('filter_extras');
+    remove_filtersShop();
+}
+
+function remove_filtersShop() {
+    localStorage.removeItem('filters_shop');
+    applyFilters();
+    location.reload();
+}
+
 $(document).ready(function() {
     // console.log('Hola JS document ready');
     loadAllRealestates();
+    loadFilters();
+    saveFilters();
     clicks();
 });

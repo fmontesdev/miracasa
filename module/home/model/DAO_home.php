@@ -3,6 +3,22 @@
 	include($path . "/model/connect.php");
     
 	class DAOHome {
+		function select_touristcat() {
+			$sql= "SELECT * FROM `tourist_cat` ORDER BY id_touristcat";
+
+			$conexion = connect::con();
+			$res = mysqli_query($conexion, $sql); //realiza una consulta a la base de datos
+			connect::close($conexion);
+
+			$retrArray = array(); //inicializa array vacio
+			if (mysqli_num_rows($res) > 0) {
+				while ($row = mysqli_fetch_assoc($res)) { //obtiene array asociativo de cada fila de resultado
+					$retrArray[] = $row;
+				}
+			}
+			return $retrArray;
+		}
+
 		function select_type() {
 			//$data = 'hola DAO select_type';
             //die("<script>console.log('.json_encode( $data ) .');</script>");
