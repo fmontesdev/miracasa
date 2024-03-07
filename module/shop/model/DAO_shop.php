@@ -31,6 +31,18 @@ class DAOShop{
 		return $retrArray;
 	}
 
+	function insert_visited($id){
+		// return $id;
+
+		$sql = "UPDATE `real_estate` r 
+					SET r.visited = (r.visited + 1)
+					WHERE r.id_realestate = '$id'";
+
+		$conexion = connect::con();
+		mysqli_query($conexion, $sql);
+		connect::close($conexion);
+	}
+
 	function select_one_realEstate($id){
 
 		// return $id;
@@ -162,7 +174,7 @@ class DAOShop{
 	function select_filter_city(){
 		$sql = "SELECT c.id_city, c.name_city
 			    FROM `city` c
-				ORDER BY c.id_city";
+				ORDER BY c.name_city";
 
 		$conexion = connect::con();
 		$res = mysqli_query($conexion, $sql);
@@ -312,6 +324,7 @@ class DAOShop{
 		$sql_selectFilter = "";
 		$sql_innerFilter = "";
 		$sql_whereFilter = "";
+		$sql_orderFilter = "";
 
 		for ($i=0; $i < count($filters); $i++) {
 			if ($filters[$i][0] == 'name_cat') {
@@ -323,6 +336,16 @@ class DAOShop{
 									INNER JOIN `extras` ex ON ex.id_extras = hex.id_extras";
 			} else if ($filters[$i][0] == 'name_touristcat') {
 				$sql_innerFilter .= " INNER JOIN `tourist_cat` toc ON toc.id_touristcat = c.id_touristcat";
+			} else if ($filters[$i][1] == 'Más baratos') {
+				$sql_orderFilter .= " ORDER BY price ASC";
+			} else if ($filters[$i][1] == 'Más caros') {
+				$sql_orderFilter .= " ORDER BY price DESC";
+			} else if ($filters[$i][1] == 'Más grandes') {
+				$sql_orderFilter .= " ORDER BY area DESC";
+			} else if ($filters[$i][1] == 'Más pequeños') {
+				$sql_orderFilter .= " ORDER BY area ASC";
+			} else if ($filters[$i][1] == 'Más visitados') {
+				$sql_orderFilter .= " ORDER BY visited DESC";
 			}
 			if ($i==0){
 				if ($filters[$i][0] == 'name_extras') { // checkbox
@@ -338,7 +361,7 @@ class DAOShop{
 					$sql_whereFilter .= " WHERE " . $filters[$i][0] . " BETWEEN " . $filters[$i][1][1] . " AND " . $filters[$i][2][1];
 				} else if ($filters[$i][1] == '+5') { // rooms - bathrooms
 					$sql_whereFilter .= " WHERE " . $filters[$i][0] . " >= '" . $filters[$i][1] . "'";
-				} else {
+				} else if ($filters[$i][0] != 'order'){
 					$sql_whereFilter .= " WHERE " . $filters[$i][0] . " = '" . $filters[$i][1] . "'";
 				}
 			}else {
@@ -355,7 +378,7 @@ class DAOShop{
 					$sql_whereFilter .= " AND " . $filters[$i][0] . " BETWEEN " . $filters[$i][1][1] . " AND " . $filters[$i][2][1];
 				} else if ($filters[$i][1] == '+5') { // rooms - bathrooms
 					$sql_whereFilter .= " AND " . $filters[$i][0] . " >= '" . $filters[$i][1] . "'";
-				} else {
+				} else if ($filters[$i][0] != 'order'){
 					$sql_whereFilter .= " AND " . $filters[$i][0] . " = '" . $filters[$i][1] . "'";
 				}
 			}        
@@ -372,7 +395,8 @@ class DAOShop{
 					INNER JOIN `city` c ON r.id_city = c.id_city "
 					. $sql_innerFilter
 					. $sql_whereFilter .
-					" GROUP BY r.id_realestate";
+					" GROUP BY r.id_realestate"
+					. $sql_orderFilter;
 					
 		// $sql .= $sql_whereFilter . " GROUP BY r.id_realestate, o.id_op";
 		// return $sql;

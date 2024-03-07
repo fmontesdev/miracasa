@@ -1,6 +1,7 @@
 function loadAllRealestates() {
     var validate_filtersHome = localStorage.getItem('filters_home') || undefined; // conseguimos de localStorage filters_home, sinó existe undefined
     var validate_filtersHome_details = localStorage.getItem('filtersHome_details') || undefined; // conseguimos de localStorage filtersHome_details, sinó existe undefined
+    var validate_filtersHome_lastsearch = localStorage.getItem('filtersHome_lastsearch') || undefined;
     var validate_filtersShop = localStorage.getItem('filters_shop') || undefined; // conseguimos de localStorage filters_shop, sinó existe undefined
     
     if (validate_filtersHome != undefined) {
@@ -13,6 +14,11 @@ function loadAllRealestates() {
         var id_details = JSON.parse(validate_filtersHome_details); // deserializamos para convertir el string otra vez en un array
         console.log(id_details);
         loadDetails(id_details[0]['recomendation'][0]);
+    } else if (validate_filtersHome_lastsearch != undefined) {
+        localStorage.removeItem('filtersHome_lastsearch'); // eliminamos de localStorage id_recomendation para no interferir en próximas busquedas
+        var id_details = JSON.parse(validate_filtersHome_lastsearch); // deserializamos para convertir el string otra vez en un array
+        console.log(id_details);
+        loadDetails(id_details[0]['lastsearch'][0]);
     } else if (validate_filtersShop != undefined) {
         // localStorage.removeItem('filters_shop'); // eliminamos de localStorage filters_shop para no interferir en próximas busquedas
         var filtersShop = JSON.parse(validate_filtersShop); // deserializamos para convertir el string otra vez en un array
@@ -34,10 +40,10 @@ function ajaxForSearch(url, type, dataType, sData=undefined) {
         localStorage.setItem('results', data.length);
             
         // return;
-        $('.section-intro').empty();
-        $('.container_listRealestates').empty(); // antes de iniciar borramos el contenedor de list
         $('.section-detailsCarousel').empty(); // antes de iniciar borramos el contenedor de details
         $('.container_detailsRealestate').empty();
+        $('.container_listRealestates').empty(); // antes de iniciar borramos el contenedor de list
+        $('.section-catch').empty();
 
         // Mejora para que cuando no hayan resultados en los filtros aplicados
         if (data == "error") {
@@ -230,6 +236,7 @@ function ajaxForSearch(url, type, dataType, sData=undefined) {
 function clicks() {
     $(document).on("click", ".more_info", function() {
         var id_realestate = this.getAttribute('id');
+        // console.log(id_realestate);
         loadDetails(id_realestate);
     });
 }
@@ -238,11 +245,14 @@ function loadDetails(id_realestate) {
     ajaxPromise('module/shop/controller/controller_shop.php?op=details_realestate&id=' + id_realestate, 'GET', 'JSON')
     .then(function(data) {
         console.log(data);
-        $('.section-intro').empty();
-        $('.container_listRealestates').empty();
         $('.section-detailsCarousel').empty();
         $('.container_detailsRealestate').empty();
         $('.section-filters').empty();
+        // $('.section-filters container').empty();
+        // $('.section-filters .modal_fixed').empty();
+        $('.container_listRealestates').empty();
+        $('.section-catch').empty();
+        
 
         // Carousel container
         $('<div></div>').attr('class', 'swiper').attr('id', 'details-carousel').appendTo('.section-detailsCarousel')
@@ -369,22 +379,22 @@ function loadFilters() {
                                 <span>Filtros</span>
                             </div>
 
-                            <div class='filterCityTouristcatAll_container filterAll_container'>
-                                <div class='filterCityAll_container'>
-                                    <div class='filterAll-title'>
-                                        <span>Ciudad</span>
-                                    </div>
-                                    <select id='filter_city_select' name='filter_city' class='filter_city'>
-                                        <option hidden selected>Selecciona una ciudad</option>
-                                    </select>
-                                </div>
-
+                            <div class='filterTouristcatCityAll_container filterAll_container'>
                                 <div class='filterTouristcatAll_container'>
                                     <div class='filterAll-title'>
                                         <span>Zona turística</span>
                                     </div>
                                     <select id='filter_touristcat_select' name='filter_touristcat' class='filter_touristcat'>
                                         <option hidden selected>Selecciona zona turística</option>
+                                    </select>
+                                </div>
+
+                                <div class='filterCityAll_container'>
+                                    <div class='filterAll-title'>
+                                        <span>Ciudad</span>
+                                    </div>
+                                    <select id='filter_city_select' name='filter_city' class='filter_city'>
+                                        <option hidden selected>Selecciona una ciudad</option>
                                     </select>
                                 </div>
                             </div>
@@ -519,21 +529,6 @@ function loadFilters() {
                     </div>
                 </div>
 
-                <div id='modal_city'>
-                    <a href='#modalCity' class='open'>
-                        <button id='city_button' class='modal-button'>Ciudad</button>
-                    </a>
-                    <div id='modalCity' class='modal container'>
-                        <a href='#' class='modal-bg container'></a>
-                        <div class='modal-content filterCity_container'>
-                            <div class='modal-title'>
-                                <span>Ciudad</span>
-                                <img src='view/img/icons/eliminar.png' onclick='remove_filterCity()'>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 <div id='modal_touristcat'>
                     <a href='#modalTouristcat' class='open'>
                         <button id='touristcat_button' class='modal-button'>Zona Turística</button>
@@ -544,6 +539,21 @@ function loadFilters() {
                             <div class='modal-title'>
                                 <span>Zona Turística</span>
                                 <img src='view/img/icons/eliminar.png' onclick='remove_filterTouristcat()'>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id='modal_city'>
+                    <a href='#modalCity' class='open'>
+                        <button id='city_button' class='modal-button'>Ciudad</button>
+                    </a>
+                    <div id='modalCity' class='modal container'>
+                        <a href='#' class='modal-bg container'></a>
+                        <div class='modal-content filterCity_container'>
+                            <div class='modal-title'>
+                                <span>Ciudad</span>
+                                <img src='view/img/icons/eliminar.png' onclick='remove_filterCity()'>
                             </div>
                         </div>
                     </div>
@@ -602,6 +612,41 @@ function loadFilters() {
                             <div class='modal-title'>
                                 <span>Extras</span>
                                 <img src='view/img/icons/eliminar.png' onclick='remove_filterExtras()'>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id='modal_order'>
+                    <a href='#modalOrder' class='open'>
+                        <button id='order_button' class='modal-button'>Ordenar</button>
+                    </a>
+                    <div id='modalOrder' class='modal container'>
+                        <a href='#' class='modal-bg container'></a>
+                        <div class='modal-content filterOrder_container'>
+                            <div class='modal-title'>
+                                <span>Ordenar</span>
+                                <img src='view/img/icons/eliminar.png' onclick='remove_filterOrder()'>
+                            </div>
+                            <div class="filter_container">
+                                <input type='radio' id='filter_order_cheaper' name='filter_order' class='filter_order' value='Más baratos'>
+                                <label for='filter_order_cheaper'>Más baratos</label>
+                            </div>
+                            <div class="filter_container">
+                                <input type='radio' id='filter_order_expensive' name='filter_order' class='filter_order' value='Más caros'>
+                                <label for='filter_order_expensive'>Más caros</label>
+                            </div>
+                            <div class="filter_container">
+                                <input type='radio' id='filter_order_bigger' name='filter_order' class='filter_order' value='Más grandes'>
+                                <label for='filter_order_bigger'>Más grandes</label>
+                            </div>
+                            <div class="filter_container">
+                                <input type='radio' id='filter_order_smaller' name='filter_order' class='filter_order' value='Más pequeños'>
+                                <label for='filter_order_smaller'>Más pequeños</label>
+                            </div>
+                            <div class="filter_container">
+                                <input type='radio' id='filter_order_visited' name='filter_order' class='filter_order' value='Más visitados'>
+                                <label for='filter_order_visited'>Más visitados</label>
                             </div>
                         </div>
                     </div>
@@ -796,6 +841,12 @@ function saveFilters() {
         localStorage.setItem('filter_touristcat', this.value);
         applyFilters();
     });
+
+    $(".section-filters").on("change",".filter_order",function(){
+        // filter_op.splice(0, 2, 'name_op', this.value);
+        localStorage.setItem('filter_order', this.value);
+        applyFilters();
+    });
 }
 
 function applyFilters() {
@@ -862,6 +913,10 @@ function applyFilters() {
         filters_shop.push(['name_touristcat', (localStorage.getItem('filter_touristcat'))]);
     }
 
+    if (localStorage.getItem('filter_order')) {
+        filters_shop.push(['order', (localStorage.getItem('filter_order'))]);
+    }
+
     if (filters_shop.length != 0) {
         localStorage.setItem('filters_shop', JSON.stringify(filters_shop));
         location.reload();
@@ -885,10 +940,32 @@ function highlight() {
                 });
             $("input[value='"+ filters_shop[row1][1] +"']").attr('checked', true);
             $("option[value='"+ filters_shop[row1][1] +"']").attr('selected', true);
+            $('.filterCityAll_container select')
+                .css({
+                    "border": "1px solid #2eca6a",
+                    "background-color": "#2eca6a17",
+                    "color": "#2ab760",
+                });
+            $('.filterCityAll_container option')
+                .css({
+                    "background-color": "#fff",
+                    "color": "#555555",
+                });
         }
 
         if (filters_shop[row1][0] === 'name_cat') {
             $("option[value='"+ filters_shop[row1][1] +"']").attr('selected', true);
+            $('.filterCatAll_container select')
+                .css({
+                    "border": "1px solid #2eca6a",
+                    "background-color": "#2eca6a17",
+                    "color": "#2ab760",
+                });
+            $('.filterCatAll_container option')
+                .css({
+                    "background-color": "#fff",
+                    "color": "#555555",
+                });
             // jQuery("input[value='"+ filters_shop[row1][1] +"']").attr('checked', true);
             // $("input[type=checkbox]").prop("checked", false);
         }
@@ -914,6 +991,17 @@ function highlight() {
                 });
             $("input[value='"+ filters_shop[row1][1] +"']").attr('checked', true);
             $("option[value='"+ filters_shop[row1][1] +"']").attr('selected', true);
+            $('.filterOpAll_container select')
+                .css({
+                    "border": "1px solid #2eca6a",
+                    "background-color": "#2eca6a17",
+                    "color": "#2ab760",
+                });
+            $('.filterOpAll_container option')
+                .css({
+                    "background-color": "#fff",
+                    "color": "#555555",
+                });
         }
 
         if (filters_shop[row1][0] === 'name_extras') {
@@ -956,6 +1044,28 @@ function highlight() {
         if (filters_shop[row1][0] === 'price') {
             $("#filter_priceSince_select option[value='"+ filters_shop[row1][1][1] +"']").attr('selected', true);
             $("#filter_priceTo_select option[value='"+ filters_shop[row1][2][1] +"']").attr('selected', true);
+            $('.filterPriceSince_container select')
+                .css({
+                    "border": "1px solid #2eca6a",
+                    "background-color": "#2eca6a17",
+                    "color": "#2ab760",
+                });
+            $('.filterPriceSince_container option')
+                .css({
+                    "background-color": "#fff",
+                    "color": "#555555",
+                });
+            $('.filterPriceTo_container select')
+                .css({
+                    "border": "1px solid #2eca6a",
+                    "background-color": "#2eca6a17",
+                    "color": "#2ab760",
+                });
+            $('.filterPriceTo_container option')
+                .css({
+                    "background-color": "#fff",
+                    "color": "#555555",
+                });
         }
 
         if (filters_shop[row1][0] === 'name_touristcat') {
@@ -968,6 +1078,28 @@ function highlight() {
                 });
             $("input[value='"+ filters_shop[row1][1] +"']").attr('checked', true);
             $("option[value='"+ filters_shop[row1][1] +"']").attr('selected', true);
+            $('.filterTouristcatAll_container select')
+                .css({
+                    "border": "1px solid #2eca6a",
+                    "background-color": "#2eca6a17",
+                    "color": "#2ab760",
+                });
+            $('.filterTouristcatAll_container option')
+                .css({
+                    "background-color": "#fff",
+                    "color": "#555555",
+                });
+        }
+
+        if (filters_shop[row1][0] === 'order') {
+            $('#order_button')
+                .html(filters_shop[row1][1])
+                .css({
+                    "background-color": "#2eca6a17",
+                    "color": "#2ab760",
+                    "transition": "all 5000ms",
+                });
+            $("input[value='"+ filters_shop[row1][1] +"']").attr('checked', true);
         }
     }
 }
@@ -984,6 +1116,7 @@ function remove_filters() {
     localStorage.removeItem('filter_priceSince');
     localStorage.removeItem('filter_priceTo');
     localStorage.removeItem('filter_touristcat');
+    localStorage.removeItem('filter_order');
     location.reload();
 }
 
@@ -1009,6 +1142,11 @@ function remove_filterOp() {
 
 function remove_filterExtras() {
     localStorage.removeItem('filter_extras');
+    remove_filtersShop();
+}
+
+function remove_filterOrder() {
+    localStorage.removeItem('filter_order');
     remove_filtersShop();
 }
 

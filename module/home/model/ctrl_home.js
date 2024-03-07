@@ -345,6 +345,179 @@ function carouselRecomendations() {
     });
 }
 
+function carouselMostvisited() {
+    //die("<script>console.log('Hola loadCategories');</script>");
+    ajaxPromise('module/home/controller/controller_home.php?op=carouselMostvisited','GET', 'JSON')
+    .then(function(data) {
+        for (row in data) {
+            $('<div></div>').attr('class', 'mostvisitedSlide carousel-item-b swiper-slide').attr('id', data[row].id_realestate).appendTo('#mostvisited-carousel .containerMostvisited')
+                .html(`
+                    <div class='card-box-a card-shadow'>
+                        <div class='img-box-a'>
+                            <img src='${data[row].img_realestate}' alt='' class='img-a img-fluid'>
+                        </div>
+                        <div class='card-overlay'>
+                            <div class='card-overlay-a-content'>
+                                <div class='card-header-a'>
+                                    <h2 class='card-title-a'>
+                                        <span class='color-b'>${data[row].name_type}</span> en ${data[row].name_city}
+                                    </h2>
+                                </div>
+                                <div class='card-body-a'>
+                                    <div class='price-box d-flex'>
+                                        <span class='price-a'>
+                                            ${data[row].name_op} | ${new Intl.NumberFormat("es-ES").format(data[row].price)} €
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class='card-footer-a'>
+                                    <ul class='card-info d-flex justify-content-around'>
+                                        <li>
+                                            <span class='card-info-title'>Area: </span>
+                                            <span>${data[row].area} m<sup>2</sup></span>
+                                        </li>
+                                        <li>
+                                            <span class='card-info-title'>Habitaciones: </span>
+                                            <span>${data[row].rooms}</span>
+                                        </li>
+                                        <li>
+                                            <span class='card-info-title'>Baños: </span>
+                                            <span>${data[row].bathrooms}</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`
+                )     
+        }
+
+        new Swiper('#mostvisited-carousel', {
+            speed: 500,
+            loop: false,
+            autoplay: {
+                delay: 2500,
+                disableOnInteraction: false
+            },
+            slidesPerView: 'auto',
+            pagination: {
+                el: '.mostvisited-carousel-pagination',
+                type: 'bullets',
+                clickable: true
+            },
+            breakpoints: {
+                320: {
+                    slidesPerView: 1,
+                    spaceBetween: 18
+                },
+            
+                768: {
+                    slidesPerView: 2,
+                    spaceBetween: 18
+                },
+            
+                1200: {
+                    slidesPerView: 3,
+                    spaceBetween: 18
+                }
+            }
+        });
+    }).catch(function() {
+        window.location.href='index.php?page=503';
+    });
+}
+
+function carouselLastsearch() {
+    var validate_filtersShop = localStorage.getItem('filters_shop') || undefined;
+
+    if (validate_filtersShop != undefined) {
+        var filtersShop = JSON.parse(validate_filtersShop);
+        console.log(filtersShop);
+    
+        ajaxPromise('module/home/controller/controller_home.php?op=carouselLastsearch', 'POST', 'JSON', { 'filters': filtersShop })
+        .then(function(data) {
+            for (row in data) {
+                console.log(data);
+                // return;
+
+                $('<div></div>').attr('class', 'lastsearchSlide carousel-item-b swiper-slide').attr('id', data[row].id_realestate).appendTo('#lastsearch-carousel .containerLastsearch')
+                    .html(`
+                        <div class='card-box-a card-shadow'>
+                            <div class='img-box-a'>
+                                <img src='${data[row].img_realestate[0]}' alt='' class='img-a img-fluid'>
+                            </div>
+                            <div class='card-overlay'>
+                                <div class='card-overlay-a-content'>
+                                    <div class='card-header-a'>
+                                        <h2 class='card-title-a'>
+                                            <span class='color-b'>${data[row].name_type}</span> en ${data[row].name_city}
+                                        </h2>
+                                    </div>
+                                    <div class='card-body-a'>
+                                        <div class='price-box d-flex'>
+                                            <span class='price-a'>
+                                                ${data[row].name_op} | ${new Intl.NumberFormat("es-ES").format(data[row].price)} €
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class='card-footer-a'>
+                                        <ul class='card-info d-flex justify-content-around'>
+                                            <li>
+                                                <span class='card-info-title'>Area: </span>
+                                                <span>${data[row].area} m<sup>2</sup></span>
+                                            </li>
+                                            <li>
+                                                <span class='card-info-title'>Habitaciones: </span>
+                                                <span>${data[row].rooms}</span>
+                                            </li>
+                                            <li>
+                                                <span class='card-info-title'>Baños: </span>
+                                                <span>${data[row].bathrooms}</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`
+                    )     
+            }
+
+            new Swiper('#lastsearch-carousel', {
+                speed: 500,
+                loop: false,
+                autoplay: {
+                    delay: 2500,
+                    disableOnInteraction: false
+                },
+                slidesPerView: 'auto',
+                pagination: {
+                    el: '.lastsearch-carousel-pagination',
+                    type: 'bullets',
+                    clickable: true
+                },
+                breakpoints: {
+                    320: {
+                        slidesPerView: 1,
+                        spaceBetween: 18
+                    },
+                
+                    768: {
+                        slidesPerView: 2,
+                        spaceBetween: 18
+                    },
+                
+                    1200: {
+                        slidesPerView: 3,
+                        spaceBetween: 18
+                    }
+                }
+            });
+        }).catch(function() {
+            window.location.href='index.php?page=503';
+        });
+    }
+}
+
 function clicks(){
     $(document).on("click",'div.touristcatSlide', function (){
         var filters_home = []; // creamos array donde capturaremos todos los clicks del home
@@ -405,6 +578,16 @@ function clicks(){
             window.location.href = 'index.php?page=controller_shop&op=list';
             }, 500);
     });
+
+    $(document).on("click",'div.lastsearchSlide', function (){
+        var filtersHome_lastsearch = [];
+        filtersHome_lastsearch.push({"lastsearch":[this.getAttribute('id')]});
+        localStorage.removeItem('filtersHome_lastsearch');
+        localStorage.setItem('filtersHome_lastsearch', JSON.stringify(filtersHome_lastsearch)); 
+            setTimeout(function(){ 
+            window.location.href = 'index.php?page=controller_shop&op=list';
+            }, 500);
+    });
 } 
 
 $(document).ready(function() {
@@ -416,5 +599,7 @@ $(document).ready(function() {
     carouselOperations();
     carouselCities();
     carouselRecomendations();
+    carouselMostvisited();
+    carouselLastsearch();
     clicks();
 });

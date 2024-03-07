@@ -27,6 +27,10 @@ switch ($op) {
     case 'details_realestate':
         // echo json_encode($_GET['id']);
         // break
+        
+        $daoshop = new DAOShop();
+        $daoshop->insert_visited($_GET['id']);
+        
         try {
             $daoshop = new DAOShop();
             $Dates_realEstate = $daoshop->select_one_realEstate($_GET['id']);

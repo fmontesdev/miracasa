@@ -108,6 +108,38 @@
                 echo json_encode("error");
             }
             break;
+        
+        case 'carouselMostvisited';
+            try{
+                $daohome = new DAOHome();
+                $SelectMostvisited = $daohome->select_mostvisited();
+            } catch(Exception $e){
+                echo json_encode("error");
+            }
+            
+            if(!empty($SelectMostvisited)){
+                echo json_encode($SelectMostvisited); 
+            }
+            else{
+                echo json_encode("error");
+            }
+            break;       
+
+        case 'carouselLastsearch';
+            try{
+                $daohome = new DAOHome();
+                $SelectLastsearch = $daohome->select_lastsearch($_POST['filters']);
+            } catch(Exception $e){
+                echo json_encode("error");
+            }
+            
+            if(!empty($SelectLastsearch)){
+                echo json_encode($SelectLastsearch); 
+            }
+            else{
+                echo json_encode("error");
+            }
+            break;
 
         default;
             include("view/inc/error404.php");

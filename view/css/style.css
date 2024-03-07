@@ -3012,7 +3012,7 @@ Carousels home
 }
 
 .touristcat_map {
-  width: 100px;
+  width: 115px;
   height: auto;
 }
 
@@ -3098,15 +3098,16 @@ Modal
 /* Modales por filtro */
 #modal_all_filters .modal-content {
   position: fixed;
-  top: 58%;
+  top: 136px;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, 0%);
   width: 550px;
-  height: 580px;
+  height: 69vh;
+  min-height: 548px;
   overflow: auto; /* Si el contenido sobrepasa la altura especificada, aparece scroll */
 }
 
-#modal_city .modal-content {
+#modal_touristcat .modal-content {
   top: 180px;
   left: 40px;
   height: 388px;
@@ -3114,11 +3115,11 @@ Modal
   overflow: auto;  /* Si el contenido sobrepasa la altura especificada, aparece scroll */
 }
 
-#modal_touristcat .modal-content {
+#modal_city .modal-content {
   top: 180px;
   left: 210px;
   height: 388px;
-  min-width: 250px;
+  min-width: 285px;
   overflow: auto;  /* Si el contenido sobrepasa la altura especificada, aparece scroll */
 }
 
@@ -3140,6 +3141,12 @@ Modal
   min-width: 250px;
 }
 
+#modal_order .modal-content {
+  top: 180px;
+  left: 900px;
+  min-width: 250px;
+}
+
 #modal_results .results {
   font-size: 16px;
   font-weight: 500;
@@ -3147,7 +3154,7 @@ Modal
 }
 
 /* Contenedores botones */
-#modal_city, #modal_touristcat, #modal_type, #modal_op, #modal_extras, #modal_all_filters {
+#modal_touristcat, #modal_city, #modal_type, #modal_op, #modal_extras, #modal_order {
   width: 170px;
   height: 35px;
   padding-right: 10px;
@@ -3162,7 +3169,6 @@ Modal
   display: flex;
   justify-content: center;
   align-items: center;
-  cursor: pointer;
 }
 
 #modal_all_filters img {
@@ -3340,7 +3346,7 @@ ul.filterTypeAllCont_general, ul.filterTypeAllCont_piso, ul.filterTypeAllCont_ca
   padding: 15px 0;
 }
 
-.filterTypeAll_container, .filterCityTouristcatAll_container, .filterCatOpAll_container, .filterPrice_container {
+.filterTouristcatCityAll_container, .filterTypeAll_container, .filterCatOpAll_container, .filterPrice_container {
   display: flex;
   flex-wrap: wrap;
 }
@@ -3354,7 +3360,18 @@ ul.filterTypeAllCont_general, ul.filterTypeAllCont_piso, ul.filterTypeAllCont_ca
   width: 243px;
   margin: 6px 0 7px 16px;
   border-radius: 5px;
+  cursor: pointer;
 }
+
+.filterAll_container select:hover {
+  background-color: #f8f8f8;
+}
+
+/* .filterAll_container select:valid {
+  border: 1px solid #2eca6a;
+  background-color: #2eca6a17;
+  color: #2ab760;
+} */
 
 /* Botones rooms/bathrooms */
 #filter_rooms_cont, #filter_bathrooms_cont {
