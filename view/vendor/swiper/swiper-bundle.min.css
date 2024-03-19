@@ -28,7 +28,7 @@
     overflow: hidden;
     list-style: none;
     padding: 0;
-    z-index: 1
+    z-index: 1;
 }
 
 .swiper-vertical>.swiper-wrapper {
@@ -405,7 +405,7 @@ button.swiper-pagination-bullet {
 
 .swiper-horizontal>.swiper-pagination-bullets .swiper-pagination-bullet,
 .swiper-pagination-horizontal.swiper-pagination-bullets .swiper-pagination-bullet {
-    margin: 0 var(--swiper-pagination-bullet-horizontal-gap, 4px)
+    margin: 0 var(--swiper-pagination-bullet-horizontal-gap, 5px)
 }
 
 .swiper-horizontal>.swiper-pagination-bullets.swiper-pagination-bullets-dynamic,

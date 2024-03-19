@@ -19,7 +19,7 @@
 		    include("view/inc/menu.html");
 		?>
     </div>	
-    <div id="">
+    <div id="content">
     	<?php 
 		    include("view/inc/pages.php"); 
 		?>        

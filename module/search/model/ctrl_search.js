@@ -1,7 +1,322 @@
+function load_operation() {
+    ajaxPromise('module/search/controller/controller_search.php?op=search_operation', 'POST', 'JSON')
+        .then(function(data) {
+            console.log(data);
+            // return;
+            for (row in data) {
+                $('<option></option>').attr('value', `${data[row].name_op}`).html(`${data[row].name_op}`).appendTo('#filter_search_op_select')
+                };
+            }).catch(function() {
+                window.location.href='index.php?page=503';
+            });
+}
+
+function load_touristCategory(op) {
+    $('#filter_search_touristcat_select').empty();
+    // var op = localStorage.getItem('filter_op') || undefined;
+    // console.log(op);
+
+    if (localStorage.getItem('filter_op')) {
+        var op2 = localStorage.getItem('filter_op');
+        // localStorage.removeItem('filter_op');
+        ajaxPromise('module/search/controller/controller_search.php?op=search_touristCategory', 'POST', 'JSON', { 'operation': op2 })
+            .then(function (data) {
+                console.log(data);
+                // return;
+                if (data != 'error') { // para gestionar la falta de resultados
+                    $('<option></option>').attr('selected', true).attr('hidden', true).html('Zona turística').appendTo('#filter_search_touristcat_select');
+                    for (row in data) {
+                        $('<option></option>').attr('value', `${data[row].name_touristcat}`).html(`${data[row].name_touristcat}`).appendTo('#filter_search_touristcat_select')
+                        };
+                } else {
+                    $('<option></option>').attr('selected', true).attr('hidden', true).html('Zona turística').appendTo('#filter_search_touristcat_select');
+                    $('<option></option>').attr('disabled', true).html('Sin resultados').appendTo('#filter_search_touristcat_select');
+                }  
+            }).catch(function () {
+                window.location.href='index.php?page=503';
+            });
+    } else if (op == undefined) {
+        ajaxPromise('module/search/controller/controller_search.php?op=search_touristCategory_null', 'POST', 'JSON')
+            .then(function (data) {
+                console.log(data);
+                // return;
+                $('<option></option>').attr('selected', true).attr('hidden', true).html('Zona turística').appendTo('#filter_search_touristcat_select');
+                for (row in data) {
+                    $('<option></option>').attr('value', `${data[row].name_touristcat}`).html(`${data[row].name_touristcat}`).appendTo('#filter_search_touristcat_select')
+                    };
+            }).catch(function () {
+                window.location.href='index.php?page=503';
+            });
+    } else {
+        ajaxPromise('module/search/controller/controller_search.php?op=search_touristCategory', 'POST', 'JSON', { 'operation': op })
+            .then(function (data) {
+                console.log(data);
+                // return;
+                if (data != 'error') { // para gestionar la falta de resultados
+                    $('<option></option>').attr('selected', true).attr('hidden', true).html('Zona turística').appendTo('#filter_search_touristcat_select');
+                    for (row in data) {
+                        $('<option></option>').attr('value', `${data[row].name_touristcat}`).html(`${data[row].name_touristcat}`).appendTo('#filter_search_touristcat_select')
+                        };
+                } else {
+                    $('<option></option>').attr('selected', true).attr('hidden', true).html('Zona turística').appendTo('#filter_search_touristcat_select');
+                    $('<option></option>').attr('disabled', true).html('Sin resultados').appendTo('#filter_search_touristcat_select');
+                }  
+            }).catch(function () {
+                window.location.href='index.php?page=503';
+            });
+    }
+}
+
+function launch_search() {
+    load_operation();
+    load_touristCategory();
+    $(".filterSearch_container").on("change", "#filter_search_op_select", function(){
+        localStorage.removeItem('filter_op');
+        var op = this.value;
+        console.log(op);
+        if (!op) {
+            load_touristCategory();
+        } else {
+            load_touristCategory(op);
+        }
+    });
+    // $(".filterSearch_container").on("change", "#filter_search_op_select", function(){
+    //     localStorage.setItem('filter_op', this.value);
+
+    //     if (localStorage.getItem('filter_op')) {
+    //         load_touristCategory(localStorage.getItem('filter_op'));
+    //     } else {
+    //         load_touristCategory();
+    //     }
+    // });
+
+    // $("#filter_search_touristcat_select").one("click", function () {
+
+    //     if (localStorage.getItem('filter_op')) {
+    //         load_touristCategory(localStorage.getItem('filter_op'));
+    //     } else {
+    //         load_touristCategory();
+    //     }
+    // });
+    
+
+    // $("#filter_search_touristcat_select").one("click", function () {
+    //     if ($('#filter_search_op_select').val() != 'Transacción') {
+    //         op = $('#filter_search_op_select').val();
+    //         load_touristCategory(op);
+    //     } else {
+    //         load_touristCategory();
+    //     }
+    // });
+
+    $("#filter_search_touristcat_select").one("click", function () {
+        if ($('#filter_search_op_select').val() == 'Transacción') {
+            
+            // op = $('#filter_search_op_select').val();
+            localStorage.removeItem('filter_op');
+            load_touristCategory();
+        }
+    });
+
+    // $("#filter_search_touristcat_select").one("click", function () {
+    //     localStorage.removeItem('filter_op');
+    // });
+}
+
+function autocomplete() {
+
+    // ------------------------- evento click ------------------------- //
+    $("#filter_search_city_auto").on("click", function () {
+        var sdata = {"complete": ""};
+
+        if ($('#filter_search_op_select').val() != 'Transacción') {
+            sdata.op = $('#filter_search_op_select').val();
+            if ($('#filter_search_touristcat_select').val() != 'Zona turística') {
+                sdata.touristcat = $('#filter_search_touristcat_select').val();
+            }
+        } else if ($('#filter_search_touristcat_select').val() != 'Zona turística') {
+            sdata.touristcat = $('#filter_search_touristcat_select').val();
+        }
+
+        ajaxPromise('module/search/controller/controller_search.php?op=search_autocomplete', 'POST', 'JSON', sdata)
+            .then(function (data) {
+                console.log(data);
+                if (data != 'error') { // para gestionar la falta de resultados
+                    $('#search_auto').empty();
+                    $('#search_auto').fadeIn(100);
+                    for (row in data) {
+                        $('<div></div>').attr('class', 'search_element').attr('id', `${data[row].name_city}`).html(`${data[row].name_city}`).appendTo('#search_auto');
+                    }
+                    $(document).on('click', '.search_element', function () {
+                        $('#filter_search_city_auto').val(this.getAttribute('id'));
+                        $('#search_auto').fadeOut(100);
+                        click_search();
+                    });
+                    $(document).on('click scroll', function (event) {
+                        if (event.target.id !== 'filter_search_city_auto') {
+                            $('#search_auto').fadeOut(100);
+                        }
+                    });
+                } else {
+                    $('#search_auto').empty();
+                    $('#search_auto').fadeIn(100);
+                    $('<div></div>').attr('class', 'search_element').html('Sin resultados').appendTo('#search_auto');
+                    $(document).on('click', '.search_element', function () {
+                        $('#filter_search_city_auto').val(this.getAttribute('id'));
+                        $('#search_auto').fadeOut(100);
+                        click_search();
+                    });
+                    $(document).on('click scroll', function (event) {
+                        if (event.target.id !== 'filter_search_city_auto') {
+                            $('#search_auto').fadeOut(100);
+                        }
+                    });
+                }
+            }).catch(function () {
+                $('#search_auto').fadeOut(100);
+            })
+        
+        // ------------------------- evento keyup ------------------------- //
+        $("#filter_search_city_auto").on("keyup", function () {
+            sdata = {"complete": $(this).val()};
+            
+            if ($('#filter_search_op_select').val() != 'Transacción') {
+                sdata.op = $('#filter_search_op_select').val();
+                if ($('#filter_search_touristcat_select').val() != 'Zona turística') {
+                    sdata.touristcat = $('#filter_search_touristcat_select').val();
+                }
+            } else if ($('#filter_search_touristcat_select').val() != 'Zona turística') {
+                sdata.touristcat = $('#filter_search_touristcat_select').val();
+            }
+
+            console.log(sdata);
+            // return;
+        
+            ajaxPromise('module/search/controller/controller_search.php?op=search_autocomplete', 'POST', 'JSON', sdata)
+                .then(function (data) {
+                    console.log(data);
+                    if (data != 'error') { // para gestionar la falta de resultados
+                        $('#search_auto').empty();
+                        $('#search_auto').fadeIn(100);
+                        for (row in data) {
+                            $('<div></div>').attr('class', 'search_element').attr('id', `${data[row].name_city}`).html(`${data[row].name_city}`).appendTo('#search_auto');
+                        }
+                        $(document).on('click', '.search_element', function () {
+                            $('#filter_search_city_auto').val(this.getAttribute('id'));
+                            $('#search_auto').fadeOut(100);
+                            click_search();
+                        });
+                        $(document).on('click scroll', function (event) {
+                            if (event.target.id !== 'filter_search_city_auto') {
+                                $('#search_auto').fadeOut(100);
+                            }
+                        });
+                    } else {
+                        $('#search_auto').empty();
+                        $('#search_auto').fadeIn(100);
+                        $('<div></div>').attr('class', 'search_element').html('Sin resultados').appendTo('#search_auto');
+                        $(document).on('click', '.search_element', function () {
+                            $('#filter_search_city_auto').val(this.getAttribute('id'));
+                            $('#search_auto').fadeOut(100);
+                            click_search();
+                        });
+                        $(document).on('click scroll', function (event) {
+                            if (event.target.id !== 'filter_search_city_auto') {
+                                $('#search_auto').fadeOut(100);
+                            }
+                        });
+                    }
+                }).catch(function () {
+                    $('#search_auto').fadeOut(100);
+                });
+        });
+        
+    });
+}
+
+function button_search() {
+    $('#search_button').on('click', function () {
+        click_search();
+    });
+}
+
+function click_search() {
+    localStorage.removeItem('filter_op');
+    localStorage.removeItem('filter_touristcat');
+    localStorage.removeItem('filter_city');
+
+    if ($('#filter_search_op_select').val() != 'Transacción') {
+        localStorage.setItem('filter_op', $('#filter_search_op_select').val());
+    }
+    if (($('#filter_search_touristcat_select').val() != 'Zona turística') && ($('#filter_search_touristcat_select').val() != null)) {
+        localStorage.setItem('filter_touristcat', $('#filter_search_touristcat_select').val());
+    }
+    if ($("#filter_search_city_auto").val()) {
+        localStorage.setItem('filter_city', $("#filter_search_city_auto").val());
+    }
+    if ( ($('#filter_search_op_select').val() == 'Transacción') && ($('#filter_search_touristcat_select').val() == 'Zona turística') && (!$("#filter_search_city_auto").val()) ) {
+        localStorage.removeItem('filters_shop');
+        localStorage.removeItem('filter_city');
+        localStorage.removeItem('filter_cat');
+        localStorage.removeItem('filter_type');
+        localStorage.removeItem('filter_op');
+        localStorage.removeItem('filter_extras');
+        localStorage.removeItem('filter_rooms');
+        localStorage.removeItem('filter_bathrooms');
+        localStorage.removeItem('filter_priceSince');
+        localStorage.removeItem('filter_priceTo');
+        localStorage.removeItem('filter_touristcat');
+        localStorage.removeItem('filter_order');
+    }
+    applySearch();
+}
+
+function applySearch() {
+    var search = [];
+
+    if (localStorage.getItem('filter_op')) {
+        search.push(['name_op', (localStorage.getItem('filter_op'))]);
+    }
+    if (localStorage.getItem('filter_touristcat')) {
+        search.push(['name_touristcat', (localStorage.getItem('filter_touristcat'))]);
+    }
+    if (localStorage.getItem('filter_city')) {
+        search.push(['name_city', (localStorage.getItem('filter_city'))]);
+    }
+
+    if (search.length != 0) {
+        localStorage.removeItem('filters_shop');
+        localStorage.removeItem('filter_cat');
+        localStorage.removeItem('filter_type');
+        localStorage.removeItem('filter_extras');
+        localStorage.removeItem('filter_rooms');
+        localStorage.removeItem('filter_bathrooms');
+        localStorage.removeItem('filter_priceSince');
+        localStorage.removeItem('filter_priceTo');
+        localStorage.removeItem('filter_order');
+        localStorage.setItem('filters_shop', JSON.stringify(search));
+    }
+
+    window.location.href = 'index.php?page=controller_shop&op=list';      
+}
+
+$(document).ready(function () {
+    launch_search();
+    autocomplete();
+    button_search();
+});
+
+
+
+
+
+
+
+
 function loadAllRealestates() {
     var validate_filtersHome = localStorage.getItem('filters_home') || undefined; // conseguimos de localStorage filters_home, sinó existe undefined
     var validate_filtersHome_details = localStorage.getItem('filtersHome_details') || undefined; // conseguimos de localStorage filtersHome_details, sinó existe undefined
-    // var validate_filtersHome_lastsearch = localStorage.getItem('filtersHome_lastsearch') || undefined;
+    var validate_filtersHome_lastsearch = localStorage.getItem('filtersHome_lastsearch') || undefined;
     var validate_filtersShop = localStorage.getItem('filters_shop') || undefined; // conseguimos de localStorage filters_shop, sinó existe undefined
     
     if (validate_filtersHome != undefined) {
@@ -9,26 +324,23 @@ function loadAllRealestates() {
         localStorage.removeItem('filters_home');
         console.log(filtersHome);
         ajaxForSearch('module/shop/controller/controller_shop.php?op=filters_home', 'POST', 'JSON', { 'filters': filtersHome });
-        loadFilters();
     } else if (validate_filtersHome_details != undefined) {
         localStorage.removeItem('filtersHome_details'); // eliminamos de localStorage id_recomendation para no interferir en próximas busquedas
         var id_details = JSON.parse(validate_filtersHome_details); // deserializamos para convertir el string otra vez en un array
         console.log(id_details);
-        loadDetails(id_details[0]['details'][0]);
-    // } else if (validate_filtersHome_lastsearch != undefined) {
-    //     localStorage.removeItem('filtersHome_lastsearch'); // eliminamos de localStorage id_recomendation para no interferir en próximas busquedas
-    //     var id_details = JSON.parse(validate_filtersHome_lastsearch); // deserializamos para convertir el string otra vez en un array
-    //     console.log(id_details);
-    //     loadDetails(id_details[0]['lastsearch'][0]);
+        loadDetails(id_details[0]['recomendation'][0]);
+    } else if (validate_filtersHome_lastsearch != undefined) {
+        localStorage.removeItem('filtersHome_lastsearch'); // eliminamos de localStorage id_recomendation para no interferir en próximas busquedas
+        var id_details = JSON.parse(validate_filtersHome_lastsearch); // deserializamos para convertir el string otra vez en un array
+        console.log(id_details);
+        loadDetails(id_details[0]['lastsearch'][0]);
     } else if (validate_filtersShop != undefined) {
         // localStorage.removeItem('filters_shop'); // eliminamos de localStorage filters_shop para no interferir en próximas busquedas
         var filtersShop = JSON.parse(validate_filtersShop); // deserializamos para convertir el string otra vez en un array
         console.log(filtersShop);
         ajaxForSearch('module/shop/controller/controller_shop.php?op=filters_shop', 'POST', 'JSON', { 'filters': filtersShop });
-        loadFilters();
     } else {
         ajaxForSearch('module/shop/controller/controller_shop.php?op=all_realestates', 'GET', 'JSON');
-        loadFilters();
     }
 }
 
@@ -45,14 +357,12 @@ function ajaxForSearch(url, type, dataType, sData=undefined) {
         // return;
         $('.section-detailsCarousel').empty(); // antes de iniciar borramos el contenedor de details
         $('.container_detailsRealestate').empty();
-        $('.section-filters').empty();
-        $('.list_realestates').empty(); // antes de iniciar borramos el contenedor de list
-        $('#list_map').empty();
+        $('.container_listRealestates').empty(); // antes de iniciar borramos el contenedor de list
         $('.section-catch').empty();
 
         // Mejora para que cuando no hayan resultados en los filtros aplicados
         if (data == "error") {
-            $('<div></div>').attr('class', 'intro-single2').appendTo('.section-catch')
+            $('<div></div>').attr('class', 'intro-single2').appendTo('.section-intro')
                 .html(`
                     <div class='container'>
                         <div class='row'>
@@ -140,7 +450,7 @@ function ajaxForSearch(url, type, dataType, sData=undefined) {
 
             // Bucle para cada una de las viviendas    
             for (row in data) {
-                $('<div></div>').attr('class', 'containerList').attr('id', data[row].id_realestate).appendTo('.list_realestates')
+                $('<div></div>').attr('class', 'containerList').attr('id', data[row].id_realestate).appendTo('.container_listRealestates')
                     .html(`
                         <div class='containerList_img'>
                             <div id='list-carousel-${data[row].id_realestate}' class='swiper'>
@@ -168,7 +478,7 @@ function ajaxForSearch(url, type, dataType, sData=undefined) {
                                     <div class="listInfoSpecs_contents">
                                         <img src='view/img/specs/rooms.png' class='listInfoSpecs-img'>
                                         <span class='listInfoSpecs-txt'>
-                                        ${data[row].rooms} habs.
+                                        ${data[row].rooms} habitaciones
                                         </span>
                                     </div>
                                 `) : "")}
@@ -218,8 +528,6 @@ function ajaxForSearch(url, type, dataType, sData=undefined) {
                     },
                 });
             }
-
-            load_mapboxList(data);
         }
     }).catch(function() {
         localStorage.setItem('results', 0);
@@ -240,80 +548,6 @@ function ajaxForSearch(url, type, dataType, sData=undefined) {
     });
 }
 
-function load_mapboxList(data) {
-    // window.addEventListener('scroll', function() {
-    //     var realestates = document.getElementById('list_realestates');
-    //     var map = document.getElementById('list_map');
-    //     var footer = document.getElementById('footer');
-    //     var realestatesRect = realestates.getBoundingClientRect();
-    //     var mapRect = map.getBoundingClientRect();
-    //     var footerRect = footer.getBoundingClientRect();
-    
-    //     if (mapRect.bottom <= footerRect.top-20) {
-    //         map.style.position = 'fixed';
-    //         map.style.top = 193 + 'px';
-    //         map.style.left = realestatesRect.right + 'px';
-    //     } else {    
-    //         map.style.position = 'sticky';
-    //         map.style.top = 193;
-    //     }
-    // });
-
-    mapboxgl.accessToken = 'pk.eyJ1IjoiMjBqdWFuMTUiLCJhIjoiY2t6eWhubW90MDBnYTNlbzdhdTRtb3BkbyJ9.uR4BNyaxVosPVFt8ePxW1g';
-    const map = new mapboxgl.Map({
-        container: 'list_map', // container ID
-        style: 'mapbox://styles/mapbox/streets-v12', // style URL
-        center: [-2.5, 40], // starting position [lng, lat]
-        zoom: 5.25 // starting zoom
-    });
-    map.addControl(new mapboxgl.NavigationControl());
-    map.addControl(new mapboxgl.FullscreenControl());
-
-    for (row in data) {
-        const popup = new mapboxgl.Popup({ offset: 15 })
-            .setHTML(`
-                <div id='${data[row].id_realestate}' class='containerMap more_info'>
-                    <div class='map_img'>
-                        <img src='${data[row].img_realestate[0]}' alt='' class='img-b img-fluid'>
-                    </div>
-                    <div class='mapInfo_header'>
-                        <span class='mapInfo_title'>${data[row].name_type} en ${data[row].name_city}</span>
-                    </div>
-                    <div class='mapInfo_trading'>
-                        <span class='mapInfo_price'>${new Intl.NumberFormat("es-ES").format(data[row].price)} €&nbsp;&nbsp;|&nbsp;&nbsp;${data[row].name_op}</span>
-                    </div>
-                    <div class='mapInfo_specs'>
-                        <div class='mapInfoSpecs_contents'>
-                            <span class='mapInfoSpecs-txt'>
-                                ${(data[row].rooms != 0 ? (`${data[row].rooms} habs.&nbsp;&nbsp;·&nbsp;&nbsp;`) : "")}
-                            </span>
-                        </div>
-                        <div class='mapInfoSpecs_contents'>
-                            <span class='mapInfoSpecs-txt'>
-                                ${(data[row].bathrooms != 0 ? (`${data[row].bathrooms} baños&nbsp;&nbsp;·&nbsp;&nbsp;`) : "")}
-                            </span>
-                        </div>
-                        <div class='mapInfoSpecs_contents'>
-                            <span class='mapInfoSpecs-txt'>
-                                ${(data[row].floor != 0 ? (`${data[row].floor}&nbsp;&nbsp;·&nbsp;&nbsp;`) : "")}
-                            </span>
-                        </div>
-                        <div class='mapInfoSpecs_contents'>
-                            <span class='mapInfoSpecs-txt'>
-                                ${data[row].area} m<sup>2</sup>
-                            </span>
-                        </div>
-                    </div>
-                </div>`
-            );
-
-        const marker = new mapboxgl.Marker({ color: '#2eca6a' })
-            .setPopup(popup)
-            .setLngLat([data[row].lng, data[row].lat])
-            .addTo(map);
-    }
-}
-
 function clicks() {
     $(document).on("click", ".more_info", function() {
         var id_realestate = this.getAttribute('id');
@@ -326,12 +560,14 @@ function loadDetails(id_realestate) {
     ajaxPromise('module/shop/controller/controller_shop.php?op=details_realestate&id=' + id_realestate, 'GET', 'JSON')
     .then(function(data) {
         console.log(data);
-        $('.section-detailsCarousel').empty(); // antes de iniciar borramos el contenedor de details
+        $('.section-detailsCarousel').empty();
         $('.container_detailsRealestate').empty();
         $('.section-filters').empty();
-        $('.filters_container').empty();
-        $('.section-listRealestates').empty();
+        // $('.section-filters container').empty();
+        // $('.section-filters .modal_fixed').empty();
+        $('.container_listRealestates').empty();
         $('.section-catch').empty();
+        
 
         // Carousel container
         $('<div></div>').attr('class', 'swiper').attr('id', 'details-carousel').appendTo('.section-detailsCarousel')
@@ -435,32 +671,9 @@ function loadDetails(id_realestate) {
                 )
         }
 
-        // Mapbox
-        $('<div></div>').attr('class', 'detailsMap_contents').appendTo('.container_detailsRealestate')
-            .html(`
-                <p class='detailsInfoMap_title'>Localización</p>
-                <div id='details_map'></div>`
-            )
-
-        load_mapboxDetails(data);
-
     }).catch(function() {
         window.location.href='index.php?page=503';
     });
-}
-
-function load_mapboxDetails(data) {
-    mapboxgl.accessToken = 'pk.eyJ1IjoiMjBqdWFuMTUiLCJhIjoiY2t6eWhubW90MDBnYTNlbzdhdTRtb3BkbyJ9.uR4BNyaxVosPVFt8ePxW1g';
-    const map = new mapboxgl.Map({
-        container: 'details_map', // container ID
-        style: 'mapbox://styles/mapbox/streets-v12', // style URL
-        center: [data[0].lng, data[0].lat], // starting position [lng, lat]
-        zoom: 15 // starting zoom
-    });
-    map.addControl(new mapboxgl.NavigationControl());
-    const marker = new mapboxgl.Marker({ color: '#2eca6a' })
-        .setLngLat([data[0].lng, data[0].lat])
-        .addTo(map);
 }
 
 function loadFilters() {
@@ -469,10 +682,10 @@ function loadFilters() {
         console.log(data);
         $('<div></div>').attr('class', 'container').appendTo('.section-filters')
         .html(`
-            <div class='filters_container container'>
+            <div class='modal_fixed container'>
                 <div id='modal_all_filters'>
                     <a href='#modalAllFilters' class='open'>
-                        <img src='view/img/icons/filtrar.png' alt='Todos los filtros'>
+                        <img src='view/img/icons/filtrar.png'>
                     </a>
                     <div id='modalAllFilters' class='modal container'>
                         <a href='#' class='modal-bg container'></a>
@@ -540,6 +753,7 @@ function loadFilters() {
                                     </select>
                                 </div>
                             </div>
+
 
 
                             <div class='filterPrice_container filterAll_container'>
@@ -630,6 +844,36 @@ function loadFilters() {
                     </div>
                 </div>
 
+                <div id='modal_touristcat'>
+                    <a href='#modalTouristcat' class='open'>
+                        <button id='touristcat_button' class='modal-button'>Zona Turística</button>
+                    </a>
+                    <div id='modalTouristcat' class='modal container'>
+                        <a href='#' class='modal-bg container'></a>
+                        <div class='modal-content filterTouristcat_container'>
+                            <div class='modal-title'>
+                                <span>Zona Turística</span>
+                                <img src='view/img/icons/eliminar.png' onclick='remove_filterTouristcat()'>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id='modal_city'>
+                    <a href='#modalCity' class='open'>
+                        <button id='city_button' class='modal-button'>Ciudad</button>
+                    </a>
+                    <div id='modalCity' class='modal container'>
+                        <a href='#' class='modal-bg container'></a>
+                        <div class='modal-content filterCity_container'>
+                            <div class='modal-title'>
+                                <span>Ciudad</span>
+                                <img src='view/img/icons/eliminar.png' onclick='remove_filterCity()'>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div id='modal_type'>
                     <a href='#modalType' class='open'>
                         <button id='type_button' class='modal-button'>Tipo de inmueble</button>
@@ -639,7 +883,7 @@ function loadFilters() {
                         <div class='modal-content filterType_container'>
                             <div class='modal-title'>
                                 <span>Tipo de inmueble</span>
-                                <img src='view/img/icons/eliminar.png' alt='Eliminar filtro' onclick='remove_filterType()'>
+                                <img src='view/img/icons/eliminar.png' onclick='remove_filterType()'>
                             </div>
                             <div class='filterTypeCont_data'>
                                 <div class='filterTypeCont_col1'>
@@ -658,16 +902,16 @@ function loadFilters() {
                     </div>
                 </div>
 
-                <div id='modal_cat'>
-                    <a href='#modalCat' class='open'>
-                        <button id='cat_button' class='modal-button'>Categoría</button>
+                <div id='modal_op'>
+                    <a href='#modalOp' class='open'>
+                        <button id='op_button' class='modal-button'>Transacción</button>
                     </a>
-                    <div id='modalCat' class='modal container'>
+                    <div id='modalOp' class='modal container'>
                         <a href='#' class='modal-bg container'></a>
-                        <div class='modal-content filterCat_container'>
+                        <div class='modal-content filterOp_container'>
                             <div class='modal-title'>
-                                <span>Categoría</span>
-                                <img src='view/img/icons/eliminar.png' alt='Eliminar filtro' onclick='remove_filterCat()'>
+                                <span>Transacción</span>
+                                <img src='view/img/icons/eliminar.png' onclick='remove_filterOp()'>
                             </div>
                         </div>
                     </div>
@@ -682,7 +926,7 @@ function loadFilters() {
                         <div class='modal-content filterExtras_container'>
                             <div class='modal-title'>
                                 <span>Extras</span>
-                                <img src='view/img/icons/eliminar.png' alt='Eliminar filtro' onclick='remove_filterExtras()'>
+                                <img src='view/img/icons/eliminar.png' onclick='remove_filterExtras()'>
                             </div>
                         </div>
                     </div>
@@ -697,7 +941,7 @@ function loadFilters() {
                         <div class='modal-content filterOrder_container'>
                             <div class='modal-title'>
                                 <span>Ordenar</span>
-                                <img src='view/img/icons/eliminar.png' alt='Eliminar filtro' onclick='remove_filterOrder()'>
+                                <img src='view/img/icons/eliminar.png' onclick='remove_filterOrder()'>
                             </div>
                             <div class="filter_container">
                                 <input type='radio' id='filter_order_cheaper' name='filter_order' class='filter_order' value='Más baratos'>
@@ -724,7 +968,7 @@ function loadFilters() {
                 </div>
 
                 <div id='modal_remove'>
-                    <img src='view/img/icons/eliminar.png' alt='Eliminar todos los filtros' onclick='remove_filters()'>
+                    <img src='view/img/icons/eliminar.png' onclick='remove_filters()'>
                 </div>
 
                 <div id='modal_results'>
@@ -771,13 +1015,13 @@ function loadFilters() {
             $('<option></option>').attr('value', `${data[5][0][row].name_touristcat}`).html(`${data[5][0][row].name_touristcat}`).appendTo('#filter_touristcat_select')
             };
 
-        // // filter city
-        // for (row in data[0][0]) {
-        //     $('<div></div>').attr('class', 'filter_container').appendTo('.filterCity_container')       
-        //         .html(`
-        //             <input type='radio' id='filter_city_${data[0][0][row].id_city}' name='filter_city' class='filter_city' value='${data[0][0][row].name_city}'>
-        //             <label for='filter_city_${data[0][0][row].id_city}'>${data[0][0][row].name_city}</label>`
-        //     )};
+        // filter city
+        for (row in data[0][0]) {
+            $('<div></div>').attr('class', 'filter_container').appendTo('.filterCity_container')       
+                .html(`
+                    <input type='radio' id='filter_city_${data[0][0][row].id_city}' name='filter_city' class='filter_city' value='${data[0][0][row].name_city}'>
+                    <label for='filter_city_${data[0][0][row].id_city}'>${data[0][0][row].name_city}</label>`
+            )};
 
         // filter type
         for (row in data[2]) {
@@ -805,22 +1049,14 @@ function loadFilters() {
                 };
             };
         };
-
-        // filter category
-        for (row in data[1][0]) {
-            $('<div></div>').attr('class', 'filter_container').appendTo('.filterCat_container')       
-                .html(`
-                    <input type='radio' id='filter_cat_${data[1][0][row].id_cat}' name='filter_cat' class='filter_cat' value='${data[1][0][row].name_cat}'>
-                    <label for='filter_cat_${data[1][0][row].id_cat}'>${data[1][0][row].name_cat}</label>`
-            )};
         
-        // // filter operation
-        // for (row in data[3][0]) {
-        //     $('<div></div>').attr('class', 'filter_container').appendTo('.filterOp_container')       
-        //         .html(`
-        //             <input type='radio' id='filter_op_${data[3][0][row].id_op}' name='filter_op' class='filter_op' value='${data[3][0][row].name_op}'>
-        //             <label for='filter_op_${data[3][0][row].id_op}'>${data[3][0][row].name_op}</label>`
-        //     )};
+        // filter operation
+        for (row in data[3][0]) {
+            $('<div></div>').attr('class', 'filter_container').appendTo('.filterOp_container')       
+                .html(`
+                    <input type='radio' id='filter_op_${data[3][0][row].id_op}' name='filter_op' class='filter_op' value='${data[3][0][row].name_op}'>
+                    <label for='filter_op_${data[3][0][row].id_op}'>${data[3][0][row].name_op}</label>`
+            )};
 
         // filter extras
         for (row in data[4][0]) {
@@ -830,13 +1066,13 @@ function loadFilters() {
                     <label for='filter_extras_${data[4][0][row].id_extras}'>${data[4][0][row].name_extras}</label>`
             )};
         
-        // // filter tourist category
-        // for (row in data[5][0]) {
-        //     $('<div></div>').attr('class', 'filter_container').appendTo('.filterTouristcat_container')       
-        //         .html(`
-        //             <input type='radio' id='filter_touristcat_${data[5][0][row].id_touristcat}' name='filter_touristcat' class='filter_touristcat' value='${data[5][0][row].name_touristcat}'>
-        //             <label for='filter_touristcat_${data[5][0][row].id_touristcat}'>${data[5][0][row].name_touristcat}</label>`
-        //     )};
+        // filter tourist category
+        for (row in data[5][0]) {
+            $('<div></div>').attr('class', 'filter_container').appendTo('.filterTouristcat_container')       
+                .html(`
+                    <input type='radio' id='filter_touristcat_${data[5][0][row].id_touristcat}' name='filter_touristcat' class='filter_touristcat' value='${data[5][0][row].name_touristcat}'>
+                    <label for='filter_touristcat_${data[5][0][row].id_touristcat}'>${data[5][0][row].name_touristcat}</label>`
+            )};
         
         highlight();
         
@@ -1010,6 +1246,14 @@ function highlight() {
     }
     for (row1 in filters_shop) {
         if (filters_shop[row1][0] === 'name_city') {
+            $('#city_button')
+                .html(filters_shop[row1][1])
+                .css({
+                    "background-color": "#2eca6a17",
+                    "color": "#2ab760",
+                    "transition": "all 5000ms",
+                });
+            $("input[value='"+ filters_shop[row1][1] +"']").attr('checked', true);
             $("option[value='"+ filters_shop[row1][1] +"']").attr('selected', true);
             $('.filterCityAll_container select')
                 .css({
@@ -1022,23 +1266,9 @@ function highlight() {
                     "background-color": "#fff",
                     "color": "#555555",
                 });
-            $(".filterSearchCity_container input[type=text]").val(filters_shop[row1][1]) // la class es del div que contiene el input
-                .css({
-                    "background-color": "#2eca6a17",
-                    "color": "#2ab760",
-                    "transition": "all 250ms",
-                });
         }
 
         if (filters_shop[row1][0] === 'name_cat') {
-            $('#cat_button')
-                .html(filters_shop[row1][1])
-                .css({
-                    "background-color": "#2eca6a17",
-                    "color": "#2ab760",
-                    "transition": "all 5000ms",
-                });
-            $("input[value='"+ filters_shop[row1][1] +"']").attr('checked', true);
             $("option[value='"+ filters_shop[row1][1] +"']").attr('selected', true);
             $('.filterCatAll_container select')
                 .css({
@@ -1067,6 +1297,14 @@ function highlight() {
         }
 
         if (filters_shop[row1][0] === 'name_op') {
+            $('#op_button')
+                .html(filters_shop[row1][1])
+                .css({
+                    "background-color": "#2eca6a17",
+                    "color": "#2ab760",
+                    "transition": "all 5000ms",
+                });
+            $("input[value='"+ filters_shop[row1][1] +"']").attr('checked', true);
             $("option[value='"+ filters_shop[row1][1] +"']").attr('selected', true);
             $('.filterOpAll_container select')
                 .css({
@@ -1078,18 +1316,6 @@ function highlight() {
                 .css({
                     "background-color": "#fff",
                     "color": "#555555",
-                });
-            $('.filterSearchOp_container select')
-                .css({
-                    "background-color": "#2eca6a17",
-                    "color": "#2ab760",
-                    "transition": "all 250ms",
-                });
-            $('.filterSearchOp_container option')
-                .css({
-                    "background-color": "#fff",
-                    "color": "#555555",
-                    "transition": "all 250ms",
                 });
         }
 
@@ -1158,6 +1384,14 @@ function highlight() {
         }
 
         if (filters_shop[row1][0] === 'name_touristcat') {
+            $('#touristcat_button')
+                .html(filters_shop[row1][1])
+                .css({
+                    "background-color": "#2eca6a17",
+                    "color": "#2ab760",
+                    "transition": "all 5000ms",
+                });
+            $("input[value='"+ filters_shop[row1][1] +"']").attr('checked', true);
             $("option[value='"+ filters_shop[row1][1] +"']").attr('selected', true);
             $('.filterTouristcatAll_container select')
                 .css({
@@ -1169,18 +1403,6 @@ function highlight() {
                 .css({
                     "background-color": "#fff",
                     "color": "#555555",
-                });
-            $('.filterSearchTouristcat_container select')
-                .css({
-                    "background-color": "#2eca6a17",
-                    "color": "#2ab760",
-                    "transition": "all 250ms",
-                });
-            $('.filterSearchTouristcat_container option')
-                .css({
-                    "background-color": "#fff",
-                    "color": "#555555",
-                    "transition": "all 250ms",
                 });
         }
 
@@ -1213,23 +1435,23 @@ function remove_filters() {
     location.reload();
 }
 
-// function remove_filterCity() {
-//     localStorage.removeItem('filter_city');
-//     remove_filtersShop();
-// }
+function remove_filterCity() {
+    localStorage.removeItem('filter_city');
+    remove_filtersShop();
+}
 
-// function remove_filterTouristcat() {
-//     localStorage.removeItem('filter_touristcat');
-//     remove_filtersShop();
-// }
+function remove_filterTouristcat() {
+    localStorage.removeItem('filter_touristcat');
+    remove_filtersShop();
+}
 
 function remove_filterType() {
     localStorage.removeItem('filter_type');
     remove_filtersShop();
 }
 
-function remove_filterCat() {
-    localStorage.removeItem('filter_cat');
+function remove_filterOp() {
+    localStorage.removeItem('filter_op');
     remove_filtersShop();
 }
 
@@ -1249,10 +1471,10 @@ function remove_filtersShop() {
     location.reload();
 }
 
-$(document).ready(function() {
-    // console.log('Hola JS document ready');
-    loadAllRealestates();
-    // loadFilters();
-    saveFilters();
-    clicks();
-});
+// $(document).ready(function() {
+//     // console.log('Hola JS document ready');
+//     loadAllRealestates();
+//     loadFilters();
+//     saveFilters();
+//     clicks();
+// });

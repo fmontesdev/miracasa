@@ -4,8 +4,8 @@ include($path . "/model/connect.php");
 
 class DAOShop{
 	function select_all_realEstates(){
-		$sql = "SELECT r.id_realestate, t.name_type, o.name_op, s.price, c.name_city, c.province, r.area, r.rooms,
-				r.bathrooms, r.floor, r.description, GROUP_CONCAT(i.img_realestate SEPARATOR ':') AS img_realestate
+		$sql = "SELECT r.id_realestate, r.lat, r.lng, t.name_type, o.name_op, s.price, c.name_city, c.province, r.area,
+				r.rooms, r.bathrooms, r.floor, r.description, GROUP_CONCAT(i.img_realestate SEPARATOR ':') AS img_realestate
 					FROM `real_estate` r
 					INNER JOIN `belong_to_type` bt ON  r.id_realestate = bt.id_realestate 
 					INNER JOIN `type` t ON t.id_type = bt.id_type
@@ -44,10 +44,10 @@ class DAOShop{
 	}
 
 	function select_one_realEstate($id){
-
 		// return $id;
 
-		$sql = "SELECT r.id_realestate, t.name_type, o.name_op, s.price, c.name_city, c.province, r.area, r.rooms, r.bathrooms, r.floor, r.description
+		$sql = "SELECT r.id_realestate, r.lat, r.lng, t.name_type, o.name_op, s.price,
+				c.name_city, c.province, r.area, r.rooms, r.bathrooms, r.floor, r.description
 					FROM `real_estate` r 
 					INNER JOIN `type` t 
 					INNER JOIN `belong_to_type` bt
@@ -141,7 +141,7 @@ class DAOShop{
             $sql_whereFilter .= " WHERE c.id_city = '$filter_city'";
         }
 
-		$sql = "SELECT r.id_realestate, t.name_type, t.subtype, o.name_op, s.price, c.name_city, c.province, r.area,
+		$sql = "SELECT r.id_realestate, r.lat, r.lng, t.name_type, t.subtype, o.name_op, s.price, c.name_city, c.province, r.area,
 				r.rooms, r.bathrooms, r.floor, r.description, GROUP_CONCAT(i.img_realestate SEPARATOR ':') AS img_realestate" . $sql_selectFilter ."
 					FROM `real_estate` r
 					INNER JOIN `belong_to_type` bt ON  r.id_realestate = bt.id_realestate
@@ -384,7 +384,7 @@ class DAOShop{
 			}        
 		}
 
-		$sql = "SELECT r.id_realestate, t.name_type, t.subtype, o.name_op, s.price, c.name_city, c.province, r.area, r.rooms,
+		$sql = "SELECT r.id_realestate, r.lat, r.lng, t.name_type, t.subtype, o.name_op, s.price, c.name_city, c.province, r.area, r.rooms,
 				r.bathrooms, r.floor, r.description, GROUP_CONCAT(i.img_realestate SEPARATOR ':') AS img_realestate". $sql_selectFilter ."
 					FROM `real_estate` r
 					INNER JOIN `belong_to_type` bt ON  r.id_realestate = bt.id_realestate

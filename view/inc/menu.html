@@ -10,7 +10,7 @@
 
         <a class="navbar-brand text-brand" href="index.php?page=home">mira<span class="color-b">casa</span></a>
 
-        <div class="navbar-collapse collapse justify-content-center" id="navbarDefault">
+        <!-- <div class="navbar-collapse collapse" id="navbarDefault">
             <ul class="navbar-nav">
 
                 <li class="nav-item">
@@ -20,7 +20,7 @@
                 <li class="nav-item">
                     <a class="nav-link" href="index.php?page=controller_shop&op=list">Inmuebles</a>
                 </li>
-                <!--
+                
                 <li class="nav-item">
                     <a class="nav-link" href="index.php?page=services">Servicios</a>
                 </li>
@@ -32,14 +32,34 @@
                 <li class="nav-item">
                     <a class="nav-link" href="index.php?page=contactus">Contacto</a>
                 </li>
-                -->
+               
             </ul>
+        </div> -->
+
+        <div class='filterSearch_container'>
+            <div class='filterSearchOp_container'>
+                <select id='filter_search_op_select' name='filter_searchOp' class='filter_searchOp'>
+                    <option hidden selected>Transacción</option>
+                </select>
+            </div>
+
+            <div class='filterSearchTouristcat_container'>
+                <select id='filter_search_touristcat_select' name='filter_searchTouristcat' class='filter_searchTouristcat'>
+                    <!-- <option hidden selected>Zona turística</option> -->
+                </select>
+            </div>
+
+            <div class='filterSearchCity_container'>
+                <input type="text" id='filter_search_city_auto' name='filter_searchCity_auto' class='filter_searchCity_auto' placeholder="Ciudad">
+                <div id="search_auto"></div>
+            </div>
+
+            <div class='filterSearchButton_container'>
+                <button type="button" id="search_button" class="btn btn-b-n navbar-toggle-box navbar-toggle-box-collapse" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01">
+                    <i class="bi bi-search"></i>
+                </button>
+            </div>
         </div>
 
-        <!-- ======= Botón Busqueda ======= -->
-        <button type="button" class="btn btn-b-n navbar-toggle-box navbar-toggle-box-collapse" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01">
-        <i class="bi bi-search"></i>
-        </button>
-    
     </div>
 </nav>

@@ -44,18 +44,18 @@
   /**
    * Toggle .navbar-reduce
    */
-  let selectHNavbar = select('.navbar-default')
-  if (selectHNavbar) {
-    onscroll(document, () => {
-      if (window.scrollY > 100) {
-        selectHNavbar.classList.add('navbar-reduce')
-        selectHNavbar.classList.remove('navbar-trans')
-      } else {
-        selectHNavbar.classList.remove('navbar-reduce')
-        selectHNavbar.classList.add('navbar-trans')
-      }
-    })
-  }
+  // let selectHNavbar = select('.navbar-default')
+  // if (selectHNavbar) {
+  //   onscroll(document, () => {
+  //     if (window.scrollY > 100) {
+  //       selectHNavbar.classList.add('navbar-reduce')
+  //       selectHNavbar.classList.remove('navbar-trans')
+  //     } else {
+  //       selectHNavbar.classList.remove('navbar-reduce')
+  //       selectHNavbar.classList.add('navbar-trans')
+  //     }
+  //   })
+  // }
 
   /**
    * Back to top button

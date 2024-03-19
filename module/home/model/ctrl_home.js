@@ -45,7 +45,8 @@ function carouselTouristcat() {
                 320: {slidesPerView: 1,},
                 500: {slidesPerView: 2,},
                 1000: {slidesPerView: 3,},
-                1500: {slidesPerView: 4,}
+                1500: {slidesPerView: 4,},
+                2000: {slidesPerView: 5,},
             }
         });
     }).catch(function() {
@@ -60,7 +61,7 @@ function carouselTypes() {
         for (row in data) {
             $('<div></div>').attr('class', 'typeSlide carousel-item-c swiper-slide').attr('id', data[row].id_type).appendTo('#types-carousel .containerTypes')
                 .html(`
-                    <div class='card-box-b card-shadow news-box'>
+                    <div class='card-box-b card-shadow news-box border_radius'>
                         <div class='img-box-b'>
                             <img src='${data[row].img_type}' alt='' class='img-b img-fluid'>
                         </div>
@@ -114,7 +115,7 @@ function carouselCategories() {
         for (row in data) {
             $('<div></div>').attr('class', 'categorySlide carousel-item-c swiper-slide').attr('id', data[row].id_cat).appendTo('#categories-carousel .containerCategories')
                 .html(`
-                    <div class='card-box-b card-shadow news-box'>
+                    <div class='card-box-b card-shadow news-box border_radius'>
                         <div class='img-box-b'>
                             <img src='${data[row].img_cat}' alt='' class='img-b img-fluid'>
                         </div>
@@ -166,7 +167,7 @@ function carouselOperations() {
         for (row in data) {
             $('<div></div>').attr('class', 'operationSlide carousel-item-c swiper-slide').attr('id', data[row].id_op).appendTo('#operations-carousel .containerOperations')
                 .html(`
-                    <div class='card-box-b card-shadow news-box'>
+                    <div class='card-box-b card-shadow news-box border_radius'>
                         <div class='img-box-b'>
                             <img src='${data[row].img_op}' alt='' class='img-b img-fluid'>
                         </div>
@@ -218,7 +219,7 @@ function carouselCities() {
         for (row in data) {
             $('<div></div>').attr('class', 'citySlide carousel-item-c swiper-slide').attr('id', data[row].id_city).appendTo('#cities-carousel .containerCities')
                 .html(`
-                    <div class='card-box-b card-shadow news-box'>
+                    <div class='card-box-b card-shadow news-box border_radius'>
                         <div class='img-box-b'>
                             <img src='${data[row].img_city}' alt='' class='img-b img-fluid'>
                         </div>
@@ -270,7 +271,7 @@ function carouselRecomendations() {
         for (row in data) {
             $('<div></div>').attr('class', 'recomendationSlide carousel-item-b swiper-slide').attr('id', data[row].id_realestate).appendTo('#recomendations-carousel .containerRecomendations')
                 .html(`
-                    <div class='card-box-a card-shadow'>
+                    <div class='card-box-a card-shadow border_radius'>
                         <div class='img-box-a'>
                             <img src='${data[row].img_realestate}' alt='' class='img-a img-fluid'>
                         </div>
@@ -352,7 +353,7 @@ function carouselMostvisited() {
         for (row in data) {
             $('<div></div>').attr('class', 'mostvisitedSlide carousel-item-b swiper-slide').attr('id', data[row].id_realestate).appendTo('#mostvisited-carousel .containerMostvisited')
                 .html(`
-                    <div class='card-box-a card-shadow'>
+                    <div class='card-box-a card-shadow border_radius'>
                         <div class='img-box-a'>
                             <img src='${data[row].img_realestate}' alt='' class='img-a img-fluid'>
                         </div>
@@ -442,7 +443,7 @@ function carouselLastsearch() {
 
                 $('<div></div>').attr('class', 'lastsearchSlide carousel-item-b swiper-slide').attr('id', data[row].id_realestate).appendTo('#lastsearch-carousel .containerLastsearch')
                     .html(`
-                        <div class='card-box-a card-shadow'>
+                        <div class='card-box-a card-shadow border_radius'>
                             <div class='img-box-a'>
                                 <img src='${data[row].img_realestate[0]}' alt='' class='img-a img-fluid'>
                             </div>
@@ -571,7 +572,17 @@ function clicks(){
 
     $(document).on("click",'div.recomendationSlide', function (){
         var filtersHome_details = [];
-        filtersHome_details.push({"recomendation":[this.getAttribute('id')]});
+        filtersHome_details.push({"details":[this.getAttribute('id')]});
+        localStorage.removeItem('filtersHome_details');
+        localStorage.setItem('filtersHome_details', JSON.stringify(filtersHome_details)); 
+            setTimeout(function(){ 
+            window.location.href = 'index.php?page=controller_shop&op=list';
+            }, 500);
+    });
+
+    $(document).on("click",'div.mostvisitedSlide', function (){
+        var filtersHome_details = [];
+        filtersHome_details.push({"details":[this.getAttribute('id')]});
         localStorage.removeItem('filtersHome_details');
         localStorage.setItem('filtersHome_details', JSON.stringify(filtersHome_details)); 
             setTimeout(function(){ 
@@ -580,10 +591,10 @@ function clicks(){
     });
 
     $(document).on("click",'div.lastsearchSlide', function (){
-        var filtersHome_lastsearch = [];
-        filtersHome_lastsearch.push({"lastsearch":[this.getAttribute('id')]});
-        localStorage.removeItem('filtersHome_lastsearch');
-        localStorage.setItem('filtersHome_lastsearch', JSON.stringify(filtersHome_lastsearch)); 
+        var filtersHome_details = [];
+        filtersHome_details.push({"details":[this.getAttribute('id')]});
+        localStorage.removeItem('filtersHome_details');
+        localStorage.setItem('filtersHome_details', JSON.stringify(filtersHome_details)); 
             setTimeout(function(){ 
             window.location.href = 'index.php?page=controller_shop&op=list';
             }, 500);
