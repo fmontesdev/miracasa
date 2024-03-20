@@ -208,28 +208,52 @@ a:hover {
 }
 
 /*------/ Pagination-a /------*/
+.pagination {
+  justify-content: center;
+}
+
 .pagination-a {
   text-decoration: none;
 }
 
 .pagination-a .pagination .page-link {
+  width: 37px;
   margin: 0 0.2rem;
-  border-color: transparent;
-  padding: 0.5rem 0.8rem;
+  padding: 0.4rem 0.6rem;
+  text-align: center;
+  vertical-align: middle;
+  border: 0;
+  border-radius: 22px;
+  background-color: #ededed;
   color: #000000;
+  cursor: pointer;
 }
 
 .pagination-a .pagination .page-link:hover,
 .pagination-a .pagination .page-link:active,
 .pagination-a .pagination .page-link:focus {
-  background-color: #2eca6a;
+  background-color: #2eca6a67;
+}
+
+.pagination-a .pagination #prev,
+.pagination-a .pagination #next {
+  background-color: #fff;
+}
+
+.pagination-a .pagination #prev:hover,
+.pagination-a .pagination #prev:active,
+.pagination-a .pagination #prev:focus,
+.pagination-a .pagination #next:hover,
+.pagination-a .pagination #next:active,
+.pagination-a .pagination #next:focus {
+  background-color: #ededed;;
 }
 
 .pagination-a .pagination .page-link span {
   font-size: 1.2rem;
 }
 
-.pagination-a .pagination .next .page-link {
+/* .pagination-a .pagination .next .page-link {
   padding: 0.4rem 0.9rem;
 }
 
@@ -241,7 +265,7 @@ a:hover {
 .pagination-a .pagination .page-item:first-child .page-link {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
-}
+} */
 
 .pagination-a .pagination .page-item.disabled .page-link {
   padding: 0.4rem 0.9rem;
@@ -2380,7 +2404,7 @@ footer .credits {
   top: 181px;
   width: 40%;
   height: calc(-181px + 100vh);
-  margin-bottom: 25px;
+  margin-bottom: 1rem;
   border-radius: 12px;
 }
 

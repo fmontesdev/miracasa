@@ -1,34 +1,29 @@
-function loadAllRealestates() {
+function loadAllRealestates(limit=4, offset=0) {
     var validate_filtersHome = localStorage.getItem('filters_home') || undefined; // conseguimos de localStorage filters_home, sinó existe undefined
     var validate_filtersHome_details = localStorage.getItem('filtersHome_details') || undefined; // conseguimos de localStorage filtersHome_details, sinó existe undefined
-    // var validate_filtersHome_lastsearch = localStorage.getItem('filtersHome_lastsearch') || undefined;
     var validate_filtersShop = localStorage.getItem('filters_shop') || undefined; // conseguimos de localStorage filters_shop, sinó existe undefined
     
+    var validate_page = localStorage.getItem('page') || undefined;
+    if (validate_page != undefined) {
+        offset = 4 * (validate_page - 1);
+    }
+
     if (validate_filtersHome != undefined) {
-        var filtersHome = JSON.parse(validate_filtersHome); // deserializamos para convertir el string otra vez en un array
         localStorage.removeItem('filters_home');
+        var filtersHome = JSON.parse(validate_filtersHome); // deserializamos para convertir el string otra vez en un array
         console.log(filtersHome);
         ajaxForSearch('module/shop/controller/controller_shop.php?op=filters_home', 'POST', 'JSON', { 'filters': filtersHome });
-        loadFilters();
     } else if (validate_filtersHome_details != undefined) {
         localStorage.removeItem('filtersHome_details'); // eliminamos de localStorage id_recomendation para no interferir en próximas busquedas
         var id_details = JSON.parse(validate_filtersHome_details); // deserializamos para convertir el string otra vez en un array
         console.log(id_details);
         loadDetails(id_details[0]['details'][0]);
-    // } else if (validate_filtersHome_lastsearch != undefined) {
-    //     localStorage.removeItem('filtersHome_lastsearch'); // eliminamos de localStorage id_recomendation para no interferir en próximas busquedas
-    //     var id_details = JSON.parse(validate_filtersHome_lastsearch); // deserializamos para convertir el string otra vez en un array
-    //     console.log(id_details);
-    //     loadDetails(id_details[0]['lastsearch'][0]);
     } else if (validate_filtersShop != undefined) {
-        // localStorage.removeItem('filters_shop'); // eliminamos de localStorage filters_shop para no interferir en próximas busquedas
         var filtersShop = JSON.parse(validate_filtersShop); // deserializamos para convertir el string otra vez en un array
         console.log(filtersShop);
-        ajaxForSearch('module/shop/controller/controller_shop.php?op=filters_shop', 'POST', 'JSON', { 'filters': filtersShop });
-        loadFilters();
+        ajaxForSearch('module/shop/controller/controller_shop.php?op=filters_shop', 'POST', 'JSON', { 'filters': filtersShop, 'limit': limit, 'offset': offset });
     } else {
-        ajaxForSearch('module/shop/controller/controller_shop.php?op=all_realestates', 'GET', 'JSON');
-        loadFilters();
+        ajaxForSearch('module/shop/controller/controller_shop.php?op=all_realestates', 'POST', 'JSON', { 'limit': limit, 'offset': offset });
     }
 }
 
@@ -38,17 +33,18 @@ function ajaxForSearch(url, type, dataType, sData=undefined) {
     // die("<script>console.log('Hola ajaxForSearch');</script>");
     ajaxPromise(url, type, dataType, sData)
     .then(function(data) {
-        console.log(data);
-
-        localStorage.setItem('results', data.length);
-            
+        console.log(data);   
         // return;
+
         $('.section-detailsCarousel').empty(); // antes de iniciar borramos el contenedor de details
         $('.container_detailsRealestate').empty();
-        $('.section-filters').empty();
         $('.list_realestates').empty(); // antes de iniciar borramos el contenedor de list
         $('#list_map').empty();
-        $('.section-catch').empty();
+        $('#pagination_container').empty();
+
+        setTimeout(function(){
+            $('html, body').animate({ scrollTop: $(".list_realestates") }); // cuando carga posiciona el list al inicio
+        }, 50);
 
         // Mejora para que cuando no hayan resultados en los filtros aplicados
         if (data == "error") {
@@ -220,11 +216,12 @@ function ajaxForSearch(url, type, dataType, sData=undefined) {
             }
 
             load_mapboxList(data);
+            load_pagination();
         }
     }).catch(function() {
         localStorage.setItem('results', 0);
         localStorage.removeItem('filters_home'); // eliminamos de localStorage filters_home para no interferir en próximas busquedas
-        $('<div></div>').attr('class', 'intro-single3').appendTo('.section-catch')
+        $('<div></div>').attr('class', 'intro-single3').appendTo('.list_realestates')
             .html(`
                 <div class='container'>
                     <div class='row'>
@@ -320,6 +317,29 @@ function clicks() {
         // console.log(id_realestate);
         loadDetails(id_realestate);
     });
+
+    $(document).on('click', '.page-link', function() {
+        var page = this.getAttribute('id');
+        console.log(page);
+
+        if (page !== 'prev' && page !== 'next') {
+            localStorage.setItem('page', page);
+        }
+        if (page === 'prev') {
+            var prev = parseInt(localStorage.getItem('page')) - 1;
+            if (prev > 0){
+                localStorage.setItem('page', prev);
+            }
+        }
+        if (page === 'next') {
+            var next = parseInt(localStorage.getItem('page')) + 1;
+            var total_pages = Math.ceil(localStorage.getItem('count') / 4);
+            if (next <= total_pages){
+                localStorage.setItem('page', next);
+            }
+        }
+        loadAllRealestates();
+    });
 }
 
 function loadDetails(id_realestate) {
@@ -328,10 +348,13 @@ function loadDetails(id_realestate) {
         console.log(data);
         $('.section-detailsCarousel').empty(); // antes de iniciar borramos el contenedor de details
         $('.container_detailsRealestate').empty();
-        $('.section-filters').empty();
-        $('.filters_container').empty();
         $('.section-listRealestates').empty();
-        $('.section-catch').empty();
+        $('#pagination_container').empty();
+        setTimeout(function(){
+            $('.section-filters').empty();
+        }, 100);
+
+        $('html, body').animate({ scrollTop: $('.section-detailsCarousel') });  // cuando carga posiciona el details al inicio
 
         // Carousel container
         $('<div></div>').attr('class', 'swiper').attr('id', 'details-carousel').appendTo('.section-detailsCarousel')
@@ -467,6 +490,7 @@ function loadFilters() {
     ajaxPromise('module/shop/controller/controller_shop.php?op=load_filters','GET', 'JSON')
     .then(function(data) {
         console.log(data);
+
         $('<div></div>').attr('class', 'container').appendTo('.section-filters')
         .html(`
             <div class='filters_container container'>
@@ -690,13 +714,13 @@ function loadFilters() {
 
                 <div id='modal_order'>
                     <a href='#modalOrder' class='open'>
-                        <button id='order_button' class='modal-button'>Ordenar</button>
+                        <button id='order_button' class='modal-button'>Ordenar por</button>
                     </a>
                     <div id='modalOrder' class='modal container'>
                         <a href='#' class='modal-bg container'></a>
                         <div class='modal-content filterOrder_container'>
                             <div class='modal-title'>
-                                <span>Ordenar</span>
+                                <span>Ordenar por</span>
                                 <img src='view/img/icons/eliminar.png' alt='Eliminar filtro' onclick='remove_filterOrder()'>
                             </div>
                             <div class="filter_container">
@@ -726,12 +750,14 @@ function loadFilters() {
                 <div id='modal_remove'>
                     <img src='view/img/icons/eliminar.png' alt='Eliminar todos los filtros' onclick='remove_filters()'>
                 </div>
-
-                <div id='modal_results'>
-                    <span class='results'>${localStorage.getItem('results')} Inmuebles</span>
-                </div>
             </div>`
         )
+
+        setTimeout(function(){
+            $('<div></div>').attr('id', 'modal_results').appendTo('.filters_container')       
+                .html(`<span class='results'>${localStorage.getItem('count')} Inmuebles</span>`);
+        }, 100);
+
         // filters all
         for (row in data[0][0]) {
             $('<option></option>').attr('value', `${data[0][0][row].name_city}`).html(`${data[0][0][row].name_city}`).appendTo('#filter_city_select')
@@ -998,6 +1024,7 @@ function applyFilters() {
 
     if (filters_shop.length != 0) {
         localStorage.setItem('filters_shop', JSON.stringify(filters_shop));
+        localStorage.setItem('page', 1);
         location.reload();
     } else {
         location.reload();
@@ -1210,6 +1237,7 @@ function remove_filters() {
     localStorage.removeItem('filter_priceTo');
     localStorage.removeItem('filter_touristcat');
     localStorage.removeItem('filter_order');
+    localStorage.setItem('page', 1);
     location.reload();
 }
 
@@ -1249,10 +1277,70 @@ function remove_filtersShop() {
     location.reload();
 }
 
+function load_pagination() {
+    var filtersShop = [];
+    var url = "";
+    var validate_filtersShop = localStorage.getItem('filters_shop') || undefined;
+
+    if (validate_filtersShop != undefined) {
+        filtersShop = JSON.parse(validate_filtersShop)
+        url = 'module/shop/controller/controller_shop.php?op=count_filtersShop';
+    } else {
+        url = 'module/shop/controller/controller_shop.php?op=count_all';
+    }
+
+    ajaxPromise(url, 'POST', 'JSON', { 'filters': filtersShop })
+        .then(function(data) {
+            // console.log(data);
+
+            var total_pages = "";
+            var count_realEstates = data.count;
+            localStorage.setItem('count', count_realEstates);
+
+            if (count_realEstates >= 4) {
+                total_pages = Math.ceil(count_realEstates / 4)
+            } else {
+                total_pages = 1;
+            }
+   
+            $('<div></div>').attr('id', 'pagination_container').attr('class', 'row').appendTo('.list_realestates')
+                .html(`
+                    <div class='col-sm-12'>
+                        <nav class='pagination-a'>
+                            <ul class='pagination'></ul>
+                        </nav>
+                    </div>`
+                );
+            $('<li></li>').attr('class', 'page-item').appendTo('.pagination')
+                .html(`<span id='prev' class='page-link bi bi-chevron-left'></span>`);
+
+            for (i=1; i<=total_pages; i++) {
+                $('<li></li>').attr('class', 'page-item').appendTo('.pagination')
+                .html(`
+                    <span id='${i}' class='page-link'>${i}</span>`
+                );
+            }
+
+            $('<li></li>').attr('class', 'page-item').appendTo('.pagination')
+                .html(`<span id='next' class='page-link bi bi-chevron-right'></span>`);
+            
+            // highlight pagination
+            var page = localStorage.getItem('page') || undefined;
+            if (page != undefined) {
+                $('span.page-link').filter(function() {
+                    return $(this).text() === page;
+                }).css('background-color', '#2eca6a');
+            }
+            
+        }).catch(function() {
+            console.log('Fail pagination');
+        });
+}
+
 $(document).ready(function() {
     // console.log('Hola JS document ready');
     loadAllRealestates();
-    // loadFilters();
+    loadFilters();
     saveFilters();
     clicks();
 });
