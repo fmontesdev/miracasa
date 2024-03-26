@@ -166,6 +166,21 @@ switch ($op) {
             echo json_encode("error");
         }
         break;
+    
+    case 'realestates_related':
+        try {
+            $daoshop_related = new DAOShop();
+            $dates_realEstates = $daoshop_related->select_realestates_related($_POST['id'], $_POST['operation'], $_POST['limit'], $_POST['offset']);
+        } catch (Exception $e) {
+            echo json_encode("error");
+        }
+
+        if (!empty($dates_realEstates)) {
+            echo json_encode($dates_realEstates);
+        } else {
+            echo json_encode("error");
+        }
+        break;
 
     case 'count_all';
         try {
@@ -186,6 +201,21 @@ switch ($op) {
         try {
             $daoshop_count = new DAOShop();
             $count_realEstates = $daoshop_count->select_count_filtersShop($_POST['filters']);
+        } catch (Exception $e) {
+            echo json_encode("error");
+        }
+
+        if (!empty($count_realEstates)) {
+            echo json_encode($count_realEstates);
+        } else {
+            echo json_encode("error");
+        }
+        break;
+
+    case 'count_realestates_related';
+        try {
+            $daoshop_count = new DAOShop();
+            $count_realEstates = $daoshop_count->select_count_related($_POST['id'], $_POST['operation']);
         } catch (Exception $e) {
             echo json_encode("error");
         }

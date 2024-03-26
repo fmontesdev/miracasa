@@ -219,7 +219,7 @@ function ajaxForSearch(url, type, dataType, sData=undefined) {
             load_pagination();
         }
     }).catch(function() {
-        localStorage.setItem('count', 0);
+        localStorage.setItem('results', 0);
         localStorage.removeItem('filters_home'); // eliminamos de localStorage filters_home para no interferir en próximas busquedas
         $('<div></div>').attr('class', 'intro-single3').appendTo('.list_realestates')
             .html(`
@@ -1377,8 +1377,11 @@ function load_pagination() {
 function realestates_related(data) {
     var id = data[0].id_realestate;
     var operation = data[0].name_op;
-    var id_related = [id];
-    
+    var id_related = [];
+    id_related.push(data[0].id_realestate);
+    console.log (id);
+    console.log (id_related);
+    // return;
     ajaxPromise('module/shop/controller/controller_shop.php?op=count_realestates_related', 'POST', 'JSON', { 'id': id, 'operation': operation })
         .then(function(data) {
             console.log(data);
@@ -1387,76 +1390,95 @@ function realestates_related(data) {
             var offset = 0;
 
             if (data != 'error') {
-                var countRelated = data.length; // número de inmuebles para el related
-                var isFirstLoad = true; // detector de primera carga de relacionados
-                // console.log(countRelated, isFirstLoad);
+                var count = data.length; // número de inmuebles para el related
+                console.log(count);
     
-                // guardamos los ids de los inmuebles mostrados
+                // guardamos en localStorage los ids de los inmuebles mostrados
                 for (row in data) {
                     id_related.push(data[row].id_realestate);
                 }
+                localStorage.setItem('id_related', id_related);
     
-                if (countRelated >= 3) {
-                    load_realestates_related(id, operation, limit, offset, countRelated, isFirstLoad);
-                    countRelated = countRelated - 3;
-                } else if (countRelated > 0) {
-                    load_realestates_related(id, operation, limit, offset, countRelated, isFirstLoad);
+                if (count >= 3) {
+                    load_realestates_related(id, operation, limit, offset);
+                    count = count - 3;
+                } else {
+                    load_realestates_related(id, operation, limit, offset);
     
                     // para completar una vista del related, hacemos un select descartando los ids ya mostrados
-                    limit = 3 - countRelated;
-                    isFirstLoad = false;
+                    limit = 3 - count;
+                    var id_moreRelated = localStorage.getItem('id_related') || undefined;
                     setTimeout(function(){
-                        load_realestates_related(id_related.join(), operation=null, limit, offset, countRelated, isFirstLoad); // array.join() convierte array en string, se puede especificar separador array.join(";")
+                        if (id_moreRelated != undefined) {
+                            load_more_realestates_related(id_moreRelated, operation=null, limit, offset);
+                        }
                     }, 50);
-                    countRelated = countRelated - 3;
+                    count = count - 3;
+                    localStorage.removeItem('id_related');
                 }
-                // console.log(countRelated);
+                console.log(count);
 
                 // click more related
-                if (countRelated > 0) {
+                if (count > 0) {
                     $(document).on("click", '.load_more_related', function() {
                         offset = offset + 3;
-                        isFirstLoad = false;
-                        // console.log(offset);
+                        console.log(offset);
         
-                        if (countRelated >= 3) {
-                            load_realestates_related(id, operation, limit, offset, countRelated, isFirstLoad);
-                            countRelated = countRelated - 3;
-                        } else if (countRelated > 0) {
-                            load_realestates_related(id, operation, limit, offset, countRelated, isFirstLoad);
+                        if (count >= 3) {
+                            load_more_realestates_related(id, operation, limit, offset);
+                            count = count - 3;
+                        } else {
+                            // console.log(count, id, operation, limit, offset);
+                            // return;
+                            load_more_realestates_related(id, operation, limit, offset);
                             
+                            var id_moreRelated = localStorage.getItem('id_related') || undefined;
                             operation = null;
-                            limit = 3 - countRelated;
+                            limit = 3 - count;
                             offset = 0;
                             setTimeout(function(){
-                                load_realestates_related(id_related.join(), operation, limit, offset, countRelated, isFirstLoad);
+                                if (id_moreRelated != undefined) {
+                                    load_more_realestates_related(id_moreRelated, operation, limit, offset);
+                                }
                             }, 50);
-                            countRelated = countRelated - 3;
-                            // console.log(countRelated, id_related, operation, limit, offset);
+                            count = count - 3;
+                            localStorage.removeItem('id_related');
+                            console.log(count, id_moreRelated, operation, limit, offset);
                         }
                     });
                 }
             } else {
-                load_realestates_related(id, operation=null, limit, offset, countRelated=0, isFirstLoad=true);
+                load_realestates_related(id, operation=null, limit, offset);
             }
+
+
+
         }).catch(function() {
             window.location.href='index.php?page=503';
         });
 }
 
-function load_realestates_related(id, operation, limit, offset, countRelated, isFirstLoad) {
+function load_realestates_related(id, operation, limit, offset) {
     ajaxPromise('module/shop/controller/controller_shop.php?op=realestates_related', 'POST', 'JSON', { 'id': id, 'operation': operation, 'limit': limit, 'offset': offset })
         .then(function(data) {
             console.log(data);
 
-            if (isFirstLoad) {
-                $('<div></div>').attr('class', 'detailsRelated_contents').appendTo('.container_detailsRealestate')
+            // // guardamos en localStorage los ids de los inmuebles mostrados
+            // var id_related = [];
+            // if (localStorage.getItem('id_related')) {
+            //     var id_related = localStorage.getItem('id_related')
+            // }
+            // for (row in data) {
+            //     id_related.push(data[row].id_realestate);
+            // }
+            // localStorage.setItem('id_related', id_related);
+            // // return;
+            
+            $('<div></div>').attr('class', 'detailsRelated_contents').appendTo('.container_detailsRealestate')
                 .html(`
                     <p class='detailsRelated_title'>Inmuebles que te pueden interesar...</p>
                     <div class='detailsRelated_realestates'></div>`
                 )
-            }
-            
             for (row in data) {
                 $('<div></div>').attr('class', 'card-box-a card-shadow border_radius detailsRelated_re').attr('id', data[row].id_realestate).appendTo('.detailsRelated_realestates')
                     .html(`
@@ -1498,16 +1520,108 @@ function load_realestates_related(id, operation, limit, offset, countRelated, is
                     )     
             }
 
-            // console.log(isFirstLoad, countRelated);
-            if (isFirstLoad && countRelated > 3) {
-                $('<div></div>').attr('class', 'load_more_related' ).appendTo('.detailsRelated_contents')
-                    .html(
-                        '<button class="load_more_button" id="load_more_button">Ver mas</button>'
-                    )
-            } else {
-                $('.load_more_related').empty();
-            }
+            $('<div></div>').attr('class', 'load_more_related' ).appendTo('.detailsRelated_contents')
+                .html(
+                    '<button class="load_more_button" id="load_more_button">Ver mas</button>'
+                )
+            
+            // if (loaded >= 3) {
+            //     for (row in data) {
+            //         if (data[row].id_car != undefined) {
+            //             console.log(data);
+            //             $('<div></div>').attr({ 'id': data[row].id_car, 'class': 'more_info_list' }).appendTo('.title_content')
+            //                 .html(
+            //                     "<li class='portfolio-item'>" +
+            //                     "<div class='item-main'>" +
+            //                     "<div class='portfolio-image'>" +
+            //                     "<img src = " + data[row].img_car + " alt='imagen car' </img> " +
+            //                     "</div>" +
+            //                     "<h5>" + data[row].id_brand + "  " + data[row].name_model + "</h5>" +
+            //                     "</div>" +
+            //                     "</li>"
 
+            //                 )
+            //         }
+            //     }
+            //     var total_cars = total_item - 3;
+            //     if (total_cars <= loaded) {
+            //         $('.more_car__button').empty();
+            //         $('<div></div>').attr({ 'id': 'more_car__button', 'class': 'more_car__button' }).appendTo('.title_content')
+            //             .html(
+            //                 "</br><button class='btn-notexist' id='btn-notexist'></button>"
+            //             )
+            //     } else {
+            //         $('.more_car__button').empty();
+            //         $('<div></div>').attr({ 'id': 'more_car__button', 'class': 'more_car__button' }).appendTo('.title_content')
+            //             .html(
+            //                 '<button class="load_more_button" id="load_more_button">LOAD MORE</button>'
+            //             )
+            //     }
+            // }
+        }).catch(function() {
+            window.location.href='index.php?page=503';
+        });
+}
+
+function load_more_realestates_related(id_moreRelated, operation, limit, offset) {
+    // console.log(id_moreRelated, operation, limit, offset);
+    // return;
+    ajaxPromise('module/shop/controller/controller_shop.php?op=realestates_related', 'POST', 'JSON', { 'id': id_moreRelated, 'operation': operation, 'limit': limit, 'offset': offset })
+        .then(function(data) {
+            console.log(data);
+            // return;
+
+            // // guardamos en localStorage los ids de los inmuebles mostrados
+            // var id_related = [];
+            // if (localStorage.getItem('id_related')) {
+            //     var id_related = localStorage.getItem('id_related')
+            // }
+            // for (row in data) {
+            //     id_related.push(data[row].id_realestate);
+            // }
+            // localStorage.setItem('id_related', id_related);
+            // // return;
+
+            for (row in data) {
+                $('<div></div>').attr('class', 'card-box-a card-shadow border_radius detailsRelated_re').attr('id', data[row].id_realestate).appendTo('.detailsRelated_realestates')
+                    .html(`
+                        <div class='img-box-a'>
+                            <img src='${data[row].img_realestate[0]}' alt='' class='img-a img-fluid'>
+                        </div>
+                        <div class='card-overlay'>
+                            <div class='card-overlay-a-content'>
+                                <div class='card-header-a'>
+                                    <h2 class='card-title-a'>
+                                        <span class='color-b'>${data[row].name_type}</span> en ${data[row].name_city}
+                                    </h2>
+                                </div>
+                                <div class='card-body-a'>
+                                    <div class='price-box d-flex'>
+                                        <span class='price-a'>
+                                            ${data[row].name_op} | ${new Intl.NumberFormat("es-ES").format(data[row].price)} €
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class='card-footer-a'>
+                                    <ul class='card-info d-flex justify-content-around'>
+                                        <li>
+                                            <span class='card-info-title'>Area: </span>
+                                            <span>${data[row].area} m<sup>2</sup></span>
+                                        </li>
+                                        <li>
+                                            <span class='card-info-title'>Habitaciones: </span>
+                                            <span>${data[row].rooms}</span>
+                                        </li>
+                                        <li>
+                                            <span class='card-info-title'>Baños: </span>
+                                            <span>${data[row].bathrooms}</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>`
+                    )     
+            }
         }).catch(function() {
             window.location.href='index.php?page=503';
         });

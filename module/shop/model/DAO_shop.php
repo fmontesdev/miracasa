@@ -107,6 +107,43 @@ class DAOShop{
 		return $extraArray;
 	}
 
+	function select_realestates_related($id, $operation, $limit, $offset){
+
+		$sql_whereFilter = "";
+		if ($operation != null) {
+			$sql_whereFilter .= " AND o.name_op = '$operation'";
+		}
+
+		$sql = "SELECT r.id_realestate, r.lat, r.lng, t.name_type, o.name_op, s.price, c.name_city, c.province, r.area,
+				r.rooms, r.bathrooms, r.floor, r.description, GROUP_CONCAT(i.img_realestate SEPARATOR ':') AS img_realestate
+					FROM `real_estate` r
+					INNER JOIN `belong_to_type` bt ON  r.id_realestate = bt.id_realestate 
+					INNER JOIN `type` t ON t.id_type = bt.id_type
+					INNER JOIN `is_traded` s ON r.id_realestate = s.id_realestate 
+					INNER JOIN `operation` o ON o.id_op = s.id_op
+					INNER JOIN `img_realestate` i ON r.id_realestate = i.id_realestate
+					INNER JOIN `city` c ON r.id_city = c.id_city
+					WHERE t.name_type != 'Vivienda' AND r.id_realestate NOT IN($id)"
+					. $sql_whereFilter .
+					" GROUP BY r.id_realestate
+					LIMIT $limit OFFSET $offset";
+					//GROUP BY r.id_realestate, o.id_op";
+
+		// return $sql;
+		$conexion = connect::con();
+		$res = mysqli_query($conexion, $sql);
+		connect::close($conexion);
+
+		if (mysqli_num_rows($res) > 0) { //devuelve número de filas
+			while ($row = mysqli_fetch_assoc($res)) { //devuelve una fila de resultado como un array asociativo
+				$row['img_realestate'] = explode(":", $row['img_realestate']);
+				$retrArray[] = $row;
+			}
+		}
+
+		return $retrArray;
+	}
+
 	function filters_home($filters){
 		// return $filters;
 
@@ -506,5 +543,30 @@ class DAOShop{
 		connect::close($conexion);
 
 		return $res;
+	}
+
+	function select_count_related($id, $operation){
+		$sql = "SELECT r.id_realestate
+					FROM `real_estate` r
+					INNER JOIN `belong_to_type` bt ON  r.id_realestate = bt.id_realestate 
+					INNER JOIN `type` t ON t.id_type = bt.id_type
+					INNER JOIN `is_traded` s ON r.id_realestate = s.id_realestate 
+					INNER JOIN `operation` o ON o.id_op = s.id_op
+					INNER JOIN `img_realestate` i ON r.id_realestate = i.id_realestate
+					INNER JOIN `city` c ON r.id_city = c.id_city
+					WHERE t.name_type != 'Vivienda' AND r.id_realestate != $id AND o.name_op = '$operation'
+					GROUP BY r.id_realestate";
+
+		$conexion = connect::con();
+		$res = mysqli_query($conexion, $sql);
+		connect::close($conexion);
+
+		$countRelated_Array = array();
+		if (mysqli_num_rows($res) > 0) {
+			foreach ($res as $row) {
+				array_push($countRelated_Array, $row);
+			}
+		}
+		return $countRelated_Array;
 	}
 }
