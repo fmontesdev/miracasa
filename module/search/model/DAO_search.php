@@ -21,33 +21,23 @@ class DAOSearch{
 		return $opArray;
     }
 
-	function search_touristCategory_null(){
-		$sql = "SELECT c.id_touristcat, c.name_touristcat
-			    FROM `tourist_cat` c
-				ORDER BY c.id_touristcat";
-
-		$conexion = connect::con();
-		$res = mysqli_query($conexion, $sql);
-		connect::close($conexion);
-
-		$touristcatArray = array();
-		if (mysqli_num_rows($res) > 0) {
-			foreach ($res as $row) {
-				array_push($touristcatArray, $row);
-			}
-		}
-		return $touristcatArray;
-	}
-
 	function search_touristCategory($op){
+		$sql_innerFilter = "";
+		$sql_whereFilter = "";
+
+		if (!empty($op)) {
+			$sql_innerFilter .= " INNER JOIN `city` c ON t.id_touristcat = c.id_touristcat
+								INNER JOIN `real_estate` r ON r.id_city = c.id_city
+								INNER JOIN `is_traded` s ON r.id_realestate = s.id_realestate 
+								INNER JOIN `operation` o ON o.id_op = s.id_op";
+			$sql_whereFilter .= " WHERE o.name_op LIKE '$op'";
+		}
+		
 		$sql = "SELECT t.id_touristcat, t.name_touristcat
-			    FROM `real_estate` r
-				INNER JOIN `is_traded` s ON r.id_realestate = s.id_realestate 
-				INNER JOIN `operation` o ON o.id_op = s.id_op
-				INNER JOIN `city` c ON r.id_city = c.id_city
-				INNER JOIN `tourist_cat` t ON t.id_touristcat = c.id_touristcat
-				WHERE o.name_op LIKE '$op'
-				ORDER BY t.id_touristcat";
+				FROM `tourist_cat`t"
+				. $sql_innerFilter
+				. $sql_whereFilter .
+				" ORDER BY t.id_touristcat";
 
 		$conexion = connect::con();
 		$res = mysqli_query($conexion, $sql);
@@ -62,78 +52,27 @@ class DAOSearch{
 		return $touristcatArray;
 	}
 
-	function autocomplete_city_op($complete, $op){
+	function search_autocomplete($complete, $op, $touristcat){
+		$sql_innerFilter = "";
+		$sql_whereFilter = "";
+
+		if (!empty($op)) {
+            $sql_innerFilter .= " INNER JOIN `is_traded` s ON r.id_realestate = s.id_realestate 
+								INNER JOIN `operation` o ON o.id_op = s.id_op";
+            $sql_whereFilter .= " AND o.name_op LIKE '$op'";
+        }
+		if (!empty($touristcat)) {
+            $sql_innerFilter .= " INNER JOIN `tourist_cat` t ON t.id_touristcat = c.id_touristcat";
+            $sql_whereFilter .= " AND t.name_touristcat LIKE '$touristcat'";
+        }
+
 		$sql = "SELECT c.id_city, c.name_city
 			    FROM `real_estate` r
-				INNER JOIN `is_traded` s ON r.id_realestate = s.id_realestate 
-				INNER JOIN `operation` o ON o.id_op = s.id_op
-				INNER JOIN `city` c ON r.id_city = c.id_city
-				WHERE o.name_op LIKE '$op' AND c.name_city LIKE '$complete%'
-				ORDER BY c.name_city";
-
-		$conexion = connect::con();
-		$res = mysqli_query($conexion, $sql);
-		connect::close($conexion);
-
-		$cityArray = array();
-		if (mysqli_num_rows($res) > 0) {
-			foreach ($res as $row) {
-				array_push($cityArray, $row);
-			}
-		}
-		return $cityArray;
-	}
-
-	function autocomplete_city_op_touristcat($complete, $op, $touristcat){
-		$sql = "SELECT c.id_city, c.name_city
-			    FROM `real_estate` r
-				INNER JOIN `is_traded` s ON r.id_realestate = s.id_realestate 
-				INNER JOIN `operation` o ON o.id_op = s.id_op
-				INNER JOIN `city` c ON r.id_city = c.id_city
-				INNER JOIN `tourist_cat` t ON t.id_touristcat = c.id_touristcat
-				WHERE o.name_op LIKE '$op' AND t.name_touristcat LIKE '$touristcat' AND c.name_city LIKE '$complete%'
-				ORDER BY c.name_city";
-
-		$conexion = connect::con();
-		$res = mysqli_query($conexion, $sql);
-		connect::close($conexion);
-
-		$cityArray = array();
-		if (mysqli_num_rows($res) > 0) {
-			foreach ($res as $row) {
-				array_push($cityArray, $row);
-			}
-		}
-		return $cityArray;
-	}
-
-	function autocomplete_city_touristcat($complete, $touristcat){
-		$sql = "SELECT c.id_city, c.name_city
-			    FROM `real_estate` r
-				INNER JOIN `city` c ON r.id_city = c.id_city
-				INNER JOIN `tourist_cat` t ON t.id_touristcat = c.id_touristcat
-				WHERE t.name_touristcat LIKE '$touristcat' AND c.name_city LIKE '$complete%'
-				ORDER BY c.name_city";
-
-		$conexion = connect::con();
-		$res = mysqli_query($conexion, $sql);
-		connect::close($conexion);
-
-		$cityArray = array();
-		if (mysqli_num_rows($res) > 0) {
-			foreach ($res as $row) {
-				array_push($cityArray, $row);
-			}
-		}
-		return $cityArray;
-	}
-
-	function autocomplete_city($complete){
-		$sql = "SELECT c.id_city, c.name_city
-			    FROM `real_estate` r
-				INNER JOIN `city` c ON r.id_city = c.id_city
-				WHERE c.name_city LIKE '$complete%'
-				ORDER BY c.name_city";
+				INNER JOIN `city` c ON r.id_city = c.id_city"
+				. $sql_innerFilter .
+				" WHERE c.name_city LIKE '$complete%'"
+				. $sql_whereFilter .
+				" ORDER BY c.name_city";
 
 		$conexion = connect::con();
 		$res = mysqli_query($conexion, $sql);

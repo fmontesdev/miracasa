@@ -1,23 +1,57 @@
 function loadAllRealestates(limit=3, offset=0) {
-    var validate_filtersHome = localStorage.getItem('filters_home') || undefined; // conseguimos de localStorage filters_home, sinó existe undefined
-    var validate_filtersHome_details = localStorage.getItem('filtersHome_details') || undefined; // conseguimos de localStorage filtersHome_details, sinó existe undefined
-    var validate_filtersShop = localStorage.getItem('filters_shop') || undefined; // conseguimos de localStorage filters_shop, sinó existe undefined
-    
     var validate_page = localStorage.getItem('page') || undefined;
     if (validate_page != undefined) {
         offset = 3 * (validate_page - 1);
     }
 
+    var validate_filtersSearch = localStorage.getItem('filters_search') || undefined; // conseguimos de localStorage filters_search, sinó existe undefined
+    if (validate_filtersSearch != undefined) {
+        localStorage.removeItem('filters_search');
+        var filtersSearch = JSON.parse(validate_filtersSearch); // deserializamos para convertir el string otra vez en un array
+        console.log(filtersSearch);
+
+        for (row in filtersSearch) {
+            if (filtersSearch[row][0] == 'name_op') {
+                localStorage.setItem('filter_op', filtersSearch[row][1]);
+            } 
+            if (filtersSearch[row][0] == 'name_touristcat') {
+                localStorage.setItem('filter_touristcat', filtersSearch[row][1]);
+            }
+            if (filtersSearch[row][0] == 'name_city') {
+                localStorage.setItem('filter_city', filtersSearch[row][1]);
+            }
+        }
+
+        applyFilters('search');
+    }
+
+    var validate_filtersHome = localStorage.getItem('filters_home') || undefined; // conseguimos de localStorage filters_home, sinó existe undefined
     if (validate_filtersHome != undefined) {
         localStorage.removeItem('filters_home');
         var filtersHome = JSON.parse(validate_filtersHome); // deserializamos para convertir el string otra vez en un array
         console.log(filtersHome);
-        ajaxForSearch('module/shop/controller/controller_shop.php?op=filters_home', 'POST', 'JSON', { 'filters': filtersHome });
-    } else if (validate_filtersHome_details != undefined) {
+
+        if (filtersHome[0][0] == 'name_touristcat') {
+            localStorage.setItem('filter_touristcat', filtersHome[0][1]);
+        } else if (filtersHome[0][0] == 'name_type') {
+            localStorage.setItem('filter_type', filtersHome[0][1]);
+        } else if (filtersHome[0][0] == 'name_cat') {
+            localStorage.setItem('filter_cat', filtersHome[0][1]);
+        } else if (filtersHome[0][0] == 'name_op') {
+            localStorage.setItem('filter_op', filtersHome[0][1]);
+        } else if (filtersHome[0][0] == 'name_city') {
+            localStorage.setItem('filter_city', filtersHome[0][1]);
+        }
+
+        localStorage.setItem('filters_shop', JSON.stringify(filtersHome));
+    }
+
+    var validate_filtersHome_details = localStorage.getItem('filtersHome_details') || undefined; // conseguimos de localStorage filtersHome_details, sinó existe undefined
+    var validate_filtersShop = localStorage.getItem('filters_shop') || undefined; // conseguimos de localStorage filters_shop, sinó existe undefined
+    if (validate_filtersHome_details != undefined) {
         localStorage.removeItem('filtersHome_details'); // eliminamos de localStorage id_recomendation para no interferir en próximas busquedas
-        var id_details = JSON.parse(validate_filtersHome_details); // deserializamos para convertir el string otra vez en un array
-        console.log(id_details);
-        loadDetails(id_details[0]['details'][0]);
+        console.log(validate_filtersHome_details);
+        loadDetails(validate_filtersHome_details);
     } else if (validate_filtersShop != undefined) {
         var filtersShop = JSON.parse(validate_filtersShop); // deserializamos para convertir el string otra vez en un array
         console.log(filtersShop);
@@ -60,7 +94,7 @@ function ajaxForSearch(url, type, dataType, sData=undefined) {
                             </div>
                         </div>
                     </div>`
-                )
+                );
         } else {
             // Título personalizado del list
             // var title_filter = "";
@@ -416,8 +450,13 @@ function loadDetails(id_realestate) {
         // Info container
         $('<div></div>').attr('class', 'containerDetails_info').attr('id', data[0].id_realestate).appendTo('.container_detailsRealestate')
             .html(`
-                <div class='detailsInfo_trading'>
-                    <span class='detailsInfo_price'>${new Intl.NumberFormat("es-ES").format(data[0].price)} €&nbsp;&nbsp;|&nbsp;&nbsp;${data[0].name_op}</span>
+                <div class='detailsInfo_firstRow'>
+                    <div class='detailsInfo_trading'>
+                        <span class='detailsInfo_price'>${new Intl.NumberFormat("es-ES").format(data[0].price)} €&nbsp;&nbsp;|&nbsp;&nbsp;${data[0].name_op}</span>
+                    </div>
+                    <div class='detailsInfo_backButton'>
+                        <button class="btn btn-c back_btn" role="link" onclick="window.location='index.php?page=controller_shop&op=list'">Volver</button>
+                    </div>
                 </div>
                 <div class='detailsInfo_specs'>
                     <div class='detailsInfoSpecs_contents'>
@@ -885,31 +924,27 @@ function saveFilters() {
     $(".section-filters").on("change",".filter_city",function(){
         // filter_city.splice(0, 2, 'name_city', this.value);
         localStorage.setItem('filter_city', this.value);
-        applyFilters();
+        applyFilters('shop');
     });
 
     $(".section-filters").on("change",".filter_cat",function(){
-        // filter_cat.splice(0, 2, 'name_cat', this.value);
         localStorage.setItem('filter_cat', this.value);
-        applyFilters();
+        applyFilters('shop');
     });
         
     $(".section-filters").on("change",".filter_type",function(){
-        // filter_type.splice(0, 2, 'name_type', this.value);
         localStorage.setItem('filter_type', this.value);
-        applyFilters();
+        applyFilters('shop');
     });
 
     $(".section-filters").on("change",".filter_type_all",function(){
-        // filter_type.splice(0, 2, 'name_type', this.value);
         localStorage.setItem('filter_type', this.value);
-        applyFilters();
+        applyFilters('shop');
     });
 
     $(".section-filters").on("change",".filter_op",function(){
-        // filter_op.splice(0, 2, 'name_op', this.value);
         localStorage.setItem('filter_op', this.value);
-        applyFilters();
+        applyFilters('shop');
     });
 
     // checkbox
@@ -924,17 +959,17 @@ function saveFilters() {
         }
 
         localStorage.setItem('filter_extras', JSON.stringify(filter_extras));
-        applyFilters();
+        applyFilters('shop');
     });
 
     $(".section-filters").on("click","#filterRooms_buttons",function(){
         localStorage.setItem('filter_rooms', this.value);
-        applyFilters();
+        applyFilters('shop');
     });
 
     $(".section-filters").on("click","#filterBathrooms_buttons",function(){
         localStorage.setItem('filter_bathrooms', this.value);
-        applyFilters();
+        applyFilters('shop');
     });
 
     // rango
@@ -942,29 +977,28 @@ function saveFilters() {
         var filter_priceSince = [];
         filter_priceSince.push('price_since', this.value);
         localStorage.setItem('filter_priceSince', JSON.stringify(filter_priceSince));
-        applyFilters();
+        applyFilters('shop');
     });
 
     $(".section-filters").on("change",".filter_priceTo",function(){
         var filter_priceTo = [];
         filter_priceTo.push('price_to', this.value);
         localStorage.setItem('filter_priceTo', JSON.stringify(filter_priceTo));
-        applyFilters();
+        applyFilters('shop');
     });
 
     $(".section-filters").on("change",".filter_touristcat",function(){
         localStorage.setItem('filter_touristcat', this.value);
-        applyFilters();
+        applyFilters('shop');
     });
 
     $(".section-filters").on("change",".filter_order",function(){
-        // filter_op.splice(0, 2, 'name_op', this.value);
         localStorage.setItem('filter_order', this.value);
-        applyFilters();
+        applyFilters('shop');
     });
 }
 
-function applyFilters() {
+function applyFilters(filters) {
     var filter_priceSince = [];
     var filter_priceTo = [];
     var filters_shop = [];
@@ -1031,14 +1065,16 @@ function applyFilters() {
     if (localStorage.getItem('filter_order')) {
         filters_shop.push(['order', (localStorage.getItem('filter_order'))]);
     }
-
+    
     if (filters_shop.length != 0) {
         localStorage.setItem('filters_shop', JSON.stringify(filters_shop));
+        localStorage.setItem('last_search', JSON.stringify(filters_shop)); // Última busqueda para Carousel Last Search en el Home
         localStorage.setItem('page', 1);
+    }
+    
+    if (filters == 'shop') {
         location.reload();
-    } else {
-        location.reload();
-    }       
+    }
 }
 
 function highlight() {
@@ -1063,7 +1099,7 @@ function highlight() {
                 .css({
                     "background-color": "#2eca6a17",
                     "color": "#2ab760",
-                    "transition": "all 250ms",
+                    "transition": "all 250ms ease",
                 });
         }
 
@@ -1073,7 +1109,7 @@ function highlight() {
                 .css({
                     "background-color": "#2eca6a17",
                     "color": "#2ab760",
-                    "transition": "all 5000ms",
+                    "transition": "all 250ms ease",
                 });
             $("input[value='"+ filters_shop[row1][1] +"']").attr('checked', true);
             $("option[value='"+ filters_shop[row1][1] +"']").attr('selected', true);
@@ -1098,7 +1134,7 @@ function highlight() {
                 .css({
                     "background-color": "#2eca6a17",
                     "color": "#2ab760",
-                    "transition": "all 5000ms",
+                    "transition": "all 250ms ease",
                 });
             $("input[value='"+ filters_shop[row1][1] +"']").attr('checked', true);
         }
@@ -1120,13 +1156,13 @@ function highlight() {
                 .css({
                     "background-color": "#2eca6a17",
                     "color": "#2ab760",
-                    "transition": "all 250ms",
+                    "transition": "all 250ms ease",
                 });
             $('.filterSearchOp_container option')
                 .css({
                     "background-color": "#fff",
                     "color": "#555555",
-                    "transition": "all 250ms",
+                    "transition": "all 250ms ease",
                 });
         }
 
@@ -1136,7 +1172,7 @@ function highlight() {
                     .css({
                         "background-color": "#2eca6a17",
                         "color": "#2ab760",
-                        "transition": "all 5000ms",
+                        "transition": "all 250ms ease",
                     });
                 if (filters_shop[row1][1].length == 1) {
                     $('#extras_button').html(filters_shop[row1][1][row2]);
@@ -1153,7 +1189,7 @@ function highlight() {
                     "border": "1px solid #2eca6a",
                     "background-color": "#2eca6a17",
                     "color": "#2ab760",
-                    "transition": "all 5000ms",
+                    "transition": "all 250ms ease",
                 });
         }
 
@@ -1163,7 +1199,7 @@ function highlight() {
                     "border": "1px solid #2eca6a",
                     "background-color": "#2eca6a17",
                     "color": "#2ab760",
-                    "transition": "all 5000ms",
+                    "transition": "all 250ms ease",
                 });
         }
 
@@ -1211,13 +1247,13 @@ function highlight() {
                 .css({
                     "background-color": "#2eca6a17",
                     "color": "#2ab760",
-                    "transition": "all 250ms",
+                    "transition": "all 250ms ease",
                 });
             $('.filterSearchTouristcat_container option')
                 .css({
                     "background-color": "#fff",
                     "color": "#555555",
-                    "transition": "all 250ms",
+                    "transition": "all 250ms ease",
                 });
         }
 
@@ -1227,7 +1263,7 @@ function highlight() {
                 .css({
                     "background-color": "#2eca6a17",
                     "color": "#2ab760",
-                    "transition": "all 5000ms",
+                    "transition": "all 250ms ease",
                 });
             $("input[value='"+ filters_shop[row1][1] +"']").attr('checked', true);
         }
@@ -1283,8 +1319,7 @@ function remove_filterOrder() {
 
 function remove_filtersShop() {
     localStorage.removeItem('filters_shop');
-    applyFilters();
-    location.reload();
+    applyFilters('shop');
 }
 
 function load_pagination() {
@@ -1502,7 +1537,7 @@ function load_realestates_related(id, operation, limit, offset, countRelated, is
             if (isFirstLoad && countRelated > 3) {
                 $('<div></div>').attr('class', 'load_more_related' ).appendTo('.detailsRelated_contents')
                     .html(
-                        '<button class="load_more_button" id="load_more_button">Ver mas</button>'
+                        '<button class="btn btn-c more_related" >Ver mas</button>'
                     )
             } else {
                 $('.load_more_related').empty();
@@ -1516,7 +1551,9 @@ function load_realestates_related(id, operation, limit, offset, countRelated, is
 $(document).ready(function() {
     // console.log('Hola JS document ready');
     loadAllRealestates();
-    loadFilters();
+    setTimeout(function(){ 
+        loadFilters();
+    }, 20);
     saveFilters();
     clicks();
 });

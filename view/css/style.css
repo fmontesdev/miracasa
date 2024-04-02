@@ -622,7 +622,25 @@ a:hover {
   color: #000000;
 }
 
-.btn.btn-b:hover {
+.btn.btn-c {
+  padding: 5px 10px;
+  border-radius: 18px;
+  background-color: #2eca6a;
+  color: #fff;
+  letter-spacing: 0.05rem;
+  text-decoration: none;
+}
+
+.btn.btn-c.back_btn {
+  width: 100px;
+}
+
+.btn.btn-c.more_related {
+  width: 150px;
+}
+
+.btn.btn-b:hover,
+.btn.btn-c:hover {
   background-color: #000000;
   color: #ffffff;
 }
@@ -1941,26 +1959,6 @@ a:hover {
 /*======================================
 //--//-->   HOME - CARD-E
 ======================================*/
-.section-types {
-
-}
-
-.section-types .presentation {
-  position: absolute;
-  left: 0;
-  width: 100%;
-  background-color: #2eca6a;
-  z-index: 2;
-}
-
-.section-types #types-carousel {
- 
-}
-
-.section-types .types-carousel-pagination {
-
-}
-
 .card-header-e {
   width: 100%;
   padding: 0.9rem 0.7rem;
@@ -2593,9 +2591,20 @@ footer .credits {
 	padding: 20px 30px 0 30px;
 }
 
+.detailsInfo_firstRow {
+  display: flex;
+  flex-wrap: nowrap;
+  padding-bottom: 40px;
+}
+
 .detailsInfo_trading {
-	width: 100%;
-  margin-bottom: 40px;
+	width: 50%;
+  text-align: left;
+}
+
+.detailsInfo_backButton {
+  width: 50%;
+  text-align: right;
 }
 
 .detailsInfo_price {
@@ -2720,16 +2729,8 @@ footer .credits {
 
 .load_more_related {
   display: flex;
+  flex-wrap: nowrap;
   justify-content: center;
-}
-
-.load_more_button {
-  width: 150px;
-  padding: 5px 10px;
-  border: 1px solid #2eca6a;
-  border-radius: 18px;
-  background-color: #2eca6a;
-  color: #fff;
 }
 
 /*--------------------------------------------------------------
@@ -3208,6 +3209,10 @@ Carousels home
   border-radius: 12px;
 }
 
+.section-recomendations {
+  padding-bottom: 30px;
+}
+
 /*======================================
 Modal
 ======================================*/
@@ -3629,6 +3634,10 @@ Search
   border: none;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.filterSearchOp_container select, .filterSearchTouristcat_container select {
+  cursor: pointer;
 }
 
 .filterSearchOp_container select:focus, .filterSearchTouristcat_container select:focus, .filterSearchCity_container input:focus {

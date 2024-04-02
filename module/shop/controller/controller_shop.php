@@ -63,22 +63,22 @@ switch ($op) {
         }
         break;
     
-    case 'filters_home':
-        // echo json_encode($_POST['filters']);
-        // break;
-        try {
-            $daoshop_filters = new DAOShop();
-            $dates_realEstates = $daoshop_filters->filters_home($_POST['filters']);
-        } catch (Exception $e) {
-            echo json_encode("error");
-        }
+    // case 'filters_home':
+    //     // echo json_encode($_POST['filters']);
+    //     // break;
+    //     try {
+    //         $daoshop_filters = new DAOShop();
+    //         $dates_realEstates = $daoshop_filters->filters_home($_POST['filters']);
+    //     } catch (Exception $e) {
+    //         echo json_encode("error");
+    //     }
 
-        if (!empty($dates_realEstates)) {
-            echo json_encode($dates_realEstates);
-        } else {
-            echo json_encode("error");
-        }
-        break;
+    //     if (!empty($dates_realEstates)) {
+    //         echo json_encode($dates_realEstates);
+    //     } else {
+    //         echo json_encode("error");
+    //     }
+    //     break;
 
     case 'load_filters';
         // echo json_encode($_POST['filters']);

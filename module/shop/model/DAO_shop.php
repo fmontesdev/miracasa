@@ -144,70 +144,70 @@ class DAOShop{
 		return $retrArray;
 	}
 
-	function filters_home($filters){
-		// return $filters;
+	// function filters_home($filters){
+	// 	// return $filters;
 
-		$sql_selectFilter = "";
-		$sql_innerFilter = "";
-		$sql_whereFilter = "";
+	// 	$sql_selectFilter = "";
+	// 	$sql_innerFilter = "";
+	// 	$sql_whereFilter = "";
 
-		if (isset($filters[0]['touristcat'])) {
-            $filter_touristcat = $filters[0]['touristcat'][0];
-            $sql_whereFilter .= " WHERE c.id_touristcat = '$filter_touristcat'";
-        }
-		if (isset($filters[0]['type'])){
-            $filter_type = $filters[0]['type'][0];
-			if ($filter_type == 1){
-				$sql_whereFilter .= " WHERE t.subtype IN ('Piso', 'Casa')";
-			}else {
-				$sql_whereFilter .= " WHERE t.id_type = '$filter_type'";
-			}
-        }
-        if (isset($filters[0]['category'])) {
-            $filter_cat = $filters[0]['category'][0];
-			$sql_selectFilter .= ", cat.name_cat";
-			$sql_innerFilter .= " INNER JOIN `belong_to_cat` bcat ON r.id_realestate = bcat.id_realestate
-								INNER JOIN `category` cat ON cat.id_cat = bcat.id_cat";
-            $sql_whereFilter .= " WHERE cat.id_cat = '$filter_cat'";		
-        }
-        if (isset($filters[0]['operation'])) {
-            $filter_op = $filters[0]['operation'][0];
-            $sql_whereFilter .= " WHERE o.id_op = '$filter_op'";
-        }
-		if (isset($filters[0]['city'])) {
-            $filter_city = $filters[0]['city'][0];
-            $sql_whereFilter .= " WHERE c.id_city = '$filter_city'";
-        }
+	// 	if (isset($filters[0]['touristcat'])) {
+    //         $filter_touristcat = $filters[0]['touristcat'][0];
+    //         $sql_whereFilter .= " WHERE c.id_touristcat = '$filter_touristcat'";
+    //     }
+	// 	if (isset($filters[0]['type'])){
+    //         $filter_type = $filters[0]['type'][0];
+	// 		if ($filter_type == 1){
+	// 			$sql_whereFilter .= " WHERE t.subtype IN ('Piso', 'Casa')";
+	// 		}else {
+	// 			$sql_whereFilter .= " WHERE t.id_type = '$filter_type'";
+	// 		}
+    //     }
+    //     if (isset($filters[0]['category'])) {
+    //         $filter_cat = $filters[0]['category'][0];
+	// 		$sql_selectFilter .= ", cat.name_cat";
+	// 		$sql_innerFilter .= " INNER JOIN `belong_to_cat` bcat ON r.id_realestate = bcat.id_realestate
+	// 							INNER JOIN `category` cat ON cat.id_cat = bcat.id_cat";
+    //         $sql_whereFilter .= " WHERE cat.id_cat = '$filter_cat'";		
+    //     }
+    //     if (isset($filters[0]['operation'])) {
+    //         $filter_op = $filters[0]['operation'][0];
+    //         $sql_whereFilter .= " WHERE o.id_op = '$filter_op'";
+    //     }
+	// 	if (isset($filters[0]['city'])) {
+    //         $filter_city = $filters[0]['city'][0];
+    //         $sql_whereFilter .= " WHERE c.id_city = '$filter_city'";
+    //     }
 
-		$sql = "SELECT r.id_realestate, r.lat, r.lng, t.name_type, t.subtype, o.name_op, s.price, c.name_city, c.province, r.area,
-				r.rooms, r.bathrooms, r.floor, r.description, GROUP_CONCAT(i.img_realestate SEPARATOR ':') AS img_realestate" . $sql_selectFilter ."
-					FROM `real_estate` r
-					INNER JOIN `belong_to_type` bt ON  r.id_realestate = bt.id_realestate
-					INNER JOIN `type` t ON t.id_type = bt.id_type
-					INNER JOIN `is_traded` s ON r.id_realestate = s.id_realestate
-					INNER JOIN `operation` o ON o.id_op = s.id_op
-					INNER JOIN `img_realestate` i ON r.id_realestate = i.id_realestate
-					INNER JOIN `city` c ON r.id_city = c.id_city "
-					. $sql_innerFilter
-					. $sql_whereFilter .
-					" GROUP BY r.id_realestate";
+	// 	$sql = "SELECT r.id_realestate, r.lat, r.lng, t.name_type, t.subtype, o.name_op, s.price, c.name_city, c.province, r.area,
+	// 			r.rooms, r.bathrooms, r.floor, r.description, GROUP_CONCAT(i.img_realestate SEPARATOR ':') AS img_realestate" . $sql_selectFilter ."
+	// 				FROM `real_estate` r
+	// 				INNER JOIN `belong_to_type` bt ON  r.id_realestate = bt.id_realestate
+	// 				INNER JOIN `type` t ON t.id_type = bt.id_type
+	// 				INNER JOIN `is_traded` s ON r.id_realestate = s.id_realestate
+	// 				INNER JOIN `operation` o ON o.id_op = s.id_op
+	// 				INNER JOIN `img_realestate` i ON r.id_realestate = i.id_realestate
+	// 				INNER JOIN `city` c ON r.id_city = c.id_city "
+	// 				. $sql_innerFilter
+	// 				. $sql_whereFilter .
+	// 				" GROUP BY r.id_realestate";
 					
-		// $sql .= $sql_whereFilter . " GROUP BY r.id_realestate";
-		// $sql .= $sql_whereFilter . " GROUP BY r.id_realestate, o.id_op";
+	// 	// $sql .= $sql_whereFilter . " GROUP BY r.id_realestate";
+	// 	// $sql .= $sql_whereFilter . " GROUP BY r.id_realestate, o.id_op";
 
-		$conexion = connect::con();
-		$res = mysqli_query($conexion, $sql);
-		connect::close($conexion);
+	// 	$conexion = connect::con();
+	// 	$res = mysqli_query($conexion, $sql);
+	// 	connect::close($conexion);
 
-		if (mysqli_num_rows($res) > 0) { //devuelve número de filas
-			while ($row = mysqli_fetch_assoc($res)) { //devuelve una fila de resultado como un array asociativo
-				$row['img_realestate'] = explode(":", $row['img_realestate']);
-				$retrArray[] = $row;
-			}
-		}
+	// 	if (mysqli_num_rows($res) > 0) { //devuelve número de filas
+	// 		while ($row = mysqli_fetch_assoc($res)) { //devuelve una fila de resultado como un array asociativo
+	// 			$row['img_realestate'] = explode(":", $row['img_realestate']);
+	// 			$retrArray[] = $row;
+	// 		}
+	// 	}
 
-		return $retrArray;
-	}
+	// 	return $retrArray;
+	// }
 
 	function select_filter_city(){
 		$sql = "SELECT c.id_city, c.name_city
