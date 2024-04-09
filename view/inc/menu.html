@@ -2,11 +2,11 @@
 <nav class="navbar navbar-default navbar-trans navbar-expand-lg fixed-top">
     <div class="container">
     
-        <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarDefault" aria-controls="navbarDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <!-- <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarDefault" aria-controls="navbarDefault" aria-expanded="false" aria-label="Toggle navigation">
             <span></span>
             <span></span>
             <span></span>
-        </button>
+        </button> -->
 
         <a class="navbar-brand text-brand" href="index.php?page=home">mira<span class="color-b">casa</span></a>
 
@@ -55,11 +55,20 @@
             </div>
 
             <div class='filterSearchButton_container'>
-                <button type="button" id="search_button" class="btn btn-b-n navbar-toggle-box navbar-toggle-box-collapse" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01">
-                    <i class="bi bi-search"></i>
-                </button>
+                <img src="view/img/icons/search1.png" id="search_button">
             </div>
         </div>
+
+        <div class="navbarLogin_container">
+            <span class="navbarLogin_text">Mi cuenta</span>
+            <img src="view/img/icons/user1.png" class="navbarLogin_icon">
+            
+            <div id="navbarLogin_modal">
+                <a class="navbarLogin_items login" href="index.php?page=controller_login&op=view"><span class="navbarLogin_items">Regístrate / Inicia sesión</span></a>
+                <span class="navbarLogin_items logout">Cierra sesión</span>
+            </div>
+        </div>
+        
 
     </div>
 </nav>

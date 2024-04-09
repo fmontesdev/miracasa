@@ -397,7 +397,7 @@ function loadDetails(id_realestate) {
             $('.section-filters').empty();
         }, 100);
 
-        $('html, body').animate({ scrollTop: $('.section-detailsCarousel') });  // cuando carga posiciona el details al inicio
+        $('html, body').animate({ scrollTop: $('#details-carousel') });  // cuando carga posiciona el details al inicio
 
         // Carousel container
         $('<div></div>').attr('class', 'swiper').attr('id', 'details-carousel').appendTo('.section-detailsCarousel')
@@ -1083,134 +1083,143 @@ function highlight() {
     }
     for (row1 in filters_shop) {
         if (filters_shop[row1][0] === 'name_city') {
+            // filter all
             $("option[value='"+ filters_shop[row1][1] +"']").attr('selected', true);
             $('.filterCityAll_container select')
                 .css({
-                    "border": "1px solid #2eca6a",
-                    "background-color": "#2eca6a17",
-                    "color": "#2ab760",
+                    "background-color": "#f0f0f0",
                 });
             $('.filterCityAll_container option')
                 .css({
                     "background-color": "#fff",
                     "color": "#555555",
                 });
+            // filter search
             $(".filterSearchCity_container input[type=text]").val(filters_shop[row1][1]) // la class es del div que contiene el input
                 .css({
-                    "background-color": "#2eca6a17",
-                    "color": "#2ab760",
-                    "transition": "all 250ms ease",
+                    "background-color": "#f0f0f0",
+                    "transition": "0.5s ease",
+                });
+            $('.filterSearchButton_container')
+                .css({
+                    "background-color": "#f0f0f0",
+                });
+            $('#search_button') // colorea icono busqueda
+                .css({
+                    "filter": "none",
                 });
         }
 
         if (filters_shop[row1][0] === 'name_cat') {
+            // filter shop
             $('#cat_button')
                 .html(filters_shop[row1][1])
                 .css({
                     "background-color": "#2eca6a17",
-                    "color": "#2ab760",
-                    "transition": "all 250ms ease",
+                    "color": "#2eca6a",
+                    "transition": "0.5s ease",
                 });
             $("input[value='"+ filters_shop[row1][1] +"']").attr('checked', true);
+            // filter all
             $("option[value='"+ filters_shop[row1][1] +"']").attr('selected', true);
             $('.filterCatAll_container select')
                 .css({
-                    "border": "1px solid #2eca6a",
-                    "background-color": "#2eca6a17",
-                    "color": "#2ab760",
+                    "background-color": "#f0f0f0",
                 });
             $('.filterCatAll_container option')
                 .css({
                     "background-color": "#fff",
                     "color": "#555555",
                 });
-            // jQuery("input[value='"+ filters_shop[row1][1] +"']").attr('checked', true);
-            // $("input[type=checkbox]").prop("checked", false);
         }
 
         if (filters_shop[row1][0] === 'name_type') {
+            // filter shop
             $('#type_button')
                 .html(filters_shop[row1][1])
                 .css({
                     "background-color": "#2eca6a17",
-                    "color": "#2ab760",
-                    "transition": "all 250ms ease",
+                    "color": "#2eca6a",
+                    "transition": "0.5s ease",
                 });
+            // filter shop y filter all 
             $("input[value='"+ filters_shop[row1][1] +"']").attr('checked', true);
         }
 
         if (filters_shop[row1][0] === 'name_op') {
+            // filter all
             $("option[value='"+ filters_shop[row1][1] +"']").attr('selected', true);
             $('.filterOpAll_container select')
                 .css({
-                    "border": "1px solid #2eca6a",
-                    "background-color": "#2eca6a17",
-                    "color": "#2ab760",
+                    "background-color": "#f0f0f0",
                 });
             $('.filterOpAll_container option')
                 .css({
                     "background-color": "#fff",
                     "color": "#555555",
                 });
+            // filter search
             $('.filterSearchOp_container select')
                 .css({
-                    "background-color": "#2eca6a17",
-                    "color": "#2ab760",
-                    "transition": "all 250ms ease",
+                    "background-color": "#f0f0f0",
+                    "transition": "0.5s ease",
                 });
             $('.filterSearchOp_container option')
                 .css({
                     "background-color": "#fff",
                     "color": "#555555",
-                    "transition": "all 250ms ease",
+                    "transition": "0.5s ease",
+                });
+            $('#search_button') // colorea icono busqueda
+                .css({
+                    "filter": "none",
                 });
         }
 
         if (filters_shop[row1][0] === 'name_extras') {
             for (row2 in filters_shop[row1][1]) {
+                // filter shop
                 $('#extras_button')
                     .css({
                         "background-color": "#2eca6a17",
-                        "color": "#2ab760",
-                        "transition": "all 250ms ease",
+                        "color": "#2eca6a",
+                        "transition": "0.5s ease",
                     });
                 if (filters_shop[row1][1].length == 1) {
                     $('#extras_button').html(filters_shop[row1][1][row2]);
                 } else {
                     $('#extras_button').html(`Extras (${filters_shop[row1][1].length})`);
                 }
+                // filter shop y filter all
                 $("input[value='"+ filters_shop[row1][1][row2] +"']").attr('checked', true);
             }  
         }
 
         if (filters_shop[row1][0] === 'rooms') {
+            // filter all
             $("#filter_rooms_cont input[value='"+ filters_shop[row1][1] +"']") // el id es del div que contiene los inputs
                 .css({
-                    "border": "1px solid #2eca6a",
                     "background-color": "#2eca6a17",
-                    "color": "#2ab760",
-                    "transition": "all 250ms ease",
+                    "color": "#2eca6a",
                 });
         }
 
         if (filters_shop[row1][0] === 'bathrooms') {
+            // filter all
             $("#filter_bathrooms_cont input[value='"+ filters_shop[row1][1] +"']") // el id es del div que contiene los inputs
                 .css({
-                    "border": "1px solid #2eca6a",
                     "background-color": "#2eca6a17",
-                    "color": "#2ab760",
-                    "transition": "all 250ms ease",
+                    "color": "#2eca6a",
                 });
         }
 
         if (filters_shop[row1][0] === 'price') {
+            // filter all
             $("#filter_priceSince_select option[value='"+ filters_shop[row1][1][1] +"']").attr('selected', true);
             $("#filter_priceTo_select option[value='"+ filters_shop[row1][2][1] +"']").attr('selected', true);
             $('.filterPriceSince_container select')
                 .css({
-                    "border": "1px solid #2eca6a",
-                    "background-color": "#2eca6a17",
-                    "color": "#2ab760",
+                    "background-color": "#f0f0f0",
                 });
             $('.filterPriceSince_container option')
                 .css({
@@ -1219,9 +1228,7 @@ function highlight() {
                 });
             $('.filterPriceTo_container select')
                 .css({
-                    "border": "1px solid #2eca6a",
-                    "background-color": "#2eca6a17",
-                    "color": "#2ab760",
+                    "background-color": "#f0f0f0",
                 });
             $('.filterPriceTo_container option')
                 .css({
@@ -1231,39 +1238,43 @@ function highlight() {
         }
 
         if (filters_shop[row1][0] === 'name_touristcat') {
+            // filter all
             $("option[value='"+ filters_shop[row1][1] +"']").attr('selected', true);
             $('.filterTouristcatAll_container select')
                 .css({
-                    "border": "1px solid #2eca6a",
-                    "background-color": "#2eca6a17",
-                    "color": "#2ab760",
+                    "background-color": "#f0f0f0",
                 });
             $('.filterTouristcatAll_container option')
                 .css({
                     "background-color": "#fff",
                     "color": "#555555",
                 });
+            // filter search
             $('.filterSearchTouristcat_container select')
                 .css({
-                    "background-color": "#2eca6a17",
-                    "color": "#2ab760",
-                    "transition": "all 250ms ease",
+                    "background-color": "#f0f0f0",
+                    "transition": "0.5s ease",
                 });
             $('.filterSearchTouristcat_container option')
                 .css({
                     "background-color": "#fff",
                     "color": "#555555",
-                    "transition": "all 250ms ease",
+                    "transition": "0.5s ease",
+                });
+            $('#search_button') // colorea icono busqueda
+                .css({
+                    "filter": "none",
                 });
         }
 
         if (filters_shop[row1][0] === 'order') {
+            // filter shop
             $('#order_button')
                 .html(filters_shop[row1][1])
                 .css({
                     "background-color": "#2eca6a17",
-                    "color": "#2ab760",
-                    "transition": "all 250ms ease",
+                    "color": "#2eca6a",
+                    "transition": "0.5s ease",
                 });
             $("input[value='"+ filters_shop[row1][1] +"']").attr('checked', true);
         }
@@ -1401,7 +1412,9 @@ function load_pagination() {
             if (page != undefined) {
                 $('span.page-link').filter(function() {
                     return $(this).text() === page;
-                }).css('background-color', '#2eca6a');
+                }).css({
+                    "background-color": "#2eca6a",
+                });
             }
             
         }).catch(function() {
@@ -1537,7 +1550,7 @@ function load_realestates_related(id, operation, limit, offset, countRelated, is
             if (isFirstLoad && countRelated > 3) {
                 $('<div></div>').attr('class', 'load_more_related' ).appendTo('.detailsRelated_contents')
                     .html(
-                        '<button class="btn btn-c more_related" >Ver mas</button>'
+                        '<button class="btn btn-c more_related" >Ver mas...</button>'
                     )
             } else {
                 $('.load_more_related').empty();
