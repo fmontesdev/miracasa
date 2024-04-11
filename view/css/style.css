@@ -3775,6 +3775,11 @@ Login
   filter: none;
 }
 
+.navbarLogin_avatar {
+  width: 38.5px;
+  transition: 0.5s ease;
+}
+
 #navbarLogin_modal {
   position: absolute;
   top: calc(100% + 10px);

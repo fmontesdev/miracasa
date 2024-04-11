@@ -16,24 +16,17 @@ function login() {
                 } else if (data == 'error_passwd') {
                     document.getElementById('error_passwd_log').innerHTML = "La contraseña es incorrecta"
                 } else {
-                    // localStorage.setItem("token", data);
-                    localStorage.setItem("user", data);
+                    localStorage.setItem("token", data);
                     //SweetAlert2
                     Swal.fire({
                         // position: "top-end",
                         icon: "success",
                         // title: "Your work has been saved",
-                        text: "Inicio de sesión completado",
+                        text: "Sesión iniciada",
                         showConfirmButton: false,
                         timer: 1250
                       });
                     setTimeout(" window.location.href = 'index.php?page=home'; ", 1500); // redirigimos al home
-
-                    // if (localStorage.getItem('redirect_like')) {
-                    //     setTimeout(' window.location.href = "index.php?module=ctrl_shop&op=list"; ', 1000);
-                    // } else {
-                    //     setTimeout(' window.location.href = "index.php?module=ctrl_home&op=list"; ', 1000);
-                    // }
                 }
             }).catch(function(textStatus) {
                 if (console && console.log) {
