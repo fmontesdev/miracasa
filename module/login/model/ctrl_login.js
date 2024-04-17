@@ -16,7 +16,8 @@ function login() {
                 } else if (data == 'error_passwd') {
                     document.getElementById('error_passwd_log').innerHTML = "La contraseña es incorrecta"
                 } else {
-                    localStorage.setItem("token", data);
+                    localStorage.setItem("refresh_token", data.refresh);
+                    localStorage.setItem("access_token", data.access);
                     //SweetAlert2
                     Swal.fire({
                         // position: "top-end",

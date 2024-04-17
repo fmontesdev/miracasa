@@ -12,35 +12,16 @@ function modal_login() {
 }
 
 function load_menu() {
-    var token = localStorage.getItem('token');
+    var token = localStorage.getItem('refresh_token');
     if (token) {
         ajaxPromise('module/login/controller/controller_login.php?op=data_user', 'POST', 'JSON', { 'token': token })
             .then(function(data) {
                 console.log(data);
                 // return;
 
-                // if (data.type_user == "client") {
-                //     console.log("Client loged");
-                //     $('.opc_CRUD').empty();
-                //     $('.opc_exceptions').empty();
-                // } else {
-                //     console.log("Admin loged");
-                //     $('.opc_CRUD').show();
-                //     $('.opc_exceptions').show();
-                // }
-
-                // $('.log-icon').empty();
-                // $('#user_info').empty();
-                // $('<img src="' + data.avatar + '"alt="Robot">').appendTo('.log-icon');
-                // $('<p></p>').attr({ 'id': 'user_info' }).appendTo('#des_inf_user')
-                //     .html(
-                //         '<a id="logout"><i id="icon-logout" class="fa-solid fa-right-from-bracket"></i></a>' +
-                //         '<a>' + data.username + '<a/>'
-
-                //     )
-
                 // highlight usuario
                 $('.navbarLogin_icon').hide();
+                $('.navbarLogin_avatar').remove();
                 $('<img>').attr('class', 'navbarLogin_avatar').attr('src', data.avatar).appendTo('.navbarLogin_container');
                 $('.navbarLogin_text')
                     .html(data.username);
@@ -61,7 +42,6 @@ function load_menu() {
         console.log("No hay token disponible");
         $('.navbarLogin_items.logout').hide();
         $('.navbarLogin_items.login').show();
-        // HAY QUE REDIRIGIR AL LOGIN-REGISTRO ???
     }
 }
 
@@ -72,7 +52,8 @@ function logout() {
                 console.log(data);
                 // return;
 
-                localStorage.removeItem('token');
+                localStorage.removeItem('refresh_token');
+                localStorage.removeItem('access_token');
                 //SweetAlert2
                 Swal.fire({
                     // position: "top-end",

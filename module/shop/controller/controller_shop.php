@@ -2,6 +2,11 @@
 $path = $_SERVER['DOCUMENT_ROOT'] . '/';
 include($path . "/module/shop/model/DAO_shop.php");
 
+@session_start();
+if (isset($_SESSION['tiempo'])) {  
+    $_SESSION['tiempo'] = time(); //Devuelve la fecha actual
+}
+
 $op = isset($_GET['op']) ? $_GET['op'] : "";
 
 switch ($op) {

@@ -2,7 +2,11 @@
 $path = $_SERVER['DOCUMENT_ROOT'] . '/';
 include($path . "/module/login/model/DAO_login.php");
 include($path . "/model/middleware_auth.php");
+
 @session_start();
+// if (isset($_SESSION['tiempo'])) {  
+//     $_SESSION['tiempo'] = time(); //cada vez que accedemos a cualquier controller.php refrescamos la cookie (servidor)
+// }
 
 $op = isset($_GET['op']) ? $_GET['op'] : "";
 
@@ -75,9 +79,11 @@ switch ($op) {
             } else if (password_verify($_POST['password'], $rdo['password'])) { //compara el password introducido con el password de base de datos
                 // echo json_encode($rdo["username"]);
                 // break;
-                $token= create_token($rdo["username"]);
-                $_SESSION['username'] = $rdo['username']; //Guardamos el usuario 
-                $_SESSION['tiempo'] = time(); //Guardamos momento exacto del login
+                $refreshToken= create_token('refresh', $rdo["username"], 30*60);
+                $accessToken= create_token('access', $rdo["username"], 10*60);
+                $token = array("refresh" => $refreshToken, "access" => $accessToken); // array asociativo
+                $_SESSION['username'] = $rdo['username']; //guardamos usuario en cookie (servidor)
+                $_SESSION['tiempo'] = time(); //guardamos momento exacto del login en cookie (servidor)
                 echo json_encode($token);
             } else {
                 echo json_encode("error_passwd");
@@ -88,11 +94,11 @@ switch ($op) {
         break;
 
     case 'data_user':
-        $json = decode_token($_POST['token']);
-        // echo json_encode($json);
+        $token_dec = decode_token('refresh', $_POST['token']);
+        // echo json_encode($token_dec);
         // break;
         $daoLog = new DAOLogin();
-        $rdo = $daoLog->select_data_user($json['name']);
+        $rdo = $daoLog->select_data_user($token_dec['name']);
         echo json_encode($rdo);
         break;
 
@@ -101,54 +107,54 @@ switch ($op) {
         unset($_SESSION['tiempo']); //elimina valor de $_SESSION
         session_destroy();
 
-        echo json_encode("done");
+        echo json_encode("logout done");
         break;
 
+    case 'control_user':
+        $refreshToken_dec = decode_token('refresh', $_POST['refreshToken']);
+        $accessToken_dec = decode_token('access', $_POST['accessToken']);
 
+        if (($refreshToken_dec['exp'] < time()) && ($accessToken_dec['exp'] < time())) {
+            echo json_encode("Wrong_User");
+            // echo json_encode("Token exp time");
+            // exit();
+        } else if (isset($_SESSION['username']) && ($_SESSION['username'] == $refreshToken_dec['name']) && ($_SESSION['username'] == $accessToken_dec['name'])) {
+            echo json_encode("Correct_User");
+            // exit();
+        } else {
+            echo json_encode("Wrong_User");
+        }
+        break;
 
-    // case 'actividad':
-    //     if (!isset($_SESSION["tiempo"])) {
-    //         echo json_encode("inactivo");
-    //         exit();
-    //     } else {
-    //         if ((time() - $_SESSION["tiempo"]) >= 1800) { //1800s=30min
-    //             echo json_encode("inactivo");
-    //             exit();
-    //         } else {
-    //             echo json_encode("activo");
-    //             exit();
-    //         }
-    //     }
-    //     break;
+    case 'control_activity':
+        if (!isset($_SESSION['tiempo'])) {
+            echo json_encode("inactivo");
+        } else {
+            if ((time() - $_SESSION['tiempo']) >= 10*60) { //1800s=30min
+                echo json_encode("inactivo");
+            } else {
+                echo json_encode("activo");
+            }
+        }
+        break;
 
-    // case 'controluser':
-    //     $token_dec = decode_token($_POST['token']);
+    case 'refresh_token':
+        $old_token = decode_token('refresh', $_POST['token']);
+        $new_token = create_token('refresh', $old_token["name"], 30*60);
+        echo json_encode($new_token);
+        break;
+    
+    case 'access_token':
+        $old_token = decode_token('access', $_POST['token']);
+        $new_token = create_token('access', $old_token["name"], 10*60);
+        echo json_encode($new_token);
+        break;
 
-    //     if ($token_dec['exp'] < time()) {
-    //         echo json_encode("Wrong_User");
-    //         exit();
-    //     }
-
-    //     if (isset($_SESSION['username']) && ($_SESSION['username']) == $token_dec['username']) {
-    //         echo json_encode("Correct_User");
-    //         exit();
-    //     } else {
-    //         echo json_encode("Wrong_User");
-    //         exit();
-    //     }
-    //     break;
-
-    // case 'refresh_token':
-    //     $old_token = decode_token($_POST['token']);
-    //     $new_token = create_token($old_token['username']);
-    //     echo json_encode($new_token);
-    //     break;
-
-    // case 'refresh_cookie':
-    //     session_regenerate_id();
-    //     echo json_encode("Done");
-    //     exit;
-    //     break;
+    case 'refresh_cookie':
+        session_regenerate_id();
+        echo json_encode("Refresh cookie correctly");
+        // exit;
+        break;
 
     default;
         include("module/exceptions/views/pages/error404.php");

@@ -2,9 +2,14 @@
 $path = $_SERVER['DOCUMENT_ROOT'] . '/';
 include($path . "/model/JWT.php");
 
-function decode_token($token){
+function decode_token($type, $token){
     $jwt = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . '/model/jwt.ini');
-    $secret = $jwt['secret'];
+
+    if ($type == 'refresh') {
+        $secret = $jwt['secret1'];
+    } else if ($type == 'access'){
+        $secret = $jwt['secret2'];
+    }
 
     $JWT = new JWT;
     $token_dec = $JWT->decode($token, $secret);
@@ -12,7 +17,7 @@ function decode_token($token){
     return $rt_token;
 }
 
-function create_token($username){
+function create_Token($type, $username, $exp){
     $jwt = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . '/model/jwt.ini');
 
     $header = '{
@@ -24,11 +29,14 @@ function create_token($username){
     //name: info user
     $payload = '{
         "iat": "'. time() .'", 
-        "exp": "'. time() + (60*60) .'",
+        "exp": "'. time() + $exp .'",
         "name": "'. $username .'"
     }';
-    $secret = $jwt['secret'];
-    // $secret = 'maytheforcebewithyou';
+    if ($type == 'refresh') {
+        $secret = $jwt['secret1'];
+    } else if ($type == 'access'){
+        $secret = $jwt['secret2'];
+    }
 
     $JWT = new JWT;
     $token = $JWT->encode($header, $payload, $secret);
