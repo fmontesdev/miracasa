@@ -2,11 +2,11 @@
 	class connect{
 		public static function con(){
 			$connect = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . '/model/credentials.ini');
-			$host = $connect['host'];
-    		$user = $connect['user'];                
-    		$pass = $connect['pass'];               
-    		$db = $connect['db'];                  
-    		$port = $connect['port'];                  
+			$host = $connect['DB_HOST'];
+    		$user = $connect['DB_USER'];                
+    		$pass = $connect['DB_PASS'];               
+    		$db = $connect['DB_DB'];                  
+    		$port = $connect['DB_PORT'];                  
     		//$tabla="real_estate";
     		
     		$conexion = mysqli_connect($host, $user, $pass, $db, $port)or die(mysql_error());

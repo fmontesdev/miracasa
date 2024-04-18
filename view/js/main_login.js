@@ -12,7 +12,7 @@ function modal_login() {
 }
 
 function load_menu() {
-    var token = localStorage.getItem('refresh_token');
+    var token = localStorage.getItem('access_token');
     if (token) {
         ajaxPromise('module/login/controller/controller_login.php?op=data_user', 'POST', 'JSON', { 'token': token })
             .then(function(data) {
@@ -52,8 +52,8 @@ function logout() {
                 console.log(data);
                 // return;
 
-                localStorage.removeItem('refresh_token');
                 localStorage.removeItem('access_token');
+                localStorage.removeItem('refresh_token');
                 //SweetAlert2
                 Swal.fire({
                     // position: "top-end",

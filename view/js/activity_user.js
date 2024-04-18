@@ -1,10 +1,10 @@
-// Controla el tiempo de expiración del token, y que el usuario del token conincida con el usuario de la cookie
+// Controla el tiempo de expiración de los tokens, y que el username de los tokens y la cookie coincida
 function control_user() {
-    var refreshToken = localStorage.getItem('refresh_token');
     var accessToken = localStorage.getItem('access_token');
+    var refreshToken = localStorage.getItem('refresh_token');
 
-    if (refreshToken && accessToken) {
-        ajaxPromise('module/login/controller/controller_login.php?op=control_user', 'POST', 'JSON', { 'refreshToken': refreshToken, 'accessToken': accessToken })
+    if (accessToken && refreshToken) {
+        ajaxPromise('module/login/controller/controller_login.php?op=control_user', 'POST', 'JSON', { 'accessToken': accessToken, 'refreshToken': refreshToken })
             .then(function(data) {
                 // console.log(data);
                 // return;
@@ -14,6 +14,13 @@ function control_user() {
                 } else if (data == "Wrong_User") {
                     console.log("INCORRECTO -> Estan intentando acceder a la cuenta");
                     logout_auto();
+                } else if (data == "ExpirationTime_Token") {
+                    console.log("INCORRECTO -> El token ha expirado");
+                    logout_auto();
+                } else {
+                    console.log("Update accessToken correctly");
+                    localStorage.setItem("access_token", data);
+                    load_menu();
                 }
             }).catch(function() {
                 console.log("ANONYMOUS user");
@@ -41,32 +48,6 @@ function control_activity() {
     }
 }
 
-// Limita el tiempo de uso del refreshToken en caso de robo
-function refresh_token() {
-    var token = localStorage.getItem('refresh_token');
-    if (token) {
-        ajaxPromise('module/login/controller/controller_login.php?op=refresh_token', 'POST', 'JSON', { 'token': token })
-            .then(function(data_token) {
-                console.log("Refresh token correctly");
-                localStorage.setItem("refresh_token", data_token);
-                load_menu();
-            });
-    }
-}
-
-// Limita el tiempo de uso del accessToken en caso de robo
-function access_token() {
-    var token = localStorage.getItem('access_token');
-    if (token) {
-        ajaxPromise('module/login/controller/controller_login.php?op=access_token', 'POST', 'JSON', { 'token': token })
-            .then(function(data_token) {
-                console.log("Access token correctly");
-                localStorage.setItem("access_token", data_token);
-                // load_menu();
-            });
-    }
-}
-
 // Limita el tiempo de uso de la cookie en caso de robo
 function refresh_cookie() {
     ajaxPromise('module/login/controller/controller_login.php?op=refresh_cookie', 'POST', 'JSON')
@@ -81,8 +62,8 @@ function logout_auto() {
             console.log(data);
             // return;
 
-            localStorage.removeItem('refresh_token');
             localStorage.removeItem('access_token');
+            localStorage.removeItem('refresh_token');
             //SweetAlert2
             Swal.fire({
                 // position: "top-end",
@@ -100,8 +81,6 @@ function logout_auto() {
 
 $(document).ready(function() {
     control_user();
-    setInterval(function() { control_activity() }, 3*60*1000); //10min= 600000, una tercera parte del tiempo màximo de inactividad                                                                                                                                                                                                                                                                        
-    setInterval(function() { refresh_token() }, 10*60*1000); // una tercera parte del tiempo de expiración del refreshToken
-    setInterval(function() { access_token() }, 3*60*1000); // una tercera parte del tiempo de expiración del accessToken
-    setInterval(function() { refresh_cookie() }, 5*60*1000);
+    setInterval(function() { control_activity() }, 10*60*1000); //10min= 600000, una tercera parte del tiempo màximo de inactividad
+    setInterval(function() { refresh_cookie() }, 10*60*1000); //10min= 600000
 });

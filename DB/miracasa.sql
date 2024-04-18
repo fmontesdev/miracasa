@@ -49,6 +49,8 @@ INSERT INTO `belong_to_cat` (`id_realestate`, `id_cat`) VALUES
 (7, 7);
 
 (9, 6);
+(10, 5);
+(10, 6);
 
 -- --------------------------------------------------------
 
@@ -81,6 +83,8 @@ INSERT INTO `belong_to_type` (`id_realestate`, `id_type`) VALUES
 (5, 16);
 
 (9, 1);
+(9, 9);
+(10, 1);
 (9, 9);
 
 -- --------------------------------------------------------
@@ -335,6 +339,12 @@ INSERT INTO `has_extras` (`id_realestate`, `id_extras`) VALUES
 (9, 10);
 (9, 11);
 (9, 12);
+(10, 1);
+(10, 2);
+(10, 8);
+(10, 10);
+(10, 11);
+(10, 12);
 
 -- --------------------------------------------------------
 
@@ -424,7 +434,8 @@ INSERT INTO `is_traded` (`id_realestate`, `id_op`, `price`) VALUES
 (7, 1, 42000),
 (8, 4, 200);
 
-(8, 2, 650);
+(9, 2, 650);
+(10, 1, 265000);
 
 -- --------------------------------------------------------
 
@@ -490,11 +501,11 @@ INSERT INTO `real_estate` (`id_realestate`, `cadastre`, `lat`, `lng`, `id_city`,
 (8, '5928522YJ5210S0496HH', 39.48681669185842, -0.36291043111424803, 46, 110, 4, 2, '3ª planta', 'Este acogedor piso en Valencia ofrece la solución perfecta para estudiantes que buscan comodidad y tranquilidad. Con 4 habitaciones bien equipadas y ubicado en una zona serena. Cada habitación está disponible individualmente a un precio asequible.', '12-01-2024', 49);
 
 (9, '2470522YJ5210S0496XA', 37.418264266530805, -1.5616969248006018, 60, 75, 1, 1, '1ª planta', '¡Descubre el encanto del Mediterráneo en este apartamento frente a la playa en Águilas! Con vistas impresionantes y todas las comodidades necesarias, es el refugio perfecto para unas vacaciones inolvidables junto al mar.', '08-03-2020', 0);
-(10, '2470522YJ5210S0496XA', 41.26676629490557, 1.9674137631022395, 54, 85, 2, 1, '2ª planta', '', '09-05-2021', 0);
-(11, '2470522YJ5210S0496XA', 37.418264266530805, -1.5616969248006018, 60, 75, 1, 1, '1ª planta', '', '08-03-2020', 0);
-(12, '2470522YJ5210S0496XA', 37.418264266530805, -1.5616969248006018, 60, 75, 1, 1, '1ª planta', '', '08-03-2020', 0);
-(13, '2470522YJ5210S0496XA', 37.418264266530805, -1.5616969248006018, 60, 75, 1, 1, '1ª planta', '', '08-03-2020', 0);
-(14, '2470522YJ5210S0496XA', 37.418264266530805, -1.5616969248006018, 60, 75, 1, 1, '1ª planta', '', '08-03-2020', 0);
+(10, '3582522YJ5210S0496BR', 41.26676629490557, 1.9674137631022395, 54, 85, 2, 1, '2ª planta', 'Apartamento frente a la playa en Castelldefels. Vistas al mar desde todas las habitaciones, terraza privada y acceso directo a la playa. Moderno y luminoso, perfecto para disfrutar del estilo de vida mediterráneo.', '09-05-2021', 0);
+(11, '7294522YJ5210S0496BZ', 37.19770063490664, -7.306096003374809, 60, 75, 1, 1, '1ª planta', '', '08-03-2020', 0);
+(12, '5922522YJ5210S0496GH', 37.418264266530805, -1.5616969248006018, 60, 75, 1, 1, '1ª planta', '', '08-03-2020', 0);
+(13, '6578522YJ5210S0496UI', 37.418264266530805, -1.5616969248006018, 60, 75, 1, 1, '1ª planta', '', '08-03-2020', 0);
+(14, '7856522YJ5210S0496CF', 37.418264266530805, -1.5616969248006018, 60, 75, 1, 1, '1ª planta', '', '08-03-2020', 0);
 
 -- --------------------------------------------------------
 

@@ -5,10 +5,10 @@ include($path . "/model/JWT.php");
 function decode_token($type, $token){
     $jwt = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . '/model/jwt.ini');
 
-    if ($type == 'refresh') {
-        $secret = $jwt['secret1'];
-    } else if ($type == 'access'){
-        $secret = $jwt['secret2'];
+    if ($type == 'access') {
+        $secret = $jwt['JWT_SECRET_ACCESS'];
+    } else if ($type == 'refresh'){
+        $secret = $jwt['JWT_SECRET_REFRESH'];
     }
 
     $JWT = new JWT;
@@ -17,25 +17,30 @@ function decode_token($type, $token){
     return $rt_token;
 }
 
-function create_Token($type, $username, $exp){
+function create_Token($type, $username){
     $jwt = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . '/model/jwt.ini');
 
     $header = '{
-        "typ": "'. $jwt['typ'] .'",
-        "alg": "'. $jwt['alg'] .'"
+        "typ": "'. $jwt['JWT_TYPE'] .'",
+        "alg": "'. $jwt['JWT_ALG'] .'"
     }';
     //iat: Tiempo que inició el token
-    //exp: Tiempo que expirará el token (+1 hora)
+    //exp: Tiempo que expirará el token
     //name: info user
-    $payload = '{
-        "iat": "'. time() .'", 
-        "exp": "'. time() + $exp .'",
-        "name": "'. $username .'"
-    }';
-    if ($type == 'refresh') {
-        $secret = $jwt['secret1'];
-    } else if ($type == 'access'){
-        $secret = $jwt['secret2'];
+    if ($type == 'access') {
+        $payload = '{
+            "iat": "'. time() .'", 
+            "exp": "'. time() + $jwt['JWT_EXP_ACCESS'] .'",
+            "username": "'. $username .'"
+        }';
+        $secret = $jwt['JWT_SECRET_ACCESS'];
+    } else if ($type == 'refresh'){
+        $payload = '{
+            "iat": "'. time() .'", 
+            "exp": "'. time() + $jwt['JWT_EXP_REFRESH'] .'",
+            "username": "'. $username .'"
+        }';
+        $secret = $jwt['JWT_SECRET_REFRESH'];
     }
 
     $JWT = new JWT;
