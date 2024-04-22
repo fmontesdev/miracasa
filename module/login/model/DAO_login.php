@@ -50,7 +50,7 @@ class DAOLogin{
     }
 
     function select_userLogin($username){
-        $sql = "SELECT u.username, u.password
+        $sql = "SELECT u.id_user, u.username, u.password
                 FROM `user` u
                 WHERE u.username = '$username'";
 

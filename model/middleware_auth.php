@@ -17,7 +17,7 @@ function decode_token($type, $token){
     return $rt_token;
 }
 
-function create_Token($type, $username){
+function create_Token($type, $id_user, $username){
     $jwt = parse_ini_file($_SERVER['DOCUMENT_ROOT'] . '/model/jwt.ini');
 
     $header = '{
@@ -31,6 +31,7 @@ function create_Token($type, $username){
         $payload = '{
             "iat": "'. time() .'", 
             "exp": "'. time() + $jwt['JWT_EXP_ACCESS'] .'",
+            "id_user": "'. $id_user .'",
             "username": "'. $username .'"
         }';
         $secret = $jwt['JWT_SECRET_ACCESS'];
@@ -38,6 +39,7 @@ function create_Token($type, $username){
         $payload = '{
             "iat": "'. time() .'", 
             "exp": "'. time() + $jwt['JWT_EXP_REFRESH'] .'",
+            "id_user": "'. $id_user .'",
             "username": "'. $username .'"
         }';
         $secret = $jwt['JWT_SECRET_REFRESH'];

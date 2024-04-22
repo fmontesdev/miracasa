@@ -46,11 +46,20 @@ INSERT INTO `belong_to_cat` (`id_realestate`, `id_cat`) VALUES
 (5, 4),
 (5, 5),
 (4, 6),
-(7, 7);
-
-(9, 6);
-(10, 5);
-(10, 6);
+(7, 7),
+(9, 6),
+(10, 5),
+(10, 6),
+(11, 6),
+(12, 3),
+(12, 4),
+(12, 6),
+(13, 3),
+(13, 6),
+(14, 1),
+(14, 3),
+(14, 5),
+(14, 6);
 
 -- --------------------------------------------------------
 
@@ -80,12 +89,20 @@ INSERT INTO `belong_to_type` (`id_realestate`, `id_type`) VALUES
 (1, 6),
 (7, 7),
 (4, 11),
-(5, 16);
-
-(9, 1);
-(9, 9);
-(10, 1);
-(9, 9);
+(5, 16),
+(9, 1),
+(9, 9),
+(10, 1),
+(10, 9),
+(11, 1),
+(11, 13),
+(12, 1),
+(12, 16),
+(13, 1),
+(13, 9),
+(13, 14),
+(14, 1),
+(14, 16);
 
 -- --------------------------------------------------------
 
@@ -332,19 +349,44 @@ INSERT INTO `has_extras` (`id_realestate`, `id_extras`) VALUES
 (1, 12),
 (3, 12),
 (4, 12),
-(5, 12);
-
-(9, 5);
-(9, 8);
-(9, 10);
-(9, 11);
-(9, 12);
-(10, 1);
-(10, 2);
-(10, 8);
-(10, 10);
-(10, 11);
-(10, 12);
+(5, 12),
+(9, 5),
+(9, 8),
+(9, 10),
+(9, 11),
+(9, 12),
+(10, 1),
+(10, 2),
+(10, 8),
+(10, 10),
+(10, 11),
+(10, 12),
+(11, 5),
+(11, 8),
+(11, 10),
+(11, 11),
+(11, 12),
+(12, 2),
+(12, 3),
+(12, 6),
+(12, 7),
+(12, 8),
+(12, 10),
+(12, 11),
+(12, 12),
+(13, 2),
+(13, 3),
+(13, 4),
+(13, 8),
+(13, 10),
+(13, 11),
+(13, 12),
+(14, 6),
+(14, 7),
+(14, 8),
+(14, 10),
+(14, 11),
+(14, 12);
 
 -- --------------------------------------------------------
 
@@ -397,12 +439,53 @@ INSERT INTO `img_realestate` (`id_img_re`, `img_realestate`, `id_realestate`) VA
 (29, 'view/img/real_estates/real_estate_8_1.jpg', 8),
 (30, 'view/img/real_estates/real_estate_8_2.jpg', 8),
 (31, 'view/img/real_estates/real_estate_8_3.jpg', 8),
-(32, 'view/img/real_estates/real_estate_8_4.jpg', 8);
-
-(33, 'view/img/real_estates/real_estate_9_1.jpg', 9);
-(34, 'view/img/real_estates/real_estate_9_2.jpg', 9);
-(35, 'view/img/real_estates/real_estate_9_3.jpg', 9);
-(36, 'view/img/real_estates/real_estate_9_4.jpg', 9);
+(32, 'view/img/real_estates/real_estate_8_4.jpg', 8),
+(33, 'view/img/real_estates/real_estate_9_1.jpg', 9),
+(34, 'view/img/real_estates/real_estate_9_2.jpg', 9),
+(35, 'view/img/real_estates/real_estate_9_3.jpg', 9),
+(36, 'view/img/real_estates/real_estate_9_4.jpg', 9),
+(37, 'view/img/real_estates/real_estate_10_1.jpg', 10),
+(38, 'view/img/real_estates/real_estate_10_2.jpg', 10),
+(39, 'view/img/real_estates/real_estate_10_3.jpg', 10),
+(40, 'view/img/real_estates/real_estate_10_4.jpg', 10),
+(41, 'view/img/real_estates/real_estate_10_5.jpg', 10),
+(42, 'view/img/real_estates/real_estate_10_6.jpg', 10),
+(43, 'view/img/real_estates/real_estate_10_7.jpg', 10),
+(44, 'view/img/real_estates/real_estate_11_1.jpg', 11),
+(45, 'view/img/real_estates/real_estate_11_2.jpg', 11),
+(46, 'view/img/real_estates/real_estate_11_3.jpg', 11),
+(47, 'view/img/real_estates/real_estate_11_4.jpg', 11),
+(48, 'view/img/real_estates/real_estate_11_5.jpg', 11),
+(49, 'view/img/real_estates/real_estate_11_6.jpg', 11),
+(50, 'view/img/real_estates/real_estate_12_1.jpg', 12),
+(51, 'view/img/real_estates/real_estate_12_2.jpg', 12),
+(52, 'view/img/real_estates/real_estate_12_3.jpg', 12),
+(53, 'view/img/real_estates/real_estate_12_4.jpg', 12),
+(54, 'view/img/real_estates/real_estate_12_5.jpg', 12),
+(55, 'view/img/real_estates/real_estate_12_6.jpg', 12),
+(56, 'view/img/real_estates/real_estate_12_7.jpg', 12),
+(57, 'view/img/real_estates/real_estate_12_8.jpg', 12),
+(58, 'view/img/real_estates/real_estate_12_9.jpg', 12),
+(59, 'view/img/real_estates/real_estate_12_10.jpg', 12),
+(60, 'view/img/real_estates/real_estate_12_11.jpg', 12),
+(61, 'view/img/real_estates/real_estate_13_1.jpg', 13),
+(62, 'view/img/real_estates/real_estate_13_2.jpg', 13),
+(63, 'view/img/real_estates/real_estate_13_3.jpg', 13),
+(64, 'view/img/real_estates/real_estate_13_4.jpg', 13),
+(65, 'view/img/real_estates/real_estate_13_5.jpg', 13),
+(66, 'view/img/real_estates/real_estate_13_6.jpg', 13),
+(67, 'view/img/real_estates/real_estate_13_7.jpg', 13),
+(68, 'view/img/real_estates/real_estate_13_8.jpg', 13),
+(69, 'view/img/real_estates/real_estate_13_9.jpg', 13),
+(70, 'view/img/real_estates/real_estate_13_10.jpg', 13),
+(71, 'view/img/real_estates/real_estate_14_1.jpg', 14),
+(72, 'view/img/real_estates/real_estate_14_2.jpg', 14),
+(73, 'view/img/real_estates/real_estate_14_3.jpg', 14),
+(74, 'view/img/real_estates/real_estate_14_4.jpg', 14),
+(75, 'view/img/real_estates/real_estate_14_5.jpg', 14),
+(76, 'view/img/real_estates/real_estate_14_6.jpg', 14),
+(77, 'view/img/real_estates/real_estate_14_7.jpg', 14),
+(78, 'view/img/real_estates/real_estate_14_8.jpg', 14);
 
 -- --------------------------------------------------------
 
@@ -432,10 +515,14 @@ INSERT INTO `is_traded` (`id_realestate`, `id_op`, `price`) VALUES
 (5, 1, 1200000),
 (6, 2, 50),
 (7, 1, 42000),
-(8, 4, 200);
-
-(9, 2, 650);
-(10, 1, 265000);
+(8, 4, 200),
+(9, 2, 650),
+(10, 1, 265000),
+(11, 2, 599),
+(12, 1, 375000),
+(13, 1, 279000),
+(13, 3, 550),
+(14, 2, 680);
 
 -- --------------------------------------------------------
 
@@ -498,14 +585,13 @@ INSERT INTO `real_estate` (`id_realestate`, `cadastre`, `lat`, `lng`, `id_city`,
 (5, '2666201YJ5210S0087EE', 40.43789739994751, -3.632903906632869, 26, 500, 5, 4, '0', 'Esta casa excepcional, ubicada en una zona residencial de lujo en Madrid, redefine el concepto de elegancia y confort. Completamente equipada con detalle, esta propiedad ofrece un estilo de vida exclusivo. Disfruta de la privacidad y la sofisticación en cada rincón de esta residencia.', '02-12-2023', 102),
 (6, '9736201YJ5210S0087FF', 39.02725747002513, -3.9403544312211514, 12, 15, 0, 0, '4ª planta', 'Pon orden en tu vida con nuestro trastero. Ubicado en una zona de fácil acceso, este espacio ofrece comodidad y seguridad para almacenar tus pertenencias. Ya sea para liberar espacio en casa u organizar herramientas y equipos, este trastero es la solución perfecta.', '02-12-2023', 35),
 (7, '4852201YJ5210S0087GG', 42.36339348927319, -3.773002201902397, 8, 1000, 0, 0, '0', 'Descubre la serenidad de este amplio terreno, situado en una zona tranquila con vistas impresionantes. Disfruta de la amplitud, la privacidad y la belleza de un bonito jardín que complementa perfectamente el paisaje. Ideal para construir la casa de tus sueños.', '02-12-2023', 64),
-(8, '5928522YJ5210S0496HH', 39.48681669185842, -0.36291043111424803, 46, 110, 4, 2, '3ª planta', 'Este acogedor piso en Valencia ofrece la solución perfecta para estudiantes que buscan comodidad y tranquilidad. Con 4 habitaciones bien equipadas y ubicado en una zona serena. Cada habitación está disponible individualmente a un precio asequible.', '12-01-2024', 49);
-
-(9, '2470522YJ5210S0496XA', 37.418264266530805, -1.5616969248006018, 60, 75, 1, 1, '1ª planta', '¡Descubre el encanto del Mediterráneo en este apartamento frente a la playa en Águilas! Con vistas impresionantes y todas las comodidades necesarias, es el refugio perfecto para unas vacaciones inolvidables junto al mar.', '08-03-2020', 0);
-(10, '3582522YJ5210S0496BR', 41.26676629490557, 1.9674137631022395, 54, 85, 2, 1, '2ª planta', 'Apartamento frente a la playa en Castelldefels. Vistas al mar desde todas las habitaciones, terraza privada y acceso directo a la playa. Moderno y luminoso, perfecto para disfrutar del estilo de vida mediterráneo.', '09-05-2021', 0);
-(11, '7294522YJ5210S0496BZ', 37.19770063490664, -7.306096003374809, 60, 75, 1, 1, '1ª planta', '', '08-03-2020', 0);
-(12, '5922522YJ5210S0496GH', 37.418264266530805, -1.5616969248006018, 60, 75, 1, 1, '1ª planta', '', '08-03-2020', 0);
-(13, '6578522YJ5210S0496UI', 37.418264266530805, -1.5616969248006018, 60, 75, 1, 1, '1ª planta', '', '08-03-2020', 0);
-(14, '7856522YJ5210S0496CF', 37.418264266530805, -1.5616969248006018, 60, 75, 1, 1, '1ª planta', '', '08-03-2020', 0);
+(8, '5928522YJ5210S0496HH', 39.48681669185842, -0.36291043111424803, 46, 110, 4, 2, '3ª planta', 'Este acogedor piso en Valencia ofrece la solución perfecta para estudiantes que buscan comodidad y tranquilidad. Con 4 habitaciones bien equipadas y ubicado en una zona serena. Cada habitación está disponible individualmente a un precio asequible.', '12-01-2024', 49),
+(9, '2470522YJ5210S0496XA', 37.418264266530805, -1.5616969248006018, 60, 75, 1, 1, '1ª planta', '¡Descubre el encanto del Mediterráneo en este apartamento frente a la playa en Águilas! Con vistas impresionantes y todas las comodidades necesarias, es el refugio perfecto para unas vacaciones inolvidables junto al mar.', '08-03-2020', 0),
+(10, '3582522YJ5210S0496BR', 41.26676629490557, 1.9674137631022395, 54, 85, 2, 1, '2ª planta', 'Apartamento frente a la playa en Castelldefels. Vistas al mar desde todas las habitaciones, terraza privada y acceso directo a la playa. Moderno y luminoso, perfecto para disfrutar del estilo de vida mediterráneo.', '09-05-2021', 0),
+(11, '7294522YJ5210S0496BZ', 37.19770063490664, -7.306096003374809, 70, 75, 1, 1, '1ª planta', 'Este encantador loft en Isla Cristina ofrece una experiencia costera incomparable, con vistas impresionantes del mar. Con un diseño moderno y acogedor, es perfecto para aquellos que buscan relajarse y disfrutar de las maravillas naturales de la costa.', '08-03-2018', 0),
+(12, '5922522YJ5210S0496GH', 41.69850900898505, 2.846702596383006, 59, 200, 4, 3, '0', 'Esta impresionante casa, ubicada a pocos pasos de la playa, ofrece un estilo de vida costero incomparable. Con amplios espacios interiores y todas las comodidades modernas, esta propiedad es perfecta para quienes buscan confort y lujo en un entorno relajado junto al mar.', '22-07-2022', 0),
+(13, '6578522YJ5210S0496UI', 43.326087675807315, -1.9719089752672998, 37, 145, 3, 2, 'Planta baja', 'Este amplio y luminoso apartamento te ofrece la oportunidad de disfrutar de la belleza del mar Cantábrico desde la comodidad de tu hogar. Situado en primera línea de playa, este apartamento es el refugio perfecto para relajarte y disfrutar de todo lo que San Sebastián tiene para ofrecer', '14-10-2021', 0),
+(14, '7856522YJ5210S0496CF', 41.12373402265875, 1.2872493152878055, 43, 140, 2, 1, '0', 'Esta encantadora casa, ubicada a pocos pasos de la playa, ofrece la combinación perfecta de comodidad y tranquilidad. Con una piscina reluciente, una amplia terraza para disfrutar del sol y un exuberante jardín, esta propiedad es un paraíso para los amantes del aire libre.', '05-08-2019', 0);
 
 -- --------------------------------------------------------
 

@@ -1,9 +1,14 @@
-function loadAllRealestates(limit=3, offset=0) {
+function loadAllRealestates(limit=4, offset=0) {
+    // conseguimos accessToken desde localStorage para comprobar que hay un usuario logeado
+    var accessToken = localStorage.getItem('access_token') || null;
+    
+    // con la página activa de la paginación definimos el offset
     var validate_page = localStorage.getItem('page') || undefined;
     if (validate_page != undefined) {
-        offset = 3 * (validate_page - 1);
+        offset = 4 * (validate_page - 1);
     }
 
+    // transformamos los valores del localStorage del filters_search en valores individuales para pasarselos al filters_shop
     var validate_filtersSearch = localStorage.getItem('filters_search') || undefined; // conseguimos de localStorage filters_search, sinó existe undefined
     if (validate_filtersSearch != undefined) {
         localStorage.removeItem('filters_search');
@@ -25,6 +30,7 @@ function loadAllRealestates(limit=3, offset=0) {
         applyFilters('search');
     }
 
+    // transformamos los valores del localStorage del filter_home en valores individuales para pasarselos al filters_shop
     var validate_filtersHome = localStorage.getItem('filters_home') || undefined; // conseguimos de localStorage filters_home, sinó existe undefined
     if (validate_filtersHome != undefined) {
         localStorage.removeItem('filters_home');
@@ -47,17 +53,21 @@ function loadAllRealestates(limit=3, offset=0) {
     }
 
     var validate_filtersHome_details = localStorage.getItem('filtersHome_details') || undefined; // conseguimos de localStorage filtersHome_details, sinó existe undefined
+    // var validate_locationDetails = localStorage.getItem('location') || undefined; // conseguimos de localStorage location, sinó existe undefined
     var validate_filtersShop = localStorage.getItem('filters_shop') || undefined; // conseguimos de localStorage filters_shop, sinó existe undefined
+    
     if (validate_filtersHome_details != undefined) {
         localStorage.removeItem('filtersHome_details'); // eliminamos de localStorage id_recomendation para no interferir en próximas busquedas
         console.log(validate_filtersHome_details);
         loadDetails(validate_filtersHome_details);
+    // } else if (validate_locationDetails != undefined && validate_locationDetails != 'home' && validate_locationDetails != 'shop') {
+    //     loadDetails(validate_locationDetails);
     } else if (validate_filtersShop != undefined) {
         var filtersShop = JSON.parse(validate_filtersShop); // deserializamos para convertir el string otra vez en un array
         console.log(filtersShop);
-        ajaxForSearch('module/shop/controller/controller_shop.php?op=filters_shop', 'POST', 'JSON', { 'filters': filtersShop, 'limit': limit, 'offset': offset });
+        ajaxForSearch('module/shop/controller/controller_shop.php?op=filters_shop', 'POST', 'JSON', { 'filters': filtersShop, 'limit': limit, 'offset': offset, 'token': accessToken });
     } else {
-        ajaxForSearch('module/shop/controller/controller_shop.php?op=all_realestates', 'POST', 'JSON', { 'limit': limit, 'offset': offset });
+        ajaxForSearch('module/shop/controller/controller_shop.php?op=all_realestates', 'POST', 'JSON', { 'limit': limit, 'offset': offset, 'token': accessToken });
     }
 }
 
@@ -65,6 +75,7 @@ function ajaxForSearch(url, type, dataType, sData=undefined) {
     // console.log(url, type, dataType, sData);
     // return;
     // die("<script>console.log('Hola ajaxForSearch');</script>");
+    localStorage.setItem("location", "shop"); // guarda en localStorage localización
     ajaxPromise(url, type, dataType, sData)
     .then(function(data) {
         console.log(data);   
@@ -181,45 +192,52 @@ function ajaxForSearch(url, type, dataType, sData=undefined) {
                         </div>
                         <div id='${data[row].id_realestate}' class='containerList_info more_info'>
                             <div class='listInfo_header'>
-                                <span class='listInfo_title'>${data[row].name_type} en ${data[row].name_city}</span>
-                                <span class='listInfo_province'>${data[row].province}</span>
-                            </div>
-                            <div class='listInfo_trading'>
-                                <span class='listInfo_price'>${new Intl.NumberFormat("es-ES").format(data[row].price)} €&nbsp;&nbsp;|&nbsp;&nbsp;${data[row].name_op}</span>
-                            </div>
-                            <div class='listInfo_specs'>
-                                <div class="listInfoSpecs_contents">
-                                    <img src='view/img/specs/area.png' class='listInfoSpecs-img'>
-                                    <span class='listInfoSpecs-txt'>
-                                        ${data[row].area} m<sup>2</sup>
-                                    </span>
+                                <span id='${data[row].id_realestate}' class='listInfo_title toDetails'>${data[row].name_type} en ${data[row].name_city}</span>
+                                <div id='${data[row].id_realestate}' class='listLike_container' like='${data[row].like}'>
+                                    ${(data[row].like != 0 ?
+                                    (`<img src='view/img/icons/like.png' id='${data[row].id_realestate}' class='listLike_icon'>
+                                    <span class='list_countLikes'>${(data[row].like > 1 ? (`${data[row].like}`) : "")}</span>`) :
+                                    (`<img src='view/img/icons/dislike.png' id='${data[row].id_realestate}' class='listLike_icon'>`))}
                                 </div>
-                                ${(data[row].rooms != 0 ? (`
-                                    <div class="listInfoSpecs_contents">
-                                        <img src='view/img/specs/rooms.png' class='listInfoSpecs-img'>
-                                        <span class='listInfoSpecs-txt'>
-                                        ${data[row].rooms} habs.
-                                        </span>
-                                    </div>
-                                `) : "")}
-                                ${(data[row].bathrooms != 0 ? (`
-                                    <div class="listInfoSpecs_contents">
-                                        <img src='view/img/specs/bathrooms.png' class='listInfoSpecs-img'>
-                                        <span class='listInfoSpecs-txt'>
-                                            ${data[row].bathrooms} baños
-                                        </span>
-                                    </div>
-                                `) : "")}
-                                ${(data[row].floor != 0 ? (`
-                                    <div class="listInfoSpecs_contents">
-                                        <img src='view/img/specs/floor.png' class='listInfoSpecs-img'>
-                                        <span class='listInfoSpecs-txt'>
-                                            ${data[row].floor}
-                                        </span>
-                                    </div>
-                                `) : "")}
                             </div>
-                            <p class='listInfo_desc'>${data[row].description}</p>
+                            <div id='${data[row].id_realestate}' class='toDetails'>
+                                <div class='listInfo_trading'>
+                                    <span class='listInfo_price'>${new Intl.NumberFormat("es-ES").format(data[row].price)} €&nbsp;&nbsp;|&nbsp;&nbsp;${data[row].name_op}</span>
+                                </div>
+                                <div class='listInfo_specs'>
+                                    <div class="listInfoSpecs_contents">
+                                        <img src='view/img/specs/area.png' class='listInfoSpecs-img'>
+                                        <span class='listInfoSpecs-txt'>
+                                            ${data[row].area} m<sup>2</sup>
+                                        </span>
+                                    </div>
+                                    ${(data[row].rooms != 0 ? (`
+                                        <div class="listInfoSpecs_contents">
+                                            <img src='view/img/specs/rooms.png' class='listInfoSpecs-img'>
+                                            <span class='listInfoSpecs-txt'>
+                                            ${data[row].rooms} habs.
+                                            </span>
+                                        </div>
+                                    `) : "")}
+                                    ${(data[row].bathrooms != 0 ? (`
+                                        <div class="listInfoSpecs_contents">
+                                            <img src='view/img/specs/bathrooms.png' class='listInfoSpecs-img'>
+                                            <span class='listInfoSpecs-txt'>
+                                                ${data[row].bathrooms} baños
+                                            </span>
+                                        </div>
+                                    `) : "")}
+                                    ${(data[row].floor != 0 ? (`
+                                        <div class="listInfoSpecs_contents">
+                                            <img src='view/img/specs/floor.png' class='listInfoSpecs-img'>
+                                            <span class='listInfoSpecs-txt'>
+                                                ${data[row].floor}
+                                            </span>
+                                        </div>
+                                    `) : "")}
+                                </div>
+                                <p class='listInfo_desc'>${data[row].description}</p>
+                            </div>
                         </div>`
                     );
 
@@ -303,7 +321,7 @@ function load_mapboxList(data) {
     for (row in data) {
         const popup = new mapboxgl.Popup({ offset: 15 })
             .setHTML(`
-                <div id='${data[row].id_realestate}' class='containerMap more_info'>
+                <div id='${data[row].id_realestate}' class='containerMap toDetails'>
                     <div class='map_img'>
                         <img src='${data[row].img_realestate[0]}' alt='' class='img-b img-fluid'>
                     </div>
@@ -347,7 +365,7 @@ function load_mapboxList(data) {
 
 function clicks() {
     // click list
-    $(document).on("click", ".more_info", function() {
+    $(document).on("click", ".toDetails", function() {
         var id_realestate = this.getAttribute('id');
         // console.log(id_realestate);
         loadDetails(id_realestate);
@@ -376,17 +394,31 @@ function clicks() {
         }
         if (page === 'next') {
             var next = parseInt(localStorage.getItem('page')) + 1;
-            var total_pages = Math.ceil(localStorage.getItem('count') / 3);
+            var total_pages = Math.ceil(localStorage.getItem('count') / 4);
             if (next <= total_pages){
                 localStorage.setItem('page', next);
             }
         }
         loadAllRealestates();
     });
+
+    // click like
+    $(document).on("click", ".listLike_container", function() {
+        var id_realestate = this.getAttribute('id');
+        var count_like = this.getAttribute('like');
+        likes(id_realestate, count_like, 'list');
+    });
+    $(document).on("click", ".detailsLike_container", function() {
+        var id_realestate = this.getAttribute('id');
+        var count_like = this.getAttribute('like');
+        likes(id_realestate, count_like, 'details');
+    });
 }
 
 function loadDetails(id_realestate) {
-    ajaxPromise('module/shop/controller/controller_shop.php?op=details_realestate&id=' + id_realestate, 'GET', 'JSON')
+    localStorage.setItem("location", id_realestate); // guarda en localStorage localización
+    var accessToken = localStorage.getItem('access_token') || null;
+    ajaxPromise('module/shop/controller/controller_shop.php?op=details_realestate', 'POST', 'JSON', { 'id_re': id_realestate, 'token': accessToken })
     .then(function(data) {
         console.log(data);
         $('.section-detailsCarousel').empty(); // antes de iniciar borramos el contenedor de details
@@ -453,6 +485,12 @@ function loadDetails(id_realestate) {
                 <div class='detailsInfo_firstRow'>
                     <div class='detailsInfo_trading'>
                         <span class='detailsInfo_price'>${new Intl.NumberFormat("es-ES").format(data[0].price)} €&nbsp;&nbsp;|&nbsp;&nbsp;${data[0].name_op}</span>
+                    </div>
+                    <div id='${data[0].id_realestate}' class='detailsLike_container' like='${data[3].like}'>
+                        ${(data[3].like != 0 ?
+                        (`<img src='view/img/icons/like.png' class='detailsLike_icon'>
+                        <span class='details_countLikes'>${(data[3].like > 1 ? (`${data[3].like}`) : "")}</span>`) :
+                        (`<img src='view/img/icons/dislike.png' class='detailsLike_icon'>`))}
                     </div>
                     <div class='detailsInfo_backButton'>
                         <button class="btn btn-c back_btn" role="link" onclick="window.location='index.php?page=controller_shop&op=list'">Volver</button>
@@ -1356,8 +1394,8 @@ function load_pagination() {
             var count_realEstates = data.count;
             localStorage.setItem('count', count_realEstates);
 
-            if (count_realEstates >= 3) {
-                total_pages = Math.ceil(count_realEstates / 3)
+            if (count_realEstates >= 4) {
+                total_pages = Math.ceil(count_realEstates / 4)
             } else {
                 total_pages = 1;
             }
@@ -1559,6 +1597,47 @@ function load_realestates_related(id, operation, limit, offset, countRelated, is
         }).catch(function() {
             window.location.href='index.php?page=503';
         });
+}
+
+function likes(id_realestate, count_like, origin) {
+    var accessToken = localStorage.getItem('access_token') || null;
+    if (accessToken != null) {
+        ajaxPromise('module/shop/controller/controller_shop.php?op=likes', 'POST', 'JSON', { 'id_re': id_realestate, 'token': accessToken, 'countLike': count_like })
+            .then(function(data) {
+                if (origin == 'list') {
+                    console.log(data);
+                    $(`#${id_realestate} .listLike_container`).attr('like', data.like); // actualiza contador de likes como atributo en el div
+                    $(`#${id_realestate} .listLike_icon`).remove();
+                    if (data.like != 0) {
+                        $('<img>').attr('id', id_realestate).attr('class', 'listLike_icon').attr('src', 'view/img/icons/like.png').appendTo(`#${id_realestate} .listLike_container`);
+                        if (data.like > 1) {
+                            $('<span></span>').attr('class', 'list_countLikes').appendTo(`#${id_realestate} .listLike_container`).html(data.like);
+                        }
+                    } else {
+                        $('<img>').attr('id', id_realestate).attr('class', 'listLike_icon').attr('src', 'view/img/icons/dislike.png').appendTo(`#${id_realestate} .listLike_container`);
+                    }
+                } else if (origin == 'details') {
+                    console.log(data);
+                    $('.detailsLike_container').attr('like', data.like);  // actualiza contador de likes como atributo en el div
+                    $('.detailsLike_icon').remove();
+                    if (data.like != 0) {
+                        $('<img>').attr('class', 'detailsLike_icon').attr('src', 'view/img/icons/like.png').appendTo('.detailsLike_container');
+                        if (data.like > 1) {
+                            $('<span></span>').attr('class', 'details_countLikes').appendTo(`.detailsLike_container`).html(data.like);
+                        }
+                    } else {
+                        $('<img>').attr('class', 'detailsLike_icon').attr('src', 'view/img/icons/dislike.png').appendTo('.detailsLike_container');
+                    }
+                }
+            }).catch(function(textStatus) {
+                if (console && console.log) {
+                    console.log("La solicitud ha fallado: " + textStatus);
+                }
+            });
+    } else {
+        window.location.href='index.php?page=controller_login&op=view';
+    }
+
 }
 
 $(document).ready(function() {

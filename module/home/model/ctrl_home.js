@@ -2,7 +2,7 @@ function carouselTouristcat() {
     //die("<script>console.log('Hola loadCategories');</script>");
     ajaxPromise('module/home/controller/controller_home.php?op=carouselTouristcat','GET', 'JSON')
     .then(function(data) {
-        console.log(data);
+        // console.log(data);
         for (row in data) {
             $('<div></div>').attr('class', 'touristcatSlide carousel-item-c swiper-slide').attr('id', data[row].name_touristcat).appendTo('#touristcat-carousel .containerTouristcat')
                 .html(`
@@ -269,10 +269,12 @@ function carouselLastsearch() {
 
     if (validate_lastSearch != undefined) {
         var lastSearch = JSON.parse(validate_lastSearch);
-        console.log(lastSearch);
+        // console.log(lastSearch);
     
         ajaxPromise('module/home/controller/controller_home.php?op=carouselLastsearch', 'POST', 'JSON', { 'filters': lastSearch })
         .then(function(data) {
+            // console.log(data);
+            // return;
 
             $('<div></div>').attr('class', 'col-md-12').appendTo('.section-lastsearch .container .row')
                 .html(`
@@ -284,9 +286,6 @@ function carouselLastsearch() {
                 );
 
             for (row in data) {
-                console.log(data);
-                // return;
-
                 $('<div></div>').attr('class', 'lastsearchSlide carousel-item-b swiper-slide').attr('id', data[row].id_realestate).appendTo('#lastsearch-carousel .containerLastsearch')
                     .html(`
                         <div class='card-box-a card-shadow border_radius'>
@@ -624,10 +623,15 @@ function remove_filtersShop() {
     localStorage.removeItem('filter_order');
 }
 
+function location_home() {
+    localStorage.setItem("location", "home"); // guarda en localStorage localización
+}
+
 $(document).ready(function() {
     //$data = 'hola JS function';
     //die("<script>console.log('.json_encode( $data ).');</script>");
     remove_filtersShop();
+    location_home();
     carouselTouristcat();
     carouselTypes();
     carouselCategories();

@@ -76,8 +76,8 @@ switch ($op) {
             } else if (password_verify($_POST['password'], $rdo['password'])) { //compara el password introducido con el password de base de datos
                 // echo json_encode($rdo["username"]);
                 // break;
-                $accessToken= create_token('access', $rdo["username"]);
-                $refreshToken= create_token('refresh', $rdo["username"]);
+                $accessToken= create_token("access", $rdo['id_user'], $rdo['username']);
+                $refreshToken= create_token("refresh", $rdo['id_user'], $rdo['username']);
                 $token = array("access" => $accessToken, "refresh" => $refreshToken); // array asociativo
                 $_SESSION['username'] = $rdo['username']; //guardamos usuario en cookie (servidor)
                 $_SESSION['tiempo'] = time(); //guardamos momento exacto del login en cookie (servidor)

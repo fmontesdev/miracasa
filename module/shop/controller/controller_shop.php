@@ -1,6 +1,7 @@
 <?php
 $path = $_SERVER['DOCUMENT_ROOT'] . '/';
 include($path . "/module/shop/model/DAO_shop.php");
+include($path . "/model/middleware_auth.php");
 
 @session_start();
 if (isset($_SESSION['tiempo'])) {  
@@ -15,9 +16,16 @@ switch ($op) {
         break;
 
     case 'all_realestates':
+        if ($_POST['token'] != null) {
+            $accessToken_dec = decode_token('access', $_POST['token']);
+            $id_user = $accessToken_dec['id_user'];
+        } else {
+            $id_user = 'null';
+        }
+
         try {
             $daoshop = new DAOShop();
-            $dates_realEstates = $daoshop->select_all_realEstates($_POST['limit'], $_POST['offset']);
+            $dates_realEstates = $daoshop->select_all_realEstates($_POST['limit'], $_POST['offset'], $id_user);
         } catch (Exception $e) {
             echo json_encode("error");
         }
@@ -30,15 +38,19 @@ switch ($op) {
         break;
 
     case 'details_realestate':
-        // echo json_encode($_GET['id']);
-        // break
+        if ($_POST['token'] != null) {
+            $accessToken_dec = decode_token('access', $_POST['token']);
+            $id_user = $accessToken_dec['id_user'];
+        } else {
+            $id_user = 'null';
+        }
         
         $daoshop = new DAOShop();
-        $daoshop->insert_visited($_GET['id']);
+        $daoshop->insert_visited($_POST['id_re']);
         
         try {
             $daoshop = new DAOShop();
-            $dates_realEstate = $daoshop->select_one_realEstate($_GET['id']);
+            $dates_realEstate = $daoshop->select_one_realEstate($_POST['id_re']);
         } catch (Exception $e) {
             echo json_encode("error");
         }
@@ -46,22 +58,29 @@ switch ($op) {
         // break
         try {
             $daoshop_img = new DAOShop();
-            $dates_images = $daoshop_img->select_imgs_realEstate($_GET['id']);
+            $dates_images = $daoshop_img->select_imgs_realEstate($_POST['id_re']);
         } catch (Exception $e) {
             echo json_encode("error");
         }
         try {
             $daoshop_extra = new DAOShop();
-            $dates_extras = $daoshop_extra->select_extras_realEstate($_GET['id']);
+            $dates_extras = $daoshop_extra->select_extras_realEstate($_POST['id_re']);
+        } catch (Exception $e) {
+            echo json_encode("error");
+        }
+        try {
+            $daoshop_like = new DAOShop();
+            $dates_likes = $daoshop_like->select_likes_realEstate($_POST['id_re'], $id_user);
         } catch (Exception $e) {
             echo json_encode("error");
         }
 
         if (!empty($dates_realEstate || $dates_images || $dates_extras)) {
             $rdo = array();
-            $rdo[0] = $dates_realEstate; //introduce objeto con datos de viviendas en posición 0
+            $rdo[0] = $dates_realEstate; //introduce objeto con datos de la vivienda en posición 0
             $rdo[1][] = $dates_images; //introduce array de imagenes en posición 1
             $rdo[2][] = $dates_extras; //introduce array de extras en posición 2
+            $rdo[3] = $dates_likes; //introduce objeto con likes de vivienda en posición 3
             echo json_encode($rdo);
         } else {
             echo json_encode("error");
@@ -156,11 +175,16 @@ switch ($op) {
         break;
 
     case 'filters_shop':
-        // echo json_encode($_POST['filters']);
-        // break;
+        if ($_POST['token'] != null) {
+            $accessToken_dec = decode_token('access', $_POST['token']);
+            $id_user = $accessToken_dec['id_user'];
+        } else {
+            $id_user = 'null';
+        }
+        
         try {
             $daoshop_filters = new DAOShop();
-            $dates_realEstates = $daoshop_filters->filters_shop($_POST['filters'], $_POST['limit'], $_POST['offset']);
+            $dates_realEstates = $daoshop_filters->filters_shop($_POST['filters'], $_POST['limit'], $_POST['offset'], $id_user);
         } catch (Exception $e) {
             echo json_encode("error");
         }
@@ -227,6 +251,34 @@ switch ($op) {
 
         if (!empty($count_realEstates)) {
             echo json_encode($count_realEstates);
+        } else {
+            echo json_encode("error");
+        }
+        break;
+
+    case 'likes';
+        if ($_POST['token'] != null) {
+            $accessToken_dec = decode_token('access', $_POST['token']);
+            $id_user = $accessToken_dec['id_user'];
+        } else {
+            $id_user = 'null';
+        }
+
+        try {
+            $daoshop_updLike = new DAOShop();
+            $rdo_updLike = $daoshop_updLike->update_like($_POST['id_re'], $id_user, $_POST['countLike']);
+        } catch (Exception $e) {
+            echo json_encode("error");
+        }
+        try {
+            $daoshop_countLike = new DAOShop();
+            $rdo_countLike = $daoshop_countLike->select_likes_realEstate($_POST['id_re'], $id_user);
+        } catch (Exception $e) {
+            echo json_encode("error");
+        }
+
+        if (!empty($rdo_countLike)) {
+            echo json_encode($rdo_countLike);
         } else {
             echo json_encode("error");
         }

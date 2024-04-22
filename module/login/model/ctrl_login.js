@@ -27,7 +27,14 @@ function login() {
                         showConfirmButton: false,
                         timer: 1250
                       });
-                    setTimeout(" window.location.href = 'index.php?page=home'; ", 1500); // redirigimos al home
+                    var location = localStorage.getItem("location");
+                    if (location == 'home')  {
+                        setTimeout(" window.location.href = 'index.php?page=home'; ", 1500); // redirigimos al home
+                    } else if (location == 'shop') {
+                        setTimeout(" window.location.href = 'index.php?page=controller_shop&op=list'; ", 1500); // redirigimos al shop
+                    } else {
+                        setTimeout(" window.location.href = 'index.php?page=controller_shop&op=list'; ", 1500); // redirigimos al shop
+                    }
                 }
             }).catch(function(textStatus) {
                 if (console && console.log) {

@@ -2428,7 +2428,7 @@ footer .credits {
 /*--------------------------------------------------------------
 # List Inmuebles
 --------------------------------------------------------------*/
-.more_info {
+.toDetails {
 	cursor: pointer;
 }
 
@@ -2476,7 +2476,8 @@ footer .credits {
 }
 
 .listInfo_header {
-	width: 100%;
+  display: flex;
+  flex-wrap: nowrap;
   margin-bottom: 11px;
 }
 
@@ -2486,9 +2487,29 @@ footer .credits {
   color: #2eca6a;
 }
 
-.listInfo_province {
-  margin-left: 10px;
+.listLike_container {
+  position: relative;
+  display: flex;
+  margin-left: auto; /* Empujar a la derecha */
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  }
+
+.listLike_icon {
+  width: 26px;
 }
+
+.list_countLikes {
+  position: absolute;
+  font-size: 12px;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+/* .listInfo_province {
+  margin-left: 10px;
+} */
 
 .listInfo_trading {
 	width: 100%;
@@ -2633,16 +2654,36 @@ footer .credits {
 .detailsInfo_firstRow {
   display: flex;
   flex-wrap: nowrap;
+  justify-content: space-between;
   padding-bottom: 40px;
 }
 
 .detailsInfo_trading {
-	width: 50%;
+  padding-right: 20px;
   text-align: left;
 }
 
+.detailsLike_container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  }
+
+.detailsLike_icon {
+  width: 30px;
+}
+
+.details_countLikes {
+  position: absolute;
+  font-size: 15px;
+  font-weight: 400;
+  color: #ffffff;
+}
+
 .detailsInfo_backButton {
-  width: 50%;
+  margin-left: auto; /* Empujar a la derecha */
   text-align: right;
 }
 
@@ -3712,7 +3753,7 @@ Search
   width: 215px;
   height: auto;
   margin-top: 1px;
-  max-height: 350px;
+  max-height: 338px;
   background-color: white;
   border-radius: 0.5rem;
   overflow: auto;
@@ -3859,3 +3900,7 @@ Login
   width: auto;
   background-color: #f3f3f3;
 }
+
+/*======================================
+Likes
+======================================*/
